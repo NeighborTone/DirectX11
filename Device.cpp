@@ -177,6 +177,7 @@ namespace DX11
 		D3D11_INPUT_ELEMENT_DESC layout[] =
 		{
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
 		UINT numElements = sizeof(layout) / sizeof(layout[0]);
 		//頂点インプットレイアウトを作成
@@ -200,10 +201,10 @@ namespace DX11
 		//バーテックスバッファー作成--------------------------------
 		SimpleVertex vertices[] =
 		{
-			D3DXVECTOR3(-0.5f,-0.5f,0.5f),
-			D3DXVECTOR3(-0.5f,0.5f,0.5f),
-			D3DXVECTOR3(0.5f,-0.5f,0.5f),
-			D3DXVECTOR3(0.5f,0.5f,0.5f)
+			D3DXVECTOR3(-0.5f,-0.5f,0), D3DXVECTOR2(0,1), //頂点1,
+			D3DXVECTOR3(-0.5f,0.5f,0),  D3DXVECTOR2(0,0),  //頂点2
+			D3DXVECTOR3(0.5f,-0.5f,0),  D3DXVECTOR2(1,1),  //頂点3
+			D3DXVECTOR3(0.5f,0.5f,0),   D3DXVECTOR2(1,0),  //頂点4
 		};
 		D3D11_BUFFER_DESC bd;
 		bd.Usage = D3D11_USAGE_DEFAULT;
@@ -218,7 +219,7 @@ namespace DX11
 		InitData.pSysMem = vertices;
 		pDevice->CreateBuffer(&bd, &InitData, &pVertexBuffer);
 		
-		
+		Texture::GetInst()->Create();
 		D3D11_BLEND_DESC BlendDesc;
 		ZeroMemory(&BlendDesc, sizeof(BlendDesc));
 		BlendDesc.AlphaToCoverageEnable = FALSE;
@@ -248,8 +249,8 @@ namespace DX11
 		pDeviceContext->OMSetBlendState(pBlendState, blendFactor, 0xffffffff);
 
 		//画面クリア
-		float ClearColor[4] = { 0.15f,0.55f,0.8f,1 };// クリア色作成　RGBAの順
-		//float ClearColor[4] = { 0,0,0,1 };
+		//float ClearColor[4] = { 0.15f,0.55f,0.8f,1 };// クリア色作成　RGBAの順
+		float ClearColor[4] = { 0,0,0,1 };
 		pDeviceContext->ClearRenderTargetView(pRTV, ClearColor);//カラーバッファクリア
 		pDeviceContext->ClearDepthStencilView(pDSV, D3D11_CLEAR_DEPTH, 1.0f, 0);//デプスステンシルバッファクリア
 		
@@ -260,27 +261,15 @@ namespace DX11
 		D3DXMATRIX proj;
 		//ワールドトランスフォーム
 		D3DXMatrixIdentity(&world);
-		D3DXMATRIX scale;
-		D3DXMATRIX tran;
-		D3DXMATRIX rota;
-		D3DXMatrixScaling(&scale,0.1f,0.1f,0.1f);
-		D3DXMatrixTranslation(&tran, 0.5, 0.5, 2);
-		static float angle = 0;
-		//angle += 0.001f;
-		D3DXMatrixRotationY(&rota, angle);
-		world = rota;
+
 		//ビュートランスフォーム(カメラ)
-		D3DXVECTOR3 vEyePt(0.0f, 0.0f, -1.0f); //視点位置
-		vEyePt.x += 0.0001f;
-		D3DXVECTOR3 vLookatPt = vEyePt + D3DXVECTOR3(0,0,1.0f);//注視位置
+		D3DXVECTOR3 vEyePt(0.0f, 0.0f, -1.5f); //視点位置
+		D3DXVECTOR3 vLookatPt(0,0,1.0f);//注視位置
 		D3DXVECTOR3 vUpVec(0.0f, 1.0f, 0.0f);//上方位置
 		D3DXMatrixLookAtLH(&view, &vEyePt, &vLookatPt, &vUpVec);
 		//プロジェクショントランスフォーム
-		static float zoom = float(D3DX_PI / 2);
-		/*if (zoom > 0.1f)
-		{
-			zoom -= 0.0001f;
-		}*/
+		static float zoom = float(D3DX_PI / 4);
+
 		D3DXMatrixPerspectiveFovLH(
 			&proj,
 			zoom,
@@ -307,6 +296,11 @@ namespace DX11
 		//このコンスタントバッファーをどのシェーダーで使うか
 		pDeviceContext->VSSetConstantBuffers(0, 1, &pConstantBuffer);
 		pDeviceContext->PSSetConstantBuffers(0, 1, &pConstantBuffer);
+
+		//テクスチャーセット
+		Texture::GetInst()->Draw();
+
+
 
 		//バーテックスバッファーをセット
 		UINT stride = sizeof(SimpleVertex);

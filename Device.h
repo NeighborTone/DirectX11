@@ -6,7 +6,7 @@
 #include <d3dx10.h>
 #include <d3dx11.h>
 #include <d3dCompiler.h>
-
+#include "Texture.h"
 #pragma comment(lib,"d3d11.lib")
 #pragma comment(lib,"d3dx10.lib")
 #pragma comment(lib,"d3dx11.lib")
@@ -15,6 +15,8 @@ namespace DX11
 {
 	class Device
 	{
+	private:
+		Device();
 	public:
 		//Simpleシェーダー用のコンスタントバッファーのアプリ側構造体
 		struct SIMPLESHADER_CONSTANT_BUFFER
@@ -25,8 +27,9 @@ namespace DX11
 		struct SimpleVertex
 		{
 			D3DXVECTOR3 Pos; //位置
+			D3DXVECTOR2 vTex; //テクスチャー座標
 		};
-		ID3D11Device * pDevice;
+		ID3D11Device* pDevice;
 		ID3D11DeviceContext*		pDeviceContext;
 		IDXGISwapChain*				pSwapChain;
 		ID3D11RenderTargetView*  pRTV;
@@ -39,10 +42,15 @@ namespace DX11
 		ID3D11Buffer*					pVertexBuffer;
 		ID3D11BlendState*			pBlendState;
 
+		static Device* GetInstace()
+		{
+			static Device inst;
+			return &inst;
+		}
 		bool MakeShader(LPSTR szFileName, LPSTR szFuncName, LPSTR szProfileName, void** ppShader, ID3DBlob** ppBlob);
 		bool InitDirect3D(System& win);
 		void Draw();
-		Device();
+		
 		~Device();
 	};
 }

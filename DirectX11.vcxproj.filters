@@ -5,11 +5,13 @@
     <ClCompile Include="Mainloop.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="WinMain.cpp" />
+    <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Device.h" />
     <ClInclude Include="Mainloop.h" />
     <ClInclude Include="System.h" />
+    <ClInclude Include="Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="shader">
