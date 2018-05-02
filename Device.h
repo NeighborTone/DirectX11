@@ -37,6 +37,7 @@ namespace DX11
 		ID3D11PixelShader*			pPixelShader;
 		ID3D11Buffer*					pConstantBuffer;
 		ID3D11Buffer*					pVertexBuffer;
+		ID3D11BlendState*			pBlendState;
 
 		bool MakeShader(LPSTR szFileName, LPSTR szFuncName, LPSTR szProfileName, void** ppShader, ID3DBlob** ppBlob);
 		bool InitDirect3D(System& win);

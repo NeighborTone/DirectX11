@@ -10,6 +10,10 @@ namespace DX11
 		pRTV = nullptr;
 		pDS = nullptr;
 		pDSV = nullptr;
+		pBlendState = nullptr;
+		pVertexBuffer = nullptr;
+		pVertexLayout = nullptr;
+		pVertexShader = nullptr;
 	}
 
 	Device::~Device()
@@ -40,9 +44,25 @@ namespace DX11
 		if (pDSV != nullptr)
 		{
 			RELEASE(pDSV);
-
+		}
+		if (pBlendState != nullptr)
+		{
+			RELEASE(pBlendState);
+		}
+		if (pVertexBuffer != nullptr)
+		{
+			RELEASE(pVertexBuffer);
+		}
+		if (pVertexLayout != nullptr)
+		{
+			RELEASE(pVertexLayout);
+		}
+		if (pVertexShader != nullptr)
+		{
+			RELEASE(pVertexShader);
 		}
 	}
+
 	bool Device::MakeShader(LPSTR szFileName, LPSTR szFuncName, LPSTR szProfileName, void** ppShader, ID3DBlob** ppBlob)
 	{
 		ID3DBlob *pErrors = NULL;
@@ -80,9 +100,10 @@ namespace DX11
 		}
 		return true;
 	}
+
 	bool Device::InitDirect3D(System& win)
 	{
-		//デバイスとスワップチェーンの作成
+		//デバイスとスワップチェーンの作成------------------------
 		DXGI_SWAP_CHAIN_DESC sd;
 		SecureZeroMemory(&sd, sizeof(sd));
 		sd.BufferCount = 1;
@@ -112,15 +133,16 @@ namespace DX11
 			&pDevice,
 			pFeatureLevel,
 			&pDeviceContext);
+		//------------------------------------------------
 
-		//バックバッファーのレンダーターゲットビュー(RTV)を作成
+		//バックバッファーのレンダーターゲットビュー(RTV)を作成------
 		ID3D11Texture2D *pBack;
 		pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBack);
 
 		pDevice->CreateRenderTargetView(pBack, NULL, &pRTV);
 		pBack->Release();
-
-		//デプスステンシルビュー(DSV)を作成
+		//------------------------------------------------
+		//デプスステンシルビュー(DSV)を作成--------------------
 		D3D11_TEXTURE2D_DESC descDepth;
 		descDepth.Width = 640;
 		descDepth.Height = 480;
@@ -134,10 +156,10 @@ namespace DX11
 		descDepth.CPUAccessFlags = 0;
 		descDepth.MiscFlags = 0;
 		pDevice->CreateTexture2D(&descDepth, NULL, &pDS);
-
 		pDevice->CreateDepthStencilView(pDS, NULL, &pDSV);
+		//------------------------------------------------
 
-		//ビューポートの設定
+		//ビューポートの設定----------------------------------
 		D3D11_VIEWPORT vp;
 		vp.Width = 640;
 		vp.Height = 480;
@@ -146,6 +168,7 @@ namespace DX11
 		vp.TopLeftX = 0;
 		vp.TopLeftY = 0;
 		pDeviceContext->RSSetViewports(1, &vp);
+		//------------------------------------------------
 
 		ID3DBlob *pCompiledShader = NULL;
 		//バーテックスシェーダー作成
@@ -162,7 +185,7 @@ namespace DX11
 		//ピクセルシェーダー作成
 		MakeShader("Shader.hlsl", "PS", "ps_5_0", (void**)&pPixelShader, &pCompiledShader);
 
-		//コンスタントバッファー作成
+		//コンスタントバッファー作成---------------------------------
 		D3D11_BUFFER_DESC cb;
 		cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		cb.ByteWidth = sizeof(SIMPLESHADER_CONSTANT_BUFFER);
@@ -170,30 +193,47 @@ namespace DX11
 		cb.MiscFlags = 0;
 		cb.StructureByteStride = 0;
 		cb.Usage = D3D11_USAGE_DYNAMIC;
-
 		pDevice->CreateBuffer(&cb, NULL, &pConstantBuffer);
+		//----------------------------------------------------
 
-		//トライアングル作成
-		//バーテックスバッファー作成
+		//プリミティブの作成
+		//バーテックスバッファー作成--------------------------------
 		SimpleVertex vertices[] =
 		{
-			D3DXVECTOR3(-0.5,-0.5,0),//頂点1	
-			D3DXVECTOR3(-0.5,0.5,0), //頂点2
-			D3DXVECTOR3(0.5,-0.5,0),  //頂点3
+			D3DXVECTOR3(-0.5f,-0.5f,0.5f),
+			D3DXVECTOR3(-0.5f,0.5f,0.5f),
+			D3DXVECTOR3(0.5f,-0.5f,0.5f),
+			D3DXVECTOR3(0.5f,0.5f,0.5f)
 		};
-
 		D3D11_BUFFER_DESC bd;
 		bd.Usage = D3D11_USAGE_DEFAULT;
-		bd.ByteWidth = sizeof(SimpleVertex) * 3;
+		bd.ByteWidth = sizeof(SimpleVertex) * 4;	//頂点数を格納
 		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		bd.CPUAccessFlags = 0;
 		bd.MiscFlags = 0;
+		//------------------------------------------------------
+
 
 		D3D11_SUBRESOURCE_DATA InitData;
 		InitData.pSysMem = vertices;
 		pDevice->CreateBuffer(&bd, &InitData, &pVertexBuffer);
-
 		
+		
+		D3D11_BLEND_DESC BlendDesc;
+		ZeroMemory(&BlendDesc, sizeof(BlendDesc));
+		BlendDesc.AlphaToCoverageEnable = FALSE;
+		BlendDesc.IndependentBlendEnable = FALSE;
+		BlendDesc.RenderTarget[0].BlendEnable = TRUE;
+		BlendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+		BlendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_DEST_COLOR;
+		BlendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+		BlendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+		BlendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+		BlendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+		BlendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+		
+		pDevice->CreateBlendState(&BlendDesc, &pBlendState);
+
 
 		return true;
 	}
@@ -202,28 +242,52 @@ namespace DX11
 	{
 		//レンダーターゲットビューとデプスステンシルビューをセット
 		pDeviceContext->OMSetRenderTargets(1, &pRTV, pDSV);
+		
+		//加算合成を	有効にする	
+		float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+		pDeviceContext->OMSetBlendState(pBlendState, blendFactor, 0xffffffff);
+
 		//画面クリア
 		float ClearColor[4] = { 0.15f,0.55f,0.8f,1 };// クリア色作成　RGBAの順
+		//float ClearColor[4] = { 0,0,0,1 };
 		pDeviceContext->ClearRenderTargetView(pRTV, ClearColor);//カラーバッファクリア
 		pDeviceContext->ClearDepthStencilView(pDSV, D3D11_CLEAR_DEPTH, 1.0f, 0);//デプスステンシルバッファクリア
-
-		D3DXMATRIX World;
-		D3DXMATRIX View;
-		D3DXMATRIX Proj;
+		
+		//3D変換-----------------------------------------------------------
+		//3D変換はワールド変換、ビュー変換、プロジェクション変換の３つの変換を合成したもの
+		D3DXMATRIX world;
+		D3DXMATRIX view;
+		D3DXMATRIX proj;
 		//ワールドトランスフォーム
-		D3DXMatrixIdentity(&World);
-		// ビュートランスフォーム
-		D3DXVECTOR3 vEyePt(0.0f, 1.0f, -2.0f); //視点位置
-		D3DXVECTOR3 vLookatPt(0.0f, 0.0f, 0.0f);//注視位置
+		D3DXMatrixIdentity(&world);
+		D3DXMATRIX scale;
+		D3DXMATRIX tran;
+		D3DXMATRIX rota;
+		D3DXMatrixScaling(&scale,0.1f,0.1f,0.1f);
+		D3DXMatrixTranslation(&tran, 0.5, 0.5, 2);
+		static float angle = 0;
+		//angle += 0.001f;
+		D3DXMatrixRotationY(&rota, angle);
+		world = rota;
+		//ビュートランスフォーム(カメラ)
+		D3DXVECTOR3 vEyePt(0.0f, 0.0f, -1.0f); //視点位置
+		vEyePt.x += 0.0001f;
+		D3DXVECTOR3 vLookatPt = vEyePt + D3DXVECTOR3(0,0,1.0f);//注視位置
 		D3DXVECTOR3 vUpVec(0.0f, 1.0f, 0.0f);//上方位置
-		D3DXMatrixLookAtLH(&View, &vEyePt, &vLookatPt, &vUpVec);
-		// プロジェクショントランスフォーム
+		D3DXMatrixLookAtLH(&view, &vEyePt, &vLookatPt, &vUpVec);
+		//プロジェクショントランスフォーム
+		static float zoom = float(D3DX_PI / 2);
+		/*if (zoom > 0.1f)
+		{
+			zoom -= 0.0001f;
+		}*/
 		D3DXMatrixPerspectiveFovLH(
-			&Proj,
-			FLOAT(D3DX_PI / 4),
+			&proj,
+			zoom,
 			640.0f / 480.0f,
 			0.1f,
 			100.0f);
+		//-----------------------------------------------------------------
 
 		//使用するシェーダーのセット
 		pDeviceContext->VSSetShader(pVertexShader, NULL, 0);
@@ -233,8 +297,8 @@ namespace DX11
 		SIMPLESHADER_CONSTANT_BUFFER cb;
 		if (SUCCEEDED(pDeviceContext->Map(pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &pData)))
 		{
-			//ワールド、カメラ、射影行列を渡す
-			cb.mWVP = World * View*Proj;
+			//ワールド、カメラ、射影行列をシェーダーに渡す
+			cb.mWVP = world * view * proj;
 			D3DXMatrixTranspose(&cb.mWVP, &cb.mWVP);
 
 			memcpy_s(pData.pData, pData.RowPitch, (void*)(&cb), sizeof(cb));
@@ -255,7 +319,7 @@ namespace DX11
 		//プリミティブ・トポロジーをセット
 		pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 		//プリミティブをレンダリング
-		pDeviceContext->Draw(3, 0);
+		pDeviceContext->Draw(4, 0);
 
 
 		pSwapChain->Present(0, 0);//画面更新
