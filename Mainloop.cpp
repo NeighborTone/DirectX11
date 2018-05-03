@@ -6,11 +6,11 @@ bool Mainloop::Init(HINSTANCE hInstance, int nCmdShow)
 	//ウィンドウ生成
 	const bool iswin = 	window.Create("DirectX11",hInstance, nCmdShow);
 	//DirectX11の初期化
-	const bool isDx = DX_device->GetInstace()->InitDirect3D(window);
+	const bool isDX = directx.Init(window);
 	//ウィンドウ描画
 	const bool isshow = ShowWindow(window.GetWindow(), nCmdShow);
 	
-	if (iswin  && isshow && isDx)
+	if (iswin && isshow && isDX)
 	{
 		
 		return true;
@@ -35,13 +35,12 @@ void Mainloop::Run()
 		}
 		else
 		{
-		
-			DX_device->GetInstace()->Draw();
-
+			directx.Update();
+			directx.Draw();
 		}
 
 	//	ShowCursor(false);	//マウス非表示
-	
 	}
+	directx.End();
 
 }

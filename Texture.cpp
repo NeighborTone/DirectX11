@@ -22,12 +22,12 @@ namespace DX11
 		}
 	}
 
-	bool Texture::Create()
+	bool Texture::Create(const char* path)
 	{
 		HRESULT hr;
 		hr = D3DX11CreateShaderResourceViewFromFile(
-			Device::GetInstace()->pDevice,
-			"test.png",
+			Direct3D::GetInstace()->GetDevice(),
+			path,
 			NULL,
 			NULL,
 			&pTexture,
@@ -47,7 +47,7 @@ namespace DX11
 		samDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;	//テクスチャーをラップモードでマッピング
 		samDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;	//テクスチャーをラップモードでマッピング
 		samDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;	//テクスチャーをラップモードでマッピング
-		hr = Device::GetInstace()->pDevice->CreateSamplerState(&samDesc, &pSampleLiner);
+		hr = Direct3D::GetInstace()->GetDevice()->CreateSamplerState(&samDesc, &pSampleLiner);
 		if (FAILED(hr))
 		{
 			MessageBox(NULL, "サンプラーの作成に失敗", "error", S_OK);
@@ -63,11 +63,11 @@ namespace DX11
 	{
 		//テクスチャーをシェーダーに渡す
 		//サンプラーはそのテクスチャーから色をどう取り出すかの指定
-		Device::GetInstace()->pDeviceContext->PSSetSamplers(
+		Direct3D::GetInstace()->GetContext()->PSSetSamplers(
 			0,	//デバイスの配列の中でサンプラーの設定を開始する位置の、0 から始まるインデックス
 			1,	//配列内のサンプラーの数。最大16
 			&pSampleLiner);
-		Device::GetInstace()->pDeviceContext->PSSetShaderResources(
+		Direct3D::GetInstace()->GetContext()->PSSetShaderResources(
 			0,	//デバイスの配列の中でシェーダー リソースの設定を開始する位置の、0 から始まるインデックス
 			1,	//設定するシェーダー リソースの数。最大128
 			&pTexture);

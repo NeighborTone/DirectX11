@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.cpp" />
+    <ClCompile Include="DirectX.cpp" />
     <ClCompile Include="Mainloop.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -27,6 +28,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Device.h" />
+    <ClInclude Include="DirectX.h" />
     <ClInclude Include="Mainloop.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="Texture.h" />

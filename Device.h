@@ -1,6 +1,7 @@
 #pragma once
 #pragma warning( disable : 4005 )	//DirectXマクロ再定義
 #define RELEASE(p) {p->Release(); p = nullptr;}
+
 #include "System.h"
 #include <d3d11.h>
 #include <d3dx10.h>
@@ -13,10 +14,23 @@
 #pragma comment(lib,"d3dCompiler.lib")
 namespace DX11
 {
-	class Device
+	class Direct3D
 	{
 	private:
-		Device();
+		Direct3D();
+		
+		ID3D11Device*					pDevice;
+		ID3D11DeviceContext*		pDeviceContext;
+		IDXGISwapChain*				pSwapChain;
+		ID3D11RenderTargetView*  pRTV;
+		ID3D11Texture2D*				pDS;
+		ID3D11DepthStencilView*	pDSV;
+		ID3D11InputLayout*			pVertexLayout;
+		ID3D11VertexShader*		pVertexShader;
+		ID3D11PixelShader*			pPixelShader;
+		ID3D11Buffer*					pConstantBuffer;
+		ID3D11Buffer*					pVertexBuffer;
+		ID3D11BlendState*			pBlendState;
 	public:
 		//Simpleシェーダー用のコンスタントバッファーのアプリ側構造体
 		struct SIMPLESHADER_CONSTANT_BUFFER
@@ -29,29 +43,31 @@ namespace DX11
 			D3DXVECTOR3 Pos; //位置
 			D3DXVECTOR2 vTex; //テクスチャー座標
 		};
-		ID3D11Device* pDevice;
-		ID3D11DeviceContext*		pDeviceContext;
-		IDXGISwapChain*				pSwapChain;
-		ID3D11RenderTargetView*  pRTV;
-		ID3D11Texture2D*				pDS;
-		ID3D11DepthStencilView*	pDSV;
-		ID3D11InputLayout*			pVertexLayout;
-		ID3D11VertexShader*		pVertexShader;
-		ID3D11PixelShader*			pPixelShader;
-		ID3D11Buffer*					pConstantBuffer;
-		ID3D11Buffer*					pVertexBuffer;
-		ID3D11BlendState*			pBlendState;
+		
 
-		static Device* GetInstace()
+		static Direct3D* GetInstace()
 		{
-			static Device inst;
+			static Direct3D inst;
 			return &inst;
 		}
 		bool MakeShader(LPSTR szFileName, LPSTR szFuncName, LPSTR szProfileName, void** ppShader, ID3DBlob** ppBlob);
-		bool InitDirect3D(System& win);
-		void Draw();
+		bool Create(System& win);
+		void BeginDraw();
+		void Flip();
+		void DrawPrimitive();
 		
-		~Device();
+		ID3D11Device* GetDevice()
+		{
+			return pDevice;
+		}
+
+		ID3D11DeviceContext* GetContext()
+		{
+			return pDeviceContext;
+		}
+
+
+		~Direct3D();
 	};
 }
 

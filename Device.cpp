@@ -2,7 +2,7 @@
 
 namespace DX11
 {
-	Device::Device()
+	Direct3D::Direct3D()
 	{
 		pDevice = nullptr;
 		pDeviceContext = nullptr;
@@ -16,7 +16,7 @@ namespace DX11
 		pVertexShader = nullptr;
 	}
 
-	Device::~Device()
+	Direct3D::~Direct3D()
 	{
 		if (pDevice != nullptr)
 		{
@@ -63,7 +63,7 @@ namespace DX11
 		}
 	}
 
-	bool Device::MakeShader(LPSTR szFileName, LPSTR szFuncName, LPSTR szProfileName, void** ppShader, ID3DBlob** ppBlob)
+	bool Direct3D::MakeShader(LPSTR szFileName, LPSTR szFuncName, LPSTR szProfileName, void** ppShader, ID3DBlob** ppBlob)
 	{
 		ID3DBlob *pErrors = NULL;
 		if (FAILED(D3DX11CompileFromFileA(szFileName, NULL, NULL, szFuncName, szProfileName, D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION, 0, NULL, ppBlob, &pErrors, NULL)))
@@ -101,7 +101,7 @@ namespace DX11
 		return true;
 	}
 
-	bool Device::InitDirect3D(System& win)
+	bool Direct3D::Create(System& win)
 	{
 		//デバイスとスワップチェーンの作成------------------------
 		DXGI_SWAP_CHAIN_DESC sd;
@@ -201,9 +201,9 @@ namespace DX11
 		//バーテックスバッファー作成--------------------------------
 		SimpleVertex vertices[] =
 		{
-			D3DXVECTOR3(-0.5f,-0.5f,0), D3DXVECTOR2(0,1), //頂点1,
-			D3DXVECTOR3(-0.5f,0.5f,0),  D3DXVECTOR2(0,0),  //頂点2
-			D3DXVECTOR3(0.5f,-0.5f,0),  D3DXVECTOR2(1,1),  //頂点3
+			D3DXVECTOR3(-0.5f,-0.5f,0),D3DXVECTOR2(0,1), //頂点1,
+			D3DXVECTOR3(-0.5f,0.5f,0), D3DXVECTOR2(0,0),  //頂点2
+			D3DXVECTOR3(0.5f,-0.5f,0), D3DXVECTOR2(1,1),  //頂点3
 			D3DXVECTOR3(0.5f,0.5f,0),   D3DXVECTOR2(1,0),  //頂点4
 		};
 		D3D11_BUFFER_DESC bd;
@@ -219,7 +219,8 @@ namespace DX11
 		InitData.pSysMem = vertices;
 		pDevice->CreateBuffer(&bd, &InitData, &pVertexBuffer);
 		
-		Texture::GetInst()->Create();
+		//アルファブレンド用ブレンドステート
+		//pngに透過情報がある場合透過させる
 		D3D11_BLEND_DESC BlendDesc;
 		ZeroMemory(&BlendDesc, sizeof(BlendDesc));
 		BlendDesc.AlphaToCoverageEnable = FALSE;
@@ -239,12 +240,12 @@ namespace DX11
 		return true;
 	}
 
-	void Device::Draw()
+	void Direct3D::BeginDraw()
 	{
 		//レンダーターゲットビューとデプスステンシルビューをセット
 		pDeviceContext->OMSetRenderTargets(1, &pRTV, pDSV);
-		
-		//加算合成を	有効にする	
+
+		//加算合成を	有効にする(ウィンドウの背景色も加算されるので注意)	
 		float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 		pDeviceContext->OMSetBlendState(pBlendState, blendFactor, 0xffffffff);
 
@@ -253,7 +254,7 @@ namespace DX11
 		float ClearColor[4] = { 0,0,0,1 };
 		pDeviceContext->ClearRenderTargetView(pRTV, ClearColor);//カラーバッファクリア
 		pDeviceContext->ClearDepthStencilView(pDSV, D3D11_CLEAR_DEPTH, 1.0f, 0);//デプスステンシルバッファクリア
-		
+
 		//3D変換-----------------------------------------------------------
 		//3D変換はワールド変換、ビュー変換、プロジェクション変換の３つの変換を合成したもの
 		D3DXMATRIX world;
@@ -264,7 +265,7 @@ namespace DX11
 
 		//ビュートランスフォーム(カメラ)
 		D3DXVECTOR3 vEyePt(0.0f, 0.0f, -1.5f); //視点位置
-		D3DXVECTOR3 vLookatPt(0,0,1.0f);//注視位置
+		D3DXVECTOR3 vLookatPt(0, 0, 1.0f);//注視位置
 		D3DXVECTOR3 vUpVec(0.0f, 1.0f, 0.0f);//上方位置
 		D3DXMatrixLookAtLH(&view, &vEyePt, &vLookatPt, &vUpVec);
 		//プロジェクショントランスフォーム
@@ -297,10 +298,12 @@ namespace DX11
 		pDeviceContext->VSSetConstantBuffers(0, 1, &pConstantBuffer);
 		pDeviceContext->PSSetConstantBuffers(0, 1, &pConstantBuffer);
 
-		//テクスチャーセット
-		Texture::GetInst()->Draw();
+	}
 
+	void Direct3D::DrawPrimitive()
+	{
 
+		//テクスチャーセット(直で書く場合)//仮
 
 		//バーテックスバッファーをセット
 		UINT stride = sizeof(SimpleVertex);
@@ -314,8 +317,12 @@ namespace DX11
 		pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 		//プリミティブをレンダリング
 		pDeviceContext->Draw(4, 0);
-
-
-		pSwapChain->Present(0, 0);//画面更新
 	}
+
+	void Direct3D::Flip()
+	{
+
+		pSwapChain->Present(1, 0);//画面更新。(1,0)で60fps
+	}
+	
 }

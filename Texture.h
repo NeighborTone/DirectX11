@@ -8,18 +8,15 @@ namespace DX11
 	class Texture
 	{
 	private:
-		Texture();
+		
 	public:
+		Texture();
+		~Texture();
 		ID3D11SamplerState * pSampleLiner;		//サンプラー、テクスチャーからピクセルをどのように取り出すかの指定
 		ID3D11ShaderResourceView* pTexture;		//テクスチャー情報
-		bool Create();
+		bool Create(const char* path);
 		void Draw();
-		static Texture* GetInst()
-		{
-			static Texture inst;
-			return &inst;
-		}
-		~Texture();
+		
 	};
 }
 
