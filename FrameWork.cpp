@@ -13,6 +13,14 @@ FrameWork::FrameWork()
 
 FrameWork::~FrameWork()
 {
+
+	if (Defs::FULL_SCREEN)
+	{
+		ChangeDisplaySettings(NULL, 0);
+	}
+
+	Engine::GetInst()->Release();
+
 	UnregisterClass(appName, hInst);
 	hInst = nullptr;
 
@@ -21,6 +29,11 @@ FrameWork::~FrameWork()
 bool FrameWork::init()
 {
 	if (!CreateDXWindow("DX11", Defs::WINDOW_POSX, Defs::WINDOW_POSY, Defs::SCREEN_WIDTH, Defs::SCREEN_HEIGHT))
+	{
+		return false;
+	}
+
+	if (!Engine::GetInst()->Create(hInst, Engine::GetInst()->GetGraphics()->GetHwnd()))
 	{
 		return false;
 	}
@@ -43,6 +56,7 @@ void FrameWork::Run()
 		else
 		{
 			//Run&Draw
+			Engine::GetInst()->Run();
 		}
 	}
 }
@@ -53,7 +67,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	PAINTSTRUCT ps;
 	HDC hdc;
 
-	
+
 	if (GetKeyState(VK_ESCAPE) & 0x8000)
 	{
 		PostQuitMessage(0);
@@ -71,17 +85,20 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			PostQuitMessage(0);
 			DestroyWindow(hwnd);
 		}
-	}break;
+		break;
+	}
 	case WM_PAINT:
 	{
 		hdc = BeginPaint(hwnd, &ps);
 		EndPaint(hwnd, &ps);
-	}break;
+		break;
+	}
 	case WM_CLOSE:
 	{
 		PostQuitMessage(0);
 		DestroyWindow(hwnd);
-	}break;
+		break;
+	}
 	default:
 	{
 		return DefWindowProc(hwnd, message, wParam, lParam);
@@ -101,19 +118,19 @@ bool FrameWork::CreateDXWindow(char* title, int x, int y, int width, int height)
 
 	hInst = GetModuleHandle(NULL);
 
-	wc.style					 = WS_OVERLAPPED;
-	wc.lpfnWndProc         = WndProc;
-	wc.cbClsExtra		     = 0;
-	wc.cbWndExtra		     = 0;
-	wc.hInstance		     = hInst;
-	wc.hIcon				     = LoadIcon(NULL, IDI_WINLOGO);
-	wc.hIconSm				 = wc.hIcon;
-	wc.hCursor				 = LoadCursor(NULL, IDC_ARROW);
-	wc.hbrBackground	     = (HBRUSH)GetStockObject(BLACK_BRUSH);
-	wc.lpszMenuName		 = NULL;
-	wc.lpszClassName		 = appName;
-	wc.cbSize				 = sizeof(WNDCLASSEX);
-	
+	wc.style = WS_OVERLAPPED;
+	wc.lpfnWndProc = WndProc;
+	wc.cbClsExtra = 0;
+	wc.cbWndExtra = 0;
+	wc.hInstance = hInst;
+	wc.hIcon = LoadIcon(NULL, IDI_WINLOGO);
+	wc.hIconSm = wc.hIcon;
+	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+	wc.lpszMenuName = NULL;
+	wc.lpszClassName = appName;
+	wc.cbSize = sizeof(WNDCLASSEX);
+
 	if (!RegisterClassEx(&wc))
 	{
 		MessageBox(NULL, "ウィンドウの初期化に失敗", "error", S_OK);
@@ -132,7 +149,7 @@ bool FrameWork::CreateDXWindow(char* title, int x, int y, int width, int height)
 		dmScreenSettings.dmBitsPerPel = 32;
 		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
 
-		// Change the display settings to full screen.
+		//フルスクリーンに切り替え
 		ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN);
 	}
 	else
@@ -146,14 +163,27 @@ bool FrameWork::CreateDXWindow(char* title, int x, int y, int width, int height)
 	if (hwnd == NULL)
 	{
 		MessageBox(NULL, "ウィンドウの作成に失敗", "Error", MB_OK);
+		Engine::GetInst()->Release();
 		PostQuitMessage(0);
 
 		return false;
 	}
 
 
+
+	if (!Engine::GetInst()->CreateGraphics(hwnd))
+	{
+		MessageBox(hwnd, "DirectX11の初期化に失敗", "Error", S_OK);
+		Engine::GetInst()->Release();
+		PostQuitMessage(0);
+		UnregisterClass(appName, hInst);
+		DestroyWindow(hwnd);
+	}
+
+	Engine::GetInst()->GetGraphics()->SetHwnd(hwnd);
+
 	ShowWindow(hwnd, SW_SHOW);
-	
+	SetForegroundWindow(hwnd);
 	SetFocus(hwnd);
 
 	return true;

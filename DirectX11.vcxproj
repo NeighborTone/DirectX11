@@ -20,13 +20,20 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DXManager.cpp" />
+    <ClCompile Include="Engine.cpp" />
     <ClCompile Include="FrameWork.cpp" />
+    <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DXManager.h" />
+    <ClInclude Include="Engine.h" />
     <ClInclude Include="FrameWork.h" />
+    <ClInclude Include="Graphics.h" />
     <ClInclude Include="SystemDefs.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

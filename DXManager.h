@@ -39,7 +39,7 @@ public:
 	DXManager();
 	~DXManager();
 
-	bool Init(int width, int height, bool vsync, HWND hwnd, bool isfullscreen);
+	bool Create(int width, int height, bool vsync, HWND hwnd, bool isfullscreen);
 	void BeginScene(float r, float g, float b, float a);
 	void EndScene();
 	void EnableAlphaBlending(bool enable);

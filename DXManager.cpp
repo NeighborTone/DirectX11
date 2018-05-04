@@ -77,7 +77,7 @@ DXManager::~DXManager()
 
 }
 //public-------------------------------------------------------------------------------------------------------------------------
-bool  DXManager::Init(int width, int height, bool vsync, HWND hwnd, bool isfullscreen)
+bool  DXManager::Create(int width, int height, bool vsync, HWND hwnd, bool isfullscreen)
 {
 	HRESULT hr;
 	//DirectXグラフィックスインフラストラクチャー(DXGI)
@@ -161,9 +161,12 @@ bool  DXManager::Init(int width, int height, bool vsync, HWND hwnd, bool isfulls
 		}
 	}
 
+	//垂直同期が失敗する環境だとここで引っかかる
 	if (numerator == 0 && denominator == 0)
 	{
-		return false;
+		//MessageBox(NULL, "垂直同期に失敗", "warning", S_OK);
+		numerator = 60;
+		denominator = 1;
 	}
 
 	//アダプター (またはビデオ カード)のDXGI1.0記述を取得
@@ -186,6 +189,7 @@ bool  DXManager::Init(int width, int height, bool vsync, HWND hwnd, bool isfulls
 		128);								//格納されるバイトの最大数、
 	if (error != 0)
 	{
+		MessageBox(NULL, "ビデオカードが取得できませんでした", "Error", S_OK);
 		return false;
 	}
 
@@ -281,6 +285,8 @@ void DXManager::EndScene()
 	{
 		//60fpsで描画
 		pSwapChain->Present(1, 0);
+		//30fps
+		//pSwapChain->Present(2, 0);
 	}
 	else
 	{

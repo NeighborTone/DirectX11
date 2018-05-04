@@ -12,10 +12,17 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="FrameWork.cpp" />
     <ClCompile Include="DXManager.cpp" />
+    <ClCompile Include="Graphics.cpp" />
+    <ClCompile Include="Engine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FrameWork.h" />
     <ClInclude Include="SystemDefs.h" />
     <ClInclude Include="DXManager.h" />
+    <ClInclude Include="Graphics.h" />
+    <ClInclude Include="Engine.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>
