@@ -14,6 +14,8 @@
     <ClCompile Include="DXManager.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="TextureShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FrameWork.h" />
@@ -21,8 +23,8 @@
     <ClInclude Include="DXManager.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Engine.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="Matrix.hpp" />
+    <ClInclude Include="TextureShader.h" />
   </ItemGroup>
 </Project>

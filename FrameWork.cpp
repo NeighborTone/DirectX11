@@ -173,7 +173,7 @@ bool FrameWork::CreateDXWindow(char* title, int x, int y, int width, int height)
 
 	if (!Engine::GetInst()->CreateGraphics(hwnd))
 	{
-		MessageBox(hwnd, "DirectX11‚Ì‰Šú‰»‚ÉŽ¸”s", "Error", S_OK);
+		MessageBox(hwnd, "DirectX11‚Ì‰Šú‰»‚ÉŽ¸”s", "Error", MB_OK);
 		Engine::GetInst()->Release();
 		PostQuitMessage(0);
 		UnregisterClass(appName, hInst);

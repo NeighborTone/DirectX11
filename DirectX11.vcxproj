@@ -24,16 +24,18 @@
     <ClCompile Include="FrameWork.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="TextureShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DXManager.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="FrameWork.h" />
     <ClInclude Include="Graphics.h" />
+    <ClInclude Include="Matrix.hpp" />
+    <ClInclude Include="Shader.h" />
     <ClInclude Include="SystemDefs.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
+    <ClInclude Include="TextureShader.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

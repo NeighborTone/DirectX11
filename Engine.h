@@ -1,7 +1,7 @@
 #pragma once
 #include "Graphics.h"
 
-class Engine
+class Engine final
 {
 private:
 	Engine();

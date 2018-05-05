@@ -169,11 +169,11 @@ bool  DXManager::Create(int width, int height, bool vsync, HWND hwnd, bool isful
 		denominator = 1;
 	}
 
-	//アダプター (またはビデオ カード)のDXGI1.0記述を取得
+	//アダプター(またはビデオカード)のDXGI1.0記述を取得
 	hr = adapter->GetDesc(&adapterDesc);
 	if (FAILED(hr))
 	{
-		MessageBox(NULL, "アダプターの取得に失敗", "Error", S_OK);
+		MessageBox(NULL, "アダプターの取得に失敗", "Error", MB_OK);
 		return false;
 	}
 
@@ -189,7 +189,7 @@ bool  DXManager::Create(int width, int height, bool vsync, HWND hwnd, bool isful
 		128);								//格納されるバイトの最大数、
 	if (error != 0)
 	{
-		MessageBox(NULL, "ビデオカードが取得できませんでした", "Error", S_OK);
+		MessageBox(NULL, "ビデオカードが取得できませんでした", "Error", MB_OK);
 		return false;
 	}
 
@@ -210,7 +210,7 @@ bool  DXManager::Create(int width, int height, bool vsync, HWND hwnd, bool isful
 	hr = pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferPtr);
 	if (FAILED(hr))
 	{
-		MessageBox(NULL, "バックバッファーの参照に失敗", "Error", S_OK);
+		MessageBox(NULL, "バックバッファーの参照に失敗", "Error", MB_OK);
 		return false;
 	}
 
@@ -218,7 +218,7 @@ bool  DXManager::Create(int width, int height, bool vsync, HWND hwnd, bool isful
 	hr = pDevice->CreateRenderTargetView(backBufferPtr, NULL, &pRenderTargetView);
 	if (FAILED(hr))
 	{
-		MessageBox(NULL, "レンダーターゲットビューの作成に失敗", "Error", S_OK);
+		MessageBox(NULL, "レンダーターゲットビューの作成に失敗", "Error", MB_OK);
 		return false;
 	}
 	//バックバッファの破棄
@@ -340,7 +340,6 @@ ID3D11DeviceContext*  DXManager::GetDeviceContext()
 bool DXManager::InitSwapChain(HWND hwnd, bool isfullscreen, int width, int height, unsigned  int numerator, unsigned int denominator)
 {
 	DXGI_SWAP_CHAIN_DESC swapDesc;
-	D3D_FEATURE_LEVEL feature;
 	HRESULT hr;
 
 	SecureZeroMemory(&swapDesc, sizeof(swapDesc));
@@ -391,7 +390,14 @@ bool DXManager::InitSwapChain(HWND hwnd, bool isfullscreen, int width, int heigh
 	swapDesc.Flags = 0;
 
 	//DirectX11の機能レベルの設定
-	feature = D3D_FEATURE_LEVEL_11_0;
+	D3D_FEATURE_LEVEL feature[] = {
+		D3D_FEATURE_LEVEL_11_0,
+		D3D_FEATURE_LEVEL_10_1,
+		D3D_FEATURE_LEVEL_10_0,
+		D3D_FEATURE_LEVEL_9_3,
+		D3D_FEATURE_LEVEL_9_2,
+		D3D_FEATURE_LEVEL_9_1,
+	};
 
 	//スワップチェイン(フロントバッファ)とコンテキストの作成
 	hr = D3D11CreateDeviceAndSwapChain(
@@ -399,8 +405,8 @@ bool DXManager::InitSwapChain(HWND hwnd, bool isfullscreen, int width, int heigh
 		D3D_DRIVER_TYPE_HARDWARE,	//作成するデバイスの種類
 		NULL,									//ソフトウェアラスタライザーを実装するDLLのハンドル
 		0,										//有効にするランタイムレイヤー
-		&feature,							//作成を試みる機能レベルの順序を指定するD3D_FEATURE_LEVELの配列へのポインター
-		1,										//pFeatureLevelsの要素数
+		feature,								//作成を試みる機能レベルの順序を指定するD3D_FEATURE_LEVELの配列へのポインター
+		6,										//pFeatureLevelsの要素数
 		D3D11_SDK_VERSION,				//SDKのバージョン。D3D11_SDK_VERSIONを指定
 		&swapDesc,							//スワップチェーンの初期化パラメーターを格納するスワップチェーンの記述へのポインター
 		&pSwapChain,						//レンダリングに使用するスワップ チェーンを表すIDXGISwapChainオブジェクトへのポインターのアドレスを返す
@@ -409,7 +415,7 @@ bool DXManager::InitSwapChain(HWND hwnd, bool isfullscreen, int width, int heigh
 		&pDeviceContext);				//デバイス コンテキストを表すID3D11DeviceContextオブジェクトへのポインターのアドレスを返す
 	if (FAILED(hr))
 	{
-		MessageBox(NULL, "スワップチェーンの作成に失敗", "Error", S_OK);
+		MessageBox(NULL, "スワップチェーンの作成に失敗", "Error", MB_OK);
 		return false;
 	}
 	return true;
@@ -440,7 +446,7 @@ bool DXManager::InitDepthBuffer(int width, int height)
 		&pDepthStencilBuffer);
 	if (FAILED(hr))
 	{
-		MessageBox(NULL, "深度バッファの作成に失敗", "Error", S_OK);
+		MessageBox(NULL, "深度バッファの作成に失敗", "Error", MB_OK);
 		return false;
 	}
 
@@ -477,7 +483,7 @@ bool DXManager::InitDepthStencilBuffer()
 	hr = pDevice->CreateDepthStencilState(&depthStencilDesc, &pDepthStencilState);
 	if (FAILED(hr))
 	{
-		MessageBox(NULL, "深度ステンシルステートの作成に失敗", "Error", S_OK);
+		MessageBox(NULL, "深度ステンシルステートの作成に失敗", "Error", MB_OK);
 		return false;
 	}
 
@@ -501,7 +507,7 @@ bool DXManager::InitStencilView()
 	hr = pDevice->CreateDepthStencilView(pDepthStencilBuffer, &depthStencilViewDesc, &pDepthStencilView);
 	if (FAILED(hr))
 	{
-		MessageBox(NULL, "深度ステンシルビューの作成に失敗", "Error", S_OK);
+		MessageBox(NULL, "深度ステンシルビューの作成に失敗", "Error", MB_OK);
 		return false;
 	}
 
@@ -527,7 +533,7 @@ bool DXManager::InitRasterizerState()
 	hr = pDevice->CreateRasterizerState(&rasterDesc, &pRasterState);
 	if (FAILED(hr))
 	{
-		MessageBox(NULL, "ラスタライザーステートの作成に失敗", "Error", S_OK);
+		MessageBox(NULL, "ラスタライザーステートの作成に失敗", "Error", MB_OK);
 		return false;
 	}
 

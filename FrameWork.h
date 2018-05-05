@@ -3,7 +3,7 @@
 
 #include "Engine.h"
 
-class FrameWork
+class FrameWork final
 {
 
 private:

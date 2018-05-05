@@ -71,7 +71,8 @@ void Engine::Draw()
 	pGraphics->BeginScene(0, 0, 0, 1);
 
 	//‚±‚±‚É•`‰æˆ—‚ð•`‚­
-
+	
+	//
 	pGraphics->EndScene();
 }
 

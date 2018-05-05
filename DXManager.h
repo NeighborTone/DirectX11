@@ -8,7 +8,7 @@
 #pragma comment(lib,"d3d11.lib")
 #pragma comment(lib,"dxgi.lib")
 #pragma comment(lib,"d3dCompiler.lib")
-class DXManager
+class DXManager final
 {
 private:
 	bool InitSwapChain(HWND hwnd, bool isfullscreen, int width, int height, unsigned  int numerator, unsigned int denominator);
