@@ -103,7 +103,7 @@ bool  DXManager::Create(int width, int height, bool vsync, HWND hwnd, bool isful
 	hr = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
 	if (FAILED(hr))
 	{
-		MessageBox(NULL, "DirectXGraphicインターフェイスの作成に失敗", "Error", S_OK);
+		MessageBox(NULL, "DirectXGraphicインターフェイスの作成に失敗", "Error", MB_OK);
 		return false;
 	}
 
@@ -111,7 +111,7 @@ bool  DXManager::Create(int width, int height, bool vsync, HWND hwnd, bool isful
 	hr = factory->EnumAdapters(0, &adapter);
 	if (FAILED(hr))
 	{
-		MessageBox(NULL, "DirectXGraphicインターフェイスファクトリーの作成に失敗", "Error", S_OK);
+		MessageBox(NULL, "DirectXGraphicインターフェイスファクトリーの作成に失敗", "Error", MB_OK);
 		return false;
 	}
 
@@ -119,7 +119,7 @@ bool  DXManager::Create(int width, int height, bool vsync, HWND hwnd, bool isful
 	hr = adapter->EnumOutputs(0, &adapterOutput);
 	if (FAILED(hr))
 	{
-		MessageBox(NULL, "プライマリアダプタの出力に失敗", "Error", S_OK);
+		MessageBox(NULL, "プライマリアダプタの出力に失敗", "Error", MB_OK);
 		return false;
 	}
 
@@ -131,7 +131,7 @@ bool  DXManager::Create(int width, int height, bool vsync, HWND hwnd, bool isful
 		NULL);									//表示リモードストへのポインターNULL に設定すると、表示モードの数を取得できる
 	if (FAILED(hr))
 	{
-		MessageBox(NULL, "ディスプレイフォーマットの取得に失敗", "Error", S_OK);
+		MessageBox(NULL, "ディスプレイフォーマットの取得に失敗", "Error", MB_OK);
 		return false;
 	}
 	//使用しているモニターとビデオカードで使用可能なモードを保持するリストを作成する
@@ -145,7 +145,7 @@ bool  DXManager::Create(int width, int height, bool vsync, HWND hwnd, bool isful
 		displayModeList);
 	if (FAILED(hr))
 	{
-		MessageBox(NULL, "ディスプレイフォーマットの指定に失敗", "Error", S_OK);
+		MessageBox(NULL, "ディスプレイフォーマットの指定に失敗", "Error", MB_OK);
 		return false;
 	}
 

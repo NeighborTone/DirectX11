@@ -1,4 +1,4 @@
-//ƒOƒ[ƒoƒ‹
+//ã‚°ãƒ­ãƒ¼ãƒãƒ«
 cbuffer MatrixBuffer
 {
     matrix worldMatrix;
@@ -21,24 +21,23 @@ struct PixelInputType
 };
 
 
-//ƒo[ƒeƒbƒNƒXƒVƒF[ƒ_[
-PixelInputType TextureVertexShader(VertexInputType input)
+//ãƒãƒ¼ãƒ†ãƒƒã‚¯ã‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
+PixelInputType VSMain(VertexInputType input)
 {
-	PixelInputType output;
-	
-	//“KØ‚Ès—ñŒvZ‚Ì‚½‚ß‚ÉˆÊ’uƒxƒNƒgƒ‹‚ğ4’PˆÊ‚É•ÏX
-	input.position.w = 1.0f;
-	
-	//ƒ[ƒ‹ƒhAƒrƒ…[A“Š‰es—ñ‚É‘Î‚µ‚Ä’¸“_‚ÌˆÊ’u‚ğŒvZ
-	output.position = mul(input.position, worldMatrix);
+    PixelInputType output;
+
+    //é©åˆ‡ãªè¡Œåˆ—è¨ˆç®—ã®ãŸã‚ã«ä½ç½®ãƒ™ã‚¯ãƒˆãƒ«ã‚’4å˜ä½ã«å¤‰æ›´
+    input.position.w = 1.0f;
+
+    //ãƒ¯ãƒ¼ãƒ«ãƒ‰ã€ãƒ“ãƒ¥ãƒ¼ã€æŠ•å½±è¡Œåˆ—ã«å¯¾ã—ã¦é ‚ç‚¹ã®ä½ç½®ã‚’è¨ˆç®—
+    output.position = mul(input.position, worldMatrix);
     output.position = mul(output.position, viewMatrix);
     output.position = mul(output.position, projectionMatrix);
 
-	 //ƒsƒNƒZƒ‹ƒVƒF[ƒ_‚ÌƒeƒNƒXƒ`ƒƒÀ•W‚ğŠi”[
+     //ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™ã‚’æ ¼ç´
     output.tex = input.tex;
     
     return output;
-
 }
 
 

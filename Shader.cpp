@@ -1,11 +1,12 @@
 #include "Shader.h"
-
-Shader::Shader(ID3D11Device* device, HWND hwnd, const char* shaderPath, const char* vertexFuncName, const char* pixelFuncName) :
+#include <d3dcompiler.h>
+#pragma comment(lib,"d3dCompiler.lib")
+Shader::Shader(ID3D11Device* device, HWND hwnd, const char* shaderPath) :
 	  pVertex(nullptr)
 	, pPixel(nullptr)
 	, pLayout(nullptr)
 	, pMatrixBuf(nullptr)
-	, isInit(Load(device, hwnd, shaderPath, vertexFuncName, pixelFuncName))
+	, isInit(Load(device, hwnd, shaderPath))
 {
 	
 }
@@ -28,15 +29,12 @@ Shader::~Shader()
 	{
 		RELEASE(pMatrixBuf);
 	}
-	if (name)
-	{
-		delete [] name;
-		name = nullptr;
-	}
+	
+	
 }
 
 //private---------------------------------------------------------------------------------------------------------------------------------------------------
-bool Shader::CreateShader(ID3D11Device* device, HWND hwnd, const char* vsPath, const char* psPath, const char* vertexFuncName, const char* pixelFuncName)
+bool Shader::CreateShader(ID3D11Device* device, HWND hwnd, const char* shaderPath)
 {
 	HRESULT hr;
 	ID3D10Blob* errorMessage = nullptr;
@@ -47,40 +45,40 @@ bool Shader::CreateShader(ID3D11Device* device, HWND hwnd, const char* vsPath, c
 	D3D11_BUFFER_DESC matrixBuf;
 
 	//バーテックシェーダーをコンパイル
-	hr = D3DX11CompileFromFile(
-		vsPath,
+	hr = D3DX11CompileFromFileA(
+		(LPCSTR)shaderPath,
 		NULL, 
 		NULL, 
-		vertexFuncName, 
-		"vs_5_0",
-		D3D10_SHADER_ENABLE_STRICTNESS, 
-		0, 
-		NULL, 
+		"VSMain",
+		"vs_4_0",
+		D3DCOMPILE_ENABLE_STRICTNESS,
+		0,
+		NULL,
 		&vertexBuf, 
-		&errorMessage, 
+		&errorMessage,
 		NULL);
 
 	if (FAILED(hr))
 	{
 		if (errorMessage)
 		{
-			OutputShaderError(errorMessage, hwnd, vsPath);
+			OutputShaderError(errorMessage, hwnd, shaderPath);
 		}
 		else
 		{
-			MessageBox(hwnd, vsPath, "Error in Shade File", MB_OK);
+			MessageBox(hwnd, (LPCSTR)shaderPath, "Error in Shade File", MB_OK);
 		}
 
 		return false;
 	}
 
 	//ピクセルシェーダーをコンパイル
-	hr = D3DX11CompileFromFile(
-		psPath,
+	hr = D3DX11CompileFromFileA(
+		(LPCSTR)shaderPath,
 		NULL,
 		NULL,
-		pixelFuncName,
-		"ps_5_0",
+		"PSMain",
+		"ps_4_0",
 		D3D10_SHADER_ENABLE_STRICTNESS,
 		0,
 		NULL,
@@ -92,11 +90,11 @@ bool Shader::CreateShader(ID3D11Device* device, HWND hwnd, const char* vsPath, c
 	{
 		if (errorMessage)
 		{
-			OutputShaderError(errorMessage, hwnd, psPath);
+			OutputShaderError(errorMessage, hwnd, shaderPath);
 		}
 		else
 		{
-			MessageBox(hwnd, psPath, "Error in Shade File", MB_OK);
+			MessageBox(hwnd, (LPCSTR)shaderPath, "Error in Shade File", MB_OK);
 		}
 
 		return false;
@@ -198,28 +196,20 @@ void Shader::OutputShaderError(ID3D10Blob* errorMes, HWND hwnd, const char* shad
 }
 
 //protected------------------------------------------------------------------------------------------------------------------------------------------------
-bool Shader::Load(ID3D11Device* device, HWND hwnd, const char* shaderPath, const char* vertexFuncName, const char* pixelFuncName)
+bool Shader::Load(ID3D11Device* device, HWND hwnd, const std::string shaderPath)
 {
 	//シェーダーファイルを読み込む
 	bool result;
-	name = new char[strlen(shaderPath) + 1]; //ヌル文字分開ける
-	memcpy(name, shaderPath, strlen(shaderPath + 1));
-
-	char vsPath[100];
-	strcpy_s(vsPath, shaderPath);
-	strcat_s(vsPath, ".vs");
-
-	vsPath[strlen(shaderPath) + 4] = '\0';
-
-
-	char psPath[100];
-	strcpy_s(psPath, shaderPath);
-	strcat_s(psPath, ".ps");
-
-	psPath[strlen(shaderPath) + 4] = '\0';
+	std::string shaderFilePath(shaderPath);
+	name = std::string(shaderFilePath.begin(), shaderFilePath.end());
+	int pos = name.find_last_of("/");
+	if (pos >= 0)
+	{
+		name = name.substr(pos + 1, name.length());
+	}
 
 	//頂点とピクセルの初期化
-	result = CreateShader(device, hwnd, vsPath, psPath, vertexFuncName, pixelFuncName);
+	result = CreateShader(device, hwnd,(LPCSTR)shaderPath.c_str());
 	return result;
 }
 
@@ -289,7 +279,7 @@ bool Shader::SetShaderParameters(ID3D11DeviceContext* context, Matrix world, Mat
 	return true;
 }
 
-char* Shader::GetName()
+std::string Shader::GetName()
 {
 	return name;
 }

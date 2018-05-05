@@ -1,14 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="shader">
-      <UniqueIdentifier>{39384c27-5ac9-46b7-9fc1-947add361354}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DX11">
-      <UniqueIdentifier>{9592eb39-c256-4f8b-af64-32b9338906f0}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="FrameWork.cpp" />
     <ClCompile Include="DXManager.cpp" />
@@ -16,6 +8,8 @@
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="TextureShader.cpp" />
+    <ClCompile Include="VertexBuffer.cpp" />
+    <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FrameWork.h" />
@@ -26,5 +20,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Matrix.hpp" />
     <ClInclude Include="TextureShader.h" />
+    <ClInclude Include="VertexBuffer.h" />
+    <ClInclude Include="Texture.h" />
   </ItemGroup>
 </Project>

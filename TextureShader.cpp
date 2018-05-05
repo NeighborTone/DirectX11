@@ -1,7 +1,7 @@
 #include "TextureShader.h"
 
-TextureShader::TextureShader(ID3D11Device* device, HWND hwnd, const char* shaderPath, const char* vertexFuncName, const char* pixelFuncName) :
-	Shader(device,hwnd,shaderPath,vertexFuncName,pixelFuncName)
+TextureShader::TextureShader(ID3D11Device* device, HWND hwnd, const char* shaderPath) :
+	Shader(device,hwnd,shaderPath)
 {
 }
 
@@ -13,13 +13,8 @@ TextureShader::~TextureShader()
 	}
 }
 
-bool TextureShader::Load(ID3D11Device* device, HWND hwnd, const char* shaderPath, const char* vertexFuncName, const char* pixelFuncName)
+bool TextureShader::Load(ID3D11Device* device, HWND hwnd)
 {
-	if (!Super::Load(device, hwnd, shaderPath, vertexFuncName, pixelFuncName))
-	{
-		return false;
-	}
-
 	D3D11_SAMPLER_DESC samplerDesc;
 	HRESULT hr;
 
@@ -50,6 +45,7 @@ bool TextureShader::Load(ID3D11Device* device, HWND hwnd, const char* shaderPath
 
 void TextureShader::Begin(ID3D11DeviceContext* context, int indexCount)
 {
+	//—áŠO‚ªƒXƒ[
 	context->PSSetSamplers(0, 1, &pSampler);
 	Super::Begin(context, indexCount);
 }

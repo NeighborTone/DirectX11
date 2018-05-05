@@ -9,7 +9,7 @@ private:
 
 	ID3D11SamplerState* pSampler;
 public:
-	TextureShader(ID3D11Device* device, HWND hwnd, const char* shaderPath, const char* vertexFuncName, const char* pixelFuncName);
+	TextureShader(ID3D11Device* device, HWND hwnd, const char* shaderPath);
 	~TextureShader();
 
 	void Begin(ID3D11DeviceContext* context, int indexCount);
@@ -17,7 +17,7 @@ public:
 	void End(ID3D11DeviceContext* context);
 
 protected:
-	bool Load(ID3D11Device* device, HWND hwnd, const char* shaderPath, const char* vertexFuncName, const char* pixelFuncName);
+	bool Load(ID3D11Device* device, HWND hwnd);
 
 };
 
