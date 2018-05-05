@@ -90,7 +90,7 @@ void Engine::Draw()
 	
 
 	D3DXVECTOR3 pos = D3DXVECTOR3(0,0,-100.0f);
-	D3DXVECTOR3 up   = D3DXVECTOR3(0,1.0f,0);
+	D3DXVECTOR3 up = D3DXVECTOR3(0,1.0f,0);
 	D3DXVECTOR3 lookAt = D3DXVECTOR3(0,0,1);
 
 	D3DXMatrixLookAtLH(&view, &pos, &lookAt, &up);
