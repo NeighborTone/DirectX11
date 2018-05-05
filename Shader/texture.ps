@@ -1,0 +1,21 @@
+//グローバル
+
+Texture2D shaderTexture;
+SamplerState SampleType;
+
+struct PixelInputType
+{
+    float4 position : SV_POSITION;
+    float2 tex : TEXCOORD0;
+};
+
+//ピクセルシェーダー
+float4 PSMain(PixelInputType input) : SV_TARGET
+{
+    float4 textureColor = float4(1, 1, 1, 1);
+
+    //このテクスチャ座標位置でサンプラを使用して、テクスチャからピクセルカラーをサンプリング
+    textureColor = shaderTexture.Sample(SampleType, input.tex);
+	//テクスチャーから得たピクセルの色を返す
+    return textureColor;
+}

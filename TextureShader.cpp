@@ -1,7 +1,7 @@
 #include "TextureShader.h"
 
-TextureShader::TextureShader(ID3D11Device* device, HWND hwnd, const char* shaderPath) :
-	Shader(device,hwnd,shaderPath)
+TextureShader::TextureShader(ID3D11Device* device, HWND hwnd, const char* shaderPath, const char* vertexFuncName, const char* pixelFuncName) :
+	Shader(device,hwnd,shaderPath,vertexFuncName,pixelFuncName)
 {
 }
 

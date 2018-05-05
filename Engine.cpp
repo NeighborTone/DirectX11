@@ -35,7 +35,7 @@ bool Engine::Create(HINSTANCE hinstance, HWND hwnd)
 {
 	pGraphics->Create();
 
-	textureShader = new TextureShader(pGraphics->GetDevice(),hwnd,"texture.fx");
+	textureShader = new TextureShader(pGraphics->GetDevice(),hwnd,"texture","VSMain","PSMain");
 
 	texture = new Texture();
 	texture->Create(pGraphics->GetDevice(), "mario-shell-sprite.png");

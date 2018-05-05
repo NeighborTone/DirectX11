@@ -9,7 +9,7 @@ private:
 
 	ID3D11SamplerState* pSampler;
 public:
-	TextureShader(ID3D11Device* device, HWND hwnd, const char* shaderPath);
+	TextureShader(ID3D11Device* device, HWND hwnd, const char* shaderPath, const char* vertexFuncName, const char* pixelFuncName);
 	~TextureShader();
 
 	void Begin(ID3D11DeviceContext* context, int indexCount);

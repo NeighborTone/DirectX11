@@ -1,14 +1,13 @@
 #include "Shader.h"
-#include <d3dcompiler.h>
-#pragma comment(lib,"d3dCompiler.lib")
-Shader::Shader(ID3D11Device* device, HWND hwnd, const char* shaderPath) :
-	  pVertex(nullptr)
+
+Shader::Shader(ID3D11Device* device, HWND hwnd, const char* shaderPath, const char* vertexFuncName, const char* pixelFuncName) :
+	pVertex(nullptr)
 	, pPixel(nullptr)
 	, pLayout(nullptr)
 	, pMatrixBuf(nullptr)
-	, isInit(Load(device, hwnd, shaderPath))
+	, isInit(Load(device, hwnd, shaderPath, vertexFuncName, pixelFuncName))
 {
-	
+
 }
 
 Shader::~Shader()
@@ -29,32 +28,35 @@ Shader::~Shader()
 	{
 		RELEASE(pMatrixBuf);
 	}
-	
-	
+	if (name)
+	{
+		delete[] name;
+		name = nullptr;
+	}
 }
 
 //private---------------------------------------------------------------------------------------------------------------------------------------------------
-bool Shader::CreateShader(ID3D11Device* device, HWND hwnd, const char* shaderPath)
+bool Shader::CreateShader(ID3D11Device* device, HWND hwnd, const char* vsPath, const char* psPath, const char* vertexFuncName, const char* pixelFuncName)
 {
 	HRESULT hr;
 	ID3D10Blob* errorMessage = nullptr;
-	ID3D10Blob* vertexBuf		= nullptr;
-	ID3D10Blob* psBuf			= nullptr;
+	ID3D10Blob* vertexBuf = nullptr;
+	ID3D10Blob* psBuf = nullptr;
 	D3D11_INPUT_ELEMENT_DESC polygonLayout[2];
 	unsigned int numElements;
 	D3D11_BUFFER_DESC matrixBuf;
 
 	//バーテックシェーダーをコンパイル
-	hr = D3DX11CompileFromFileA(
-		(LPCSTR)shaderPath,
-		NULL, 
-		NULL, 
-		"VSMain",
-		"vs_4_0",
-		D3DCOMPILE_ENABLE_STRICTNESS,
+	hr = D3DX11CompileFromFile(
+		vsPath,
+		NULL,
+		NULL,
+		vertexFuncName,
+		"vs_5_0",
+		D3D10_SHADER_ENABLE_STRICTNESS,
 		0,
 		NULL,
-		&vertexBuf, 
+		&vertexBuf,
 		&errorMessage,
 		NULL);
 
@@ -62,23 +64,23 @@ bool Shader::CreateShader(ID3D11Device* device, HWND hwnd, const char* shaderPat
 	{
 		if (errorMessage)
 		{
-			OutputShaderError(errorMessage, hwnd, shaderPath);
+			OutputShaderError(errorMessage, hwnd, vsPath);
 		}
 		else
 		{
-			MessageBox(hwnd, (LPCSTR)shaderPath, "Error in Shade File", MB_OK);
+			MessageBox(hwnd, vsPath, "Error in Shade File", MB_OK);
 		}
 
 		return false;
 	}
 
 	//ピクセルシェーダーをコンパイル
-	hr = D3DX11CompileFromFileA(
-		(LPCSTR)shaderPath,
+	hr = D3DX11CompileFromFile(
+		psPath,
 		NULL,
 		NULL,
-		"PSMain",
-		"ps_4_0",
+		pixelFuncName,
+		"ps_5_0",
 		D3D10_SHADER_ENABLE_STRICTNESS,
 		0,
 		NULL,
@@ -90,11 +92,11 @@ bool Shader::CreateShader(ID3D11Device* device, HWND hwnd, const char* shaderPat
 	{
 		if (errorMessage)
 		{
-			OutputShaderError(errorMessage, hwnd, shaderPath);
+			OutputShaderError(errorMessage, hwnd, psPath);
 		}
 		else
 		{
-			MessageBox(hwnd, (LPCSTR)shaderPath, "Error in Shade File", MB_OK);
+			MessageBox(hwnd, psPath, "Error in Shade File", MB_OK);
 		}
 
 		return false;
@@ -102,9 +104,9 @@ bool Shader::CreateShader(ID3D11Device* device, HWND hwnd, const char* shaderPat
 
 	//バーテックスシェーダーのバッファを作る
 	hr = device->CreateVertexShader(
-		vertexBuf->GetBufferPointer(), 
-		vertexBuf->GetBufferSize(), 
-		NULL, 
+		vertexBuf->GetBufferPointer(),
+		vertexBuf->GetBufferSize(),
+		NULL,
 		&pVertex);
 	if (FAILED(hr))
 	{
@@ -113,9 +115,9 @@ bool Shader::CreateShader(ID3D11Device* device, HWND hwnd, const char* shaderPat
 
 	//ピクセルシェーダーのバッファを作る
 	hr = device->CreatePixelShader(
-		psBuf->GetBufferPointer(), 
-		psBuf->GetBufferSize(), 
-		NULL, 
+		psBuf->GetBufferPointer(),
+		psBuf->GetBufferSize(),
+		NULL,
 		&pPixel);
 	if (FAILED(hr))
 	{
@@ -131,22 +133,22 @@ bool Shader::CreateShader(ID3D11Device* device, HWND hwnd, const char* shaderPat
 	polygonLayout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;			//単一の入力スロットの入力データ クラスを識別
 	polygonLayout[0].InstanceDataStepRate = 0;											//バッファーの中で要素の 1 つ分進む前に、インスタンス単位の同じデータを使用して描画するインスタンスの数
 
-	polygonLayout[1].SemanticName = "TEXCOORD";										
-	polygonLayout[1].SemanticIndex = 0;													
-	polygonLayout[1].Format = DXGI_FORMAT_R32G32_FLOAT;							
-	polygonLayout[1].InputSlot = 0;															
-	polygonLayout[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;		
-	polygonLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;			
-	polygonLayout[1].InstanceDataStepRate = 0;											
+	polygonLayout[1].SemanticName = "TEXCOORD";
+	polygonLayout[1].SemanticIndex = 0;
+	polygonLayout[1].Format = DXGI_FORMAT_R32G32_FLOAT;
+	polygonLayout[1].InputSlot = 0;
+	polygonLayout[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	polygonLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	polygonLayout[1].InstanceDataStepRate = 0;
 
-	numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);			
+	numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
 
 	//入力レイアウトオブジェクトを作成
 	hr = device->CreateInputLayout(
 		polygonLayout,
 		numElements,
 		vertexBuf->GetBufferPointer(),
-		vertexBuf->GetBufferSize(), 
+		vertexBuf->GetBufferSize(),
 		&pLayout);
 	if (FAILED(hr))
 	{
@@ -165,7 +167,7 @@ bool Shader::CreateShader(ID3D11Device* device, HWND hwnd, const char* shaderPat
 	matrixBuf.MiscFlags = 0;												//リソースに使用される、あまり一般的でないその他のオプション
 	matrixBuf.StructureByteStride = 0;								//構造体が構造化バッファーを表す場合、その構造体のサイズ (バイト単位) 
 
-	//バッファポインタを作成する
+																	//バッファポインタを作成する
 	hr = device->CreateBuffer(&matrixBuf, NULL, &pMatrixBuf);
 	if (FAILED(hr))
 	{
@@ -196,20 +198,28 @@ void Shader::OutputShaderError(ID3D10Blob* errorMes, HWND hwnd, const char* shad
 }
 
 //protected------------------------------------------------------------------------------------------------------------------------------------------------
-bool Shader::Load(ID3D11Device* device, HWND hwnd, const std::string shaderPath)
+bool Shader::Load(ID3D11Device* device, HWND hwnd, const char* shaderPath, const char* vertexFuncName, const char* pixelFuncName)
 {
 	//シェーダーファイルを読み込む
 	bool result;
-	std::string shaderFilePath(shaderPath);
-	name = std::string(shaderFilePath.begin(), shaderFilePath.end());
-	int pos = name.find_last_of("/");
-	if (pos >= 0)
-	{
-		name = name.substr(pos + 1, name.length());
-	}
+	name = new char[strlen(shaderPath) + 1]; //ヌル文字分開ける
+	memcpy(name, shaderPath, strlen(shaderPath + 1));
+
+	char vsPath[100];
+	strcpy_s(vsPath, shaderPath);
+	strcat_s(vsPath, ".vs");
+
+	vsPath[strlen(shaderPath) + 4] = '\0';
+
+
+	char psPath[100];
+	strcpy_s(psPath, shaderPath);
+	strcat_s(psPath, ".ps");
+
+	psPath[strlen(shaderPath) + 4] = '\0';
 
 	//頂点とピクセルの初期化
-	result = CreateShader(device, hwnd,(LPCSTR)shaderPath.c_str());
+	result = CreateShader(device, hwnd, vsPath, psPath, vertexFuncName, pixelFuncName);
 	return result;
 }
 
@@ -218,7 +228,7 @@ void Shader::Begin(ID3D11DeviceContext* context, int indexCount)
 {
 	//コンテキストに頂点の設定をする
 	context->IASetInputLayout(pLayout);
-	
+
 	//レンダリングに使用する頂点シェーダとピクセルシェーダを設定する
 	context->VSSetShader(pVertex, NULL, 0);
 	context->PSSetShader(pPixel, NULL, 0);
@@ -279,7 +289,7 @@ bool Shader::SetShaderParameters(ID3D11DeviceContext* context, Matrix world, Mat
 	return true;
 }
 
-std::string Shader::GetName()
+char* Shader::GetName()
 {
 	return name;
 }

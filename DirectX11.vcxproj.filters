@@ -23,4 +23,9 @@
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="Texture.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{312da80b-68f7-4f9e-b81c-b3b5288b715b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
 </Project>
