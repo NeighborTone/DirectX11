@@ -38,10 +38,10 @@ bool Engine::Create(HINSTANCE hinstance, HWND hwnd)
 	textureShader = new TextureShader(pGraphics->GetDevice(),hwnd,"texture","VSMain","PSMain");
 
 	texture = new Texture();
-	texture->Create(pGraphics->GetDevice(), "mario-shell-sprite.png");
+	texture->Create(pGraphics->GetDevice(), "ƒJ[ƒ\ƒ‹.png");
 
 	vBuf = new VertexBuffer();
-	vBuf->Create(pGraphics->GetDevice(), textureShader, 32.0f, false);
+	vBuf->Create(pGraphics->GetDevice(), textureShader, 80.0f, false);
 	return true;
 }
 
@@ -82,19 +82,20 @@ void Engine::Update()
 
 void Engine::Draw()
 {
+	pGraphics->EnableAlphaBlending(true);
 	pGraphics->BeginScene(0, 0, 0, 1);
 
 	//‚±‚±‚É•`‰æˆ—‚ð•`‚­
-	Matrix view ,proj,world;
+	D3DXMATRIX view ,proj,world;
 	
 
 	D3DXVECTOR3 pos = D3DXVECTOR3(0,0,-100.0f);
-	D3DXVECTOR3 up = D3DXVECTOR3(0,1.0f,0);
+	D3DXVECTOR3 up   = D3DXVECTOR3(0,1.0f,0);
 	D3DXVECTOR3 lookAt = D3DXVECTOR3(0,0,1);
 
-	view.MatrixLookAtLH(&view, pos.x, pos.y, pos.z, lookAt.x, lookAt.y, lookAt.z, up.x, up.y, up.z);
-	proj.MatrixIdentity(&proj);
-	world.MatrixIdentity(&world);
+	D3DXMatrixLookAtLH(&view, &pos, &lookAt, &up);
+	D3DXMatrixOrthoLH(&proj, (float)Defs::SCREEN_WIDTH, (float)Defs::SCREEN_HEIGHT, 0.1f, 1000.0f);
+	D3DXMatrixIdentity(&world);
 
 	textureShader->SetShaderParameters(pGraphics->GetDeviceContext(), texture->GetTexture());
 	textureShader->SetShaderParameters(pGraphics->GetDeviceContext(), world, view, proj);

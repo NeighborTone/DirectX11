@@ -3,6 +3,7 @@
 TextureShader::TextureShader(ID3D11Device* device, HWND hwnd, const char* shaderPath, const char* vertexFuncName, const char* pixelFuncName) :
 	Shader(device,hwnd,shaderPath,vertexFuncName,pixelFuncName)
 {
+	isInit = CreateSampleState(device);
 }
 
 TextureShader::~TextureShader()
@@ -13,8 +14,18 @@ TextureShader::~TextureShader()
 	}
 }
 
-bool TextureShader::Load(ID3D11Device* device, HWND hwnd)
+bool TextureShader::Load(ID3D11Device* device, HWND hwnd, const char* shaderPath, const char* vertexFuncName, const char* pixelFuncName)
 {
+	if (!Shader::Load(device, hwnd, shaderPath, vertexFuncName, pixelFuncName))
+	{
+		return false;
+	}
+	return true;
+}
+
+bool TextureShader::CreateSampleState(ID3D11Device* device)
+{
+
 	D3D11_SAMPLER_DESC samplerDesc;
 	HRESULT hr;
 
@@ -32,7 +43,7 @@ bool TextureShader::Load(ID3D11Device* device, HWND hwnd)
 	samplerDesc.MinLOD = 0;													//アクセスをクランプするミップマップ範囲の下限です。0は最大かつ最も詳細なミップマップレベル
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;							//アクセスをクランプするミップマップ範囲の上限
 
-	//テクスチャーのサンプリング情報をカプセル化するサンプラーステートの作成
+																	//テクスチャーのサンプリング情報をカプセル化するサンプラーステートの作成
 	hr = device->CreateSamplerState(&samplerDesc, &pSampler);
 	if (FAILED(hr))
 	{

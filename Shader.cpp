@@ -251,12 +251,17 @@ bool Shader::SetShaderParameters(ID3D11DeviceContext* context, ID3D11ShaderResou
 	return true;
 }
 
-bool Shader::SetShaderParameters(ID3D11DeviceContext* context, Matrix world, Matrix view, Matrix proj)
+bool Shader::SetShaderParameters(ID3D11DeviceContext* context, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX proj)
 {
 	HRESULT hr;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	MatrixBufferType* dataPtr;
 	unsigned int bufferNumber;
+
+	//行列を変換してシェーダ用に準備
+	D3DXMatrixTranspose(&world,&world);
+	D3DXMatrixTranspose(&view,&view);
+	D3DXMatrixTranspose(&proj,&proj);
 
 	//定数バッファをロックして書き込み可能にする
 	hr = context->Map(pMatrixBuf, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
@@ -268,10 +273,6 @@ bool Shader::SetShaderParameters(ID3D11DeviceContext* context, Matrix world, Mat
 	//定数バッファ内のデータへのポインタを取得
 	dataPtr = (MatrixBufferType*)mappedResource.pData;
 
-	//行列を変換してシェーダ用に準備
-	world.MatrixTranspose(&world);
-	view.MatrixTranspose(&view);
-	proj.MatrixTranspose(&proj);
 	//行列を定数バッファにコピー
 	dataPtr->world = world;
 	dataPtr->view = view;

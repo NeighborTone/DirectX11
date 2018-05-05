@@ -17,8 +17,8 @@ public:
 	void End(ID3D11DeviceContext* context);
 
 protected:
-	bool Load(ID3D11Device* device, HWND hwnd);
-
+	bool Load(ID3D11Device* device, HWND hwnd, const char* shaderPath, const char* vertexFuncName, const char* pixelFuncName);
+	bool CreateSampleState(ID3D11Device* device);
 };
 
  
