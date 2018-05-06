@@ -1,10 +1,8 @@
 #pragma once
 #pragma warning( disable : 4005 )	//DirectXƒ}ƒNƒÄ’è‹`
-#define RELEASE(p) {p->Release(); p = nullptr;}
 #include <d3d11.h>
 #include <D3DX10mesh.h>
 #include <D3DX11async.h>
-#include "Matrix.hpp"
 #include <fstream>
 #pragma comment(lib,"d3d11.lib")
 #pragma comment(lib,"d3dx10.lib")

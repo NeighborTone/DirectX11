@@ -1,5 +1,5 @@
 #include "Texture.h"
-
+#include "SystemDefs.h"
 Texture::Texture() :
 	pTexture(nullptr),
 	width(0),
@@ -10,11 +10,7 @@ Texture::Texture() :
 
 Texture::~Texture()
 {
-	if (pTexture)
-	{
-		pTexture->Release();
-		pTexture = nullptr;
-	}
+	Memory::SafeRelease(pTexture);
 }
 
 bool Texture::Create(ID3D11Device* device, const char * path)

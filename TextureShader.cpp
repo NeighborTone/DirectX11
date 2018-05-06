@@ -1,5 +1,5 @@
 #include "TextureShader.h"
-
+#include "SystemDefs.h"
 TextureShader::TextureShader(ID3D11Device* device, HWND hwnd, const char* shaderPath, const char* vertexFuncName, const char* pixelFuncName) :
 	Shader(device,hwnd,shaderPath,vertexFuncName,pixelFuncName)
 {
@@ -8,10 +8,8 @@ TextureShader::TextureShader(ID3D11Device* device, HWND hwnd, const char* shader
 
 TextureShader::~TextureShader()
 {
-	if (pSampler)
-	{
-		RELEASE(pSampler);
-	}
+	Memory::SafeRelease(pSampler);
+	
 }
 
 bool TextureShader::Load(ID3D11Device* device, HWND hwnd, const char* shaderPath, const char* vertexFuncName, const char* pixelFuncName)

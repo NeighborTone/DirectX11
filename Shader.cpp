@@ -1,4 +1,5 @@
 #include "Shader.h"
+#include "SystemDefs.h"
 
 Shader::Shader(ID3D11Device* device, HWND hwnd, const char* shaderPath, const char* vertexFuncName, const char* pixelFuncName) :
 	pVertex(nullptr)
@@ -12,27 +13,12 @@ Shader::Shader(ID3D11Device* device, HWND hwnd, const char* shaderPath, const ch
 
 Shader::~Shader()
 {
-	if (pVertex)
-	{
-		RELEASE(pVertex);
-	}
-	if (pPixel)
-	{
-		RELEASE(pPixel);
-	}
-	if (pLayout)
-	{
-		RELEASE(pLayout);
-	}
-	if (pMatrixBuf)
-	{
-		RELEASE(pMatrixBuf);
-	}
-	if (name)
-	{
-		delete[] name;
-		name = nullptr;
-	}
+	Memory::SafeRelease(pVertex);
+	Memory::SafeRelease(pPixel);
+	Memory::SafeRelease(pLayout);
+	Memory::SafeRelease(pMatrixBuf);
+	Memory::SafeDeleteArr(name);
+	
 }
 
 //private---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -156,8 +142,8 @@ bool Shader::CreateShader(ID3D11Device* device, HWND hwnd, const char* vsPath, c
 	}
 
 	//作成が終わったので余分なバッファを破棄
-	RELEASE(vertexBuf);
-	RELEASE(psBuf);
+	Memory::SafeRelease(vertexBuf);
+	Memory::SafeRelease(psBuf);
 
 	//マトリックスバッファの設定
 	matrixBuf.ByteWidth = sizeof(MatrixBufferType);				//バッファーのサイズ (バイト単位)
@@ -191,7 +177,7 @@ void Shader::OutputShaderError(ID3D10Blob* errorMes, HWND hwnd, const char* shad
 	}
 	fout.close();
 
-	RELEASE(errorMes);
+	Memory::SafeRelease(errorMes);
 
 	MessageBox(hwnd, "Error compiling shader. Check shader-error.txt for message", shaderPath, MB_OK);
 

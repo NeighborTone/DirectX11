@@ -1,5 +1,5 @@
 #include "Graphics.h"
-
+#include "SystemDefs.h"
 
 Graphics::Graphics()
 {
@@ -9,11 +9,8 @@ Graphics::Graphics()
 
 Graphics::~Graphics()
 {
-	if (pManager)
-	{
-		delete pManager;
-		pManager = nullptr;
-	}
+	Memory::SafeDelete(pManager);
+
 }
 
 bool Graphics::CreateDX(HWND hwnd)

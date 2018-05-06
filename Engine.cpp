@@ -1,4 +1,5 @@
 #include "Engine.h"
+#include "SystemDefs.h"
 
 Engine* Engine::instance = nullptr;
 
@@ -12,11 +13,8 @@ Engine::Engine()
 
 Engine::~Engine()
 {
-	if (pGraphics)
-	{
-		delete pGraphics;
-		pGraphics = nullptr;
-	}
+	Memory::SafeDelete(pGraphics);
+	//‰¼
 	delete vBuf;
 	delete textureShader;
 	delete texture;

@@ -1,5 +1,5 @@
 #include "VertexBuffer.h"
-
+#include "SystemDefs.h"
 VertexBuffer::VertexBuffer() :
 	pVertices(nullptr),
 	pVertexBuffer(nullptr),
@@ -11,19 +11,10 @@ VertexBuffer::VertexBuffer() :
 
 VertexBuffer::~VertexBuffer()
 {
-	if (pVertices)
-	{
-		delete[] pVertices;
-		pVertices = nullptr;
-	}
-	if (pVertexBuffer)
-	{
-		RELEASE(pVertexBuffer);
-	}
-	if (pIndexBuffer)
-	{
-		RELEASE(pIndexBuffer);
-	}
+	Memory::SafeDeleteArr(pVertices);
+	Memory::SafeRelease(pVertexBuffer);
+	Memory::SafeRelease(pIndexBuffer);
+
 }
 
 bool VertexBuffer::Create(ID3D11Device* device, Shader* shader, float size, bool writeable)
@@ -109,8 +100,8 @@ bool VertexBuffer::Create(ID3D11Device* device, Shader* shader, float size, bool
 	}
 
 	//”jŠü
-	delete[] indices;
-	indices = 0;
+	Memory::SafeDeleteArr(indices);
+	
 
 	return true;
 }
