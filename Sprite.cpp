@@ -14,11 +14,11 @@ Sprite::~Sprite()
 	Memory::SafeDelete(pTex);
 }
 
-void Sprite::Create(ID3D11Device* device, Shader* shader, const char* texturePath, bool isAnim)
+void Sprite::Create(ID3D11Device* device, Shader* shader, const char* texturePath, bool isWriteAble)
 {
 	pShader = shader;
 	pVerBuf = new VertexBuffer();
-	pVerBuf->Create(device, shader, size, isAnim);
+	pVerBuf->Create(device, shader, size, isWriteAble);
 
 	if (texturePath != nullptr)
 	{

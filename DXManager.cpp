@@ -1,78 +1,41 @@
 #include "DXManager.h"
+#include "SystemDefs.h"
 
 DXManager::DXManager() :
-pSwapChain(nullptr),
-pDevice(nullptr),
-pDeviceContext(nullptr),
-pRenderTargetView(nullptr),
-pDepthStencilBuffer(nullptr),
-pDepthStencilState(nullptr),
-pDepthStencilView(nullptr),
-pRasterState(nullptr),
-pAlphaEnableBlendingState(nullptr),
-pAlphaDisableBlendingState(nullptr),
-pDepthDisabledStencilState(nullptr)
+	pSwapChain(nullptr),
+	pDevice(nullptr),
+	pDeviceContext(nullptr),
+	pRenderTargetView(nullptr),
+	pDepthStencilBuffer(nullptr),
+	pDepthStencilState(nullptr),
+	pDepthStencilView(nullptr),
+	pRasterState(nullptr),
+	pAlphaEnableBlendingState(nullptr),
+	pAlphaDisableBlendingState(nullptr),
+	pDepthDisabledStencilState(nullptr)
 {
 
 }
 
 
-DXManager::~DXManager()				 
-{											  
+DXManager::~DXManager()
+{
 	if (pSwapChain)
 	{
-		pSwapChain->SetFullscreenState(false,nullptr);
+		pSwapChain->SetFullscreenState(false, nullptr);
 	}
+	Memory::SafeRelease(pDevice);
+	Memory::SafeRelease(pDeviceContext);
+	Memory::SafeRelease(pRenderTargetView);
+	Memory::SafeRelease(pDepthStencilBuffer);
+	Memory::SafeRelease(pDepthStencilState);
+	Memory::SafeRelease(pDepthStencilView);
+	Memory::SafeRelease(pRasterState);
+	Memory::SafeRelease(pAlphaEnableBlendingState);
+	Memory::SafeRelease(pAlphaDisableBlendingState);
+	Memory::SafeRelease(pDepthDisabledStencilState);
 
-	if (pDevice)
-	{
-		RELEASE(pDevice);
-	}
 
-	if (pDeviceContext)
-	{
-		RELEASE(pDeviceContext);
-	}
-
-	if (pRenderTargetView)
-	{
-		RELEASE(pRenderTargetView);
-	}
-
-	if (pDepthStencilBuffer)
-	{
-		RELEASE(pDepthStencilBuffer);
-	}
-
-	if (pDepthStencilState)
-	{
-		RELEASE(pDepthStencilState);
-	}
-
-	if (pDepthStencilView)
-	{
-		RELEASE(pDepthStencilView);
-	}
-
-	if (pRasterState)
-	{
-		RELEASE(pRasterState);
-	}
-
-	if (pAlphaEnableBlendingState)
-	{
-		RELEASE(pAlphaEnableBlendingState);
-	}
-
-	if (pAlphaDisableBlendingState)
-	{
-		RELEASE(pAlphaDisableBlendingState);
-	}
-
-	if (pDepthDisabledStencilState)
-	{
-		RELEASE(pDepthDisabledStencilState);
-	}
 
 
 }
@@ -85,10 +48,10 @@ bool  DXManager::Create(int width, int height, bool vsync, HWND hwnd, bool isful
 	IDXGIAdapter* adapter;			//ディスプレイ表示を行なうためのデバイス(ディスプレイサブシステム)
 	IDXGIOutput* adapterOutput;		//モニターなどに出力するためのインターフェース
 
-	unsigned int 
-		numModes, 
+	unsigned int
+		numModes,
 		numerator = 0,
-		denominator = 0, 
+		denominator = 0,
 		stringLength;
 
 	DXGI_MODE_DESC* displayModeList;
@@ -127,8 +90,8 @@ bool  DXManager::Create(int width, int height, bool vsync, HWND hwnd, bool isful
 	hr = adapterOutput->GetDisplayModeList(
 		DXGI_FORMAT_R8G8B8A8_UNORM,		//カラーフォーマット
 		DXGI_ENUM_MODES_INTERLACED,		//オプション
-		&numModes,						//モード数が返る
-		NULL);							//表示リモードストへのポインターNULL に設定すると、表示モードの数を取得できる
+		&numModes,								//モード数が返る
+		NULL);									//表示リモードストへのポインターNULL に設定すると、表示モードの数を取得できる
 	if (FAILED(hr))
 	{
 		MessageBox(NULL, "ディスプレイフォーマットの取得に失敗", "Error", MB_OK);
@@ -139,8 +102,8 @@ bool  DXManager::Create(int width, int height, bool vsync, HWND hwnd, bool isful
 
 	//取得した表示モードリストでモードを指定する
 	hr = adapterOutput->GetDisplayModeList(
-		DXGI_FORMAT_R8G8B8A8_UNORM, 
-		DXGI_ENUM_MODES_INTERLACED, 
+		DXGI_FORMAT_R8G8B8A8_UNORM,
+		DXGI_ENUM_MODES_INTERLACED,
 		&numModes,
 		displayModeList);
 	if (FAILED(hr))
@@ -182,11 +145,11 @@ bool  DXManager::Create(int width, int height, bool vsync, HWND hwnd, bool isful
 
 	//ビデオカードの名前を文字配列に変換する
 	error = wcstombs_s(
-		&stringLength,				//変換された文字数。
+		&stringLength,					//変換された文字数。
 		videoCardDescription,		//変換されたマルチバイト文字の文字列を生成されるバッファーのアドレス。
-		128,						//サイズのバイト数
+		128,								//サイズのバイト数
 		adapterDesc.Description,	//変換するワイド文字の文字列へのポインター。
-		128);						//格納されるバイトの最大数、
+		128);								//格納されるバイトの最大数、
 	if (error != 0)
 	{
 		MessageBox(NULL, "ビデオカードが取得できませんでした", "Error", MB_OK);
@@ -194,14 +157,12 @@ bool  DXManager::Create(int width, int height, bool vsync, HWND hwnd, bool isful
 	}
 
 	//もういらないので破棄
-	delete[] displayModeList;
-	displayModeList = 0;
+	Memory::SafeDeleteArr(displayModeList);
+	Memory::SafeRelease(adapterOutput);
+	Memory::SafeRelease(adapter);
+	Memory::SafeRelease(factory);
 
-	RELEASE(adapterOutput);
-	RELEASE(adapter);
-	RELEASE(factory);
-
-	if (!InitSwapChain(hwnd, isfullscreen, width, height,numerator,denominator))
+	if (!InitSwapChain(hwnd, isfullscreen, width, height, numerator, denominator))
 	{
 		return false;
 	}
@@ -222,7 +183,7 @@ bool  DXManager::Create(int width, int height, bool vsync, HWND hwnd, bool isful
 		return false;
 	}
 	//バックバッファの破棄
-	RELEASE(backBufferPtr);
+	Memory::SafeRelease(backBufferPtr);
 
 	if (!InitDepthBuffer(width, height))
 	{
@@ -273,8 +234,8 @@ void  DXManager::BeginScene(float r, float g, float b, float a)
 	color[2] = b;
 	color[3] = a;
 
-	
-	pDeviceContext->ClearRenderTargetView(pRenderTargetView, color);	
+
+	pDeviceContext->ClearRenderTargetView(pRenderTargetView, color);
 	pDeviceContext->ClearDepthStencilView(pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
 }
@@ -401,18 +362,18 @@ bool DXManager::InitSwapChain(HWND hwnd, bool isfullscreen, int width, int heigh
 
 	//スワップチェイン(フロントバッファ)とコンテキストの作成
 	hr = D3D11CreateDeviceAndSwapChain(
-		NULL,						//デバイスの作成時に使用するビデオアダプターへのポインター
+		NULL,									//デバイスの作成時に使用するビデオアダプターへのポインター
 		D3D_DRIVER_TYPE_HARDWARE,	//作成するデバイスの種類
-		NULL,						//ソフトウェアラスタライザーを実装するDLLのハンドル
-		0,							//有効にするランタイムレイヤー
-		feature,					//作成を試みる機能レベルの順序を指定するD3D_FEATURE_LEVELの配列へのポインター
-		6,							//pFeatureLevelsの要素数
-		D3D11_SDK_VERSION,			//SDKのバージョン。D3D11_SDK_VERSIONを指定
-		&swapDesc,					//スワップチェーンの初期化パラメーターを格納するスワップチェーンの記述へのポインター
-		&pSwapChain,				//レンダリングに使用するスワップ チェーンを表すIDXGISwapChainオブジェクトへのポインターのアドレスを返す
-		&pDevice,					//作成されたデバイスを表すID3D11Deviceオブジェクトへのポインターのアドレスを返す。NULLを指定すると、pFeatureLevelでサポートされている最高の機能レベルが返される
-		NULL,						//このデバイスでサポートされている機能レベルの配列にある最初の要素を表すD3D_FEATURE_LEVELへのポインターを返す
-		&pDeviceContext);			//デバイス コンテキストを表すID3D11DeviceContextオブジェクトへのポインターのアドレスを返す
+		NULL,									//ソフトウェアラスタライザーを実装するDLLのハンドル
+		0,										//有効にするランタイムレイヤー
+		feature,								//作成を試みる機能レベルの順序を指定するD3D_FEATURE_LEVELの配列へのポインター
+		6,										//pFeatureLevelsの要素数
+		D3D11_SDK_VERSION,				//SDKのバージョン。D3D11_SDK_VERSIONを指定
+		&swapDesc,							//スワップチェーンの初期化パラメーターを格納するスワップチェーンの記述へのポインター
+		&pSwapChain,						//レンダリングに使用するスワップ チェーンを表すIDXGISwapChainオブジェクトへのポインターのアドレスを返す
+		&pDevice,							//作成されたデバイスを表すID3D11Deviceオブジェクトへのポインターのアドレスを返す。NULLを指定すると、pFeatureLevelでサポートされている最高の機能レベルが返される
+		NULL,									//このデバイスでサポートされている機能レベルの配列にある最初の要素を表すD3D_FEATURE_LEVELへのポインターを返す
+		&pDeviceContext);				//デバイス コンテキストを表すID3D11DeviceContextオブジェクトへのポインターのアドレスを返す
 	if (FAILED(hr))
 	{
 		MessageBox(NULL, "スワップチェーンの作成に失敗", "Error", MB_OK);
@@ -427,22 +388,22 @@ bool DXManager::InitDepthBuffer(int width, int height)
 	SecureZeroMemory(&depthBuf, sizeof(depthBuf));
 
 	//デプスバッファ(Zバッファ)の設定
-	depthBuf.Width = width;								//幅
-	depthBuf.Height = height;							//高さ
-	depthBuf.MipLevels = 1;								//ミップマップ(テクスチャの画像を補完する)レベルの最大数
-	depthBuf.ArraySize = 1;								//テクスチャー配列内のテクスチャーの数
+	depthBuf.Width = width;											//幅
+	depthBuf.Height = height;										//高さ
+	depthBuf.MipLevels = 1;											//ミップマップ(テクスチャの画像を補完する)レベルの最大数
+	depthBuf.ArraySize = 1;											//テクスチャー配列内のテクスチャーの数
 	depthBuf.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;	//テキスチャーフォーマット
-	depthBuf.SampleDesc.Count = 1;						//マルチサンプリング(アンチエイリアシング)パラメーターを指定する構造体
-	depthBuf.SampleDesc.Quality = 0;					//マルチサンプリング(アンチエイリアシング)パラメーターを指定する構造体
-	depthBuf.Usage = D3D11_USAGE_DEFAULT;				//テクスチャーの読み込みおよび書き込み方法を識別する値
+	depthBuf.SampleDesc.Count = 1;								//マルチサンプリング(アンチエイリアシング)パラメーターを指定する構造体
+	depthBuf.SampleDesc.Quality = 0;							//マルチサンプリング(アンチエイリアシング)パラメーターを指定する構造体
+	depthBuf.Usage = D3D11_USAGE_DEFAULT;					//テクスチャーの読み込みおよび書き込み方法を識別する値
 	depthBuf.BindFlags = D3D11_BIND_DEPTH_STENCIL;		//パイプラインステージへのバインドに関するフラグ
-	depthBuf.CPUAccessFlags = 0;						//許可するCPUアクセスの種類を指定するフラグ
-	depthBuf.MiscFlags = 0;								//他の一般性の低いリソース オプションを識別するフラグ
+	depthBuf.CPUAccessFlags = 0;									//許可するCPUアクセスの種類を指定するフラグ
+	depthBuf.MiscFlags = 0;											//他の一般性の低いリソース オプションを識別するフラグ
 
 	//深度バッファの作成
 	hr = pDevice->CreateTexture2D(
-		&depthBuf, 
-		NULL, 
+		&depthBuf,
+		NULL,
 		&pDepthStencilBuffer);
 	if (FAILED(hr))
 	{
@@ -501,7 +462,7 @@ bool DXManager::InitStencilView()
 	//深度ステンシル ビューからアクセス可能なテクスチャーのサブリソースを指定する
 	depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;		//リソースのデータフォーマット
 	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;	//リソースのタイプ
-	depthStencilViewDesc.Texture2D.MipSlice = 0;										
+	depthStencilViewDesc.Texture2D.MipSlice = 0;
 
 	//デプスステンシルビューの作成
 	hr = pDevice->CreateDepthStencilView(pDepthStencilBuffer, &depthStencilViewDesc, &pDepthStencilView);
@@ -553,7 +514,7 @@ void DXManager::InitViewport(int width, int height)
 	viewport.TopLeftX = 0.0f;
 	viewport.TopLeftY = 0.0f;
 
-	
+
 	pDeviceContext->RSSetViewports(1, &viewport);
 }
 bool DXManager::InitAlphaBlending()

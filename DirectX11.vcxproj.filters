@@ -12,6 +12,7 @@
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="AnimatedSprite.cpp" />
+    <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FrameWork.h" />
@@ -26,10 +27,14 @@
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="AnimatedSprite.h" />
+    <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shader">
       <UniqueIdentifier>{312da80b-68f7-4f9e-b81c-b3b5288b715b}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

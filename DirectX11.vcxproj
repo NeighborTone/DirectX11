@@ -29,6 +29,7 @@
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureShader.cpp" />
+    <ClCompile Include="Timer.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -43,7 +44,11 @@
     <ClInclude Include="SystemDefs.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureShader.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="VertexBuffer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

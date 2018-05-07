@@ -1,6 +1,6 @@
 #pragma once
 //この順番でインクルード
-#include "Sprite.h"
+#include "AnimatedSprite.h"
 #include "Graphics.h"
 #include "TextureShader.h"
 
@@ -25,6 +25,6 @@ public:
 	Graphics* GetGraphics();
 	static Engine* GetInst();
 
-	Sprite* pSprite;
+	AnimatedSprite* pSprite;
 };
 

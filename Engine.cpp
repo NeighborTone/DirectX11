@@ -28,8 +28,9 @@ bool Engine::Create(HINSTANCE hinstance, HWND hwnd)
 {
 	pGraphics->Create();
 	TextureShader* shader = new TextureShader(pGraphics->GetDevice(), hwnd,"texture", "VSMain", "PSMain");
-	pSprite = new Sprite(192.0f);
-	pSprite->Create(pGraphics->GetDevice(), shader, "mario-shell-sprite.png");
+	//pSprite = new Sprite(100.f);	//”{—¦H
+	pSprite = new AnimatedSprite(64.0f, 24.0f);
+	pSprite->Create(pGraphics->GetDevice(),pGraphics->GetDeviceContext(), shader, "mario-shell-sprite.png");
 	return true;
 }
 
@@ -65,7 +66,7 @@ Engine* Engine::GetInst()
 //private-------------------------------------------------------------
 void Engine::Update()
 {
-
+	pSprite->Update();
 }
 
 void Engine::Draw()
