@@ -81,8 +81,8 @@ bool  DXManager::Create(int width, int height, bool vsync, HWND hwnd, bool isful
 {
 	HRESULT hr;
 	//DirectXグラフィックスインフラストラクチャー(DXGI)
-	IDXGIFactory* factory;				//フルスクリーン切り替えを処理する
-	IDXGIAdapter* adapter;				//ディスプレイ表示を行なうためのデバイス(ディスプレイサブシステム)
+	IDXGIFactory* factory;			//フルスクリーン切り替えを処理する
+	IDXGIAdapter* adapter;			//ディスプレイ表示を行なうためのデバイス(ディスプレイサブシステム)
 	IDXGIOutput* adapterOutput;		//モニターなどに出力するためのインターフェース
 
 	unsigned int 
@@ -127,8 +127,8 @@ bool  DXManager::Create(int width, int height, bool vsync, HWND hwnd, bool isful
 	hr = adapterOutput->GetDisplayModeList(
 		DXGI_FORMAT_R8G8B8A8_UNORM,		//カラーフォーマット
 		DXGI_ENUM_MODES_INTERLACED,		//オプション
-		&numModes,								//モード数が返る
-		NULL);									//表示リモードストへのポインターNULL に設定すると、表示モードの数を取得できる
+		&numModes,						//モード数が返る
+		NULL);							//表示リモードストへのポインターNULL に設定すると、表示モードの数を取得できる
 	if (FAILED(hr))
 	{
 		MessageBox(NULL, "ディスプレイフォーマットの取得に失敗", "Error", MB_OK);
@@ -182,11 +182,11 @@ bool  DXManager::Create(int width, int height, bool vsync, HWND hwnd, bool isful
 
 	//ビデオカードの名前を文字配列に変換する
 	error = wcstombs_s(
-		&stringLength,					//変換された文字数。
+		&stringLength,				//変換された文字数。
 		videoCardDescription,		//変換されたマルチバイト文字の文字列を生成されるバッファーのアドレス。
-		128,								//サイズのバイト数
+		128,						//サイズのバイト数
 		adapterDesc.Description,	//変換するワイド文字の文字列へのポインター。
-		128);								//格納されるバイトの最大数、
+		128);						//格納されるバイトの最大数、
 	if (error != 0)
 	{
 		MessageBox(NULL, "ビデオカードが取得できませんでした", "Error", MB_OK);
@@ -401,18 +401,18 @@ bool DXManager::InitSwapChain(HWND hwnd, bool isfullscreen, int width, int heigh
 
 	//スワップチェイン(フロントバッファ)とコンテキストの作成
 	hr = D3D11CreateDeviceAndSwapChain(
-		NULL,									//デバイスの作成時に使用するビデオアダプターへのポインター
+		NULL,						//デバイスの作成時に使用するビデオアダプターへのポインター
 		D3D_DRIVER_TYPE_HARDWARE,	//作成するデバイスの種類
-		NULL,									//ソフトウェアラスタライザーを実装するDLLのハンドル
-		0,										//有効にするランタイムレイヤー
-		feature,								//作成を試みる機能レベルの順序を指定するD3D_FEATURE_LEVELの配列へのポインター
-		6,										//pFeatureLevelsの要素数
-		D3D11_SDK_VERSION,				//SDKのバージョン。D3D11_SDK_VERSIONを指定
-		&swapDesc,							//スワップチェーンの初期化パラメーターを格納するスワップチェーンの記述へのポインター
-		&pSwapChain,						//レンダリングに使用するスワップ チェーンを表すIDXGISwapChainオブジェクトへのポインターのアドレスを返す
-		&pDevice,							//作成されたデバイスを表すID3D11Deviceオブジェクトへのポインターのアドレスを返す。NULLを指定すると、pFeatureLevelでサポートされている最高の機能レベルが返される
-		NULL,									//このデバイスでサポートされている機能レベルの配列にある最初の要素を表すD3D_FEATURE_LEVELへのポインターを返す
-		&pDeviceContext);				//デバイス コンテキストを表すID3D11DeviceContextオブジェクトへのポインターのアドレスを返す
+		NULL,						//ソフトウェアラスタライザーを実装するDLLのハンドル
+		0,							//有効にするランタイムレイヤー
+		feature,					//作成を試みる機能レベルの順序を指定するD3D_FEATURE_LEVELの配列へのポインター
+		6,							//pFeatureLevelsの要素数
+		D3D11_SDK_VERSION,			//SDKのバージョン。D3D11_SDK_VERSIONを指定
+		&swapDesc,					//スワップチェーンの初期化パラメーターを格納するスワップチェーンの記述へのポインター
+		&pSwapChain,				//レンダリングに使用するスワップ チェーンを表すIDXGISwapChainオブジェクトへのポインターのアドレスを返す
+		&pDevice,					//作成されたデバイスを表すID3D11Deviceオブジェクトへのポインターのアドレスを返す。NULLを指定すると、pFeatureLevelでサポートされている最高の機能レベルが返される
+		NULL,						//このデバイスでサポートされている機能レベルの配列にある最初の要素を表すD3D_FEATURE_LEVELへのポインターを返す
+		&pDeviceContext);			//デバイス コンテキストを表すID3D11DeviceContextオブジェクトへのポインターのアドレスを返す
 	if (FAILED(hr))
 	{
 		MessageBox(NULL, "スワップチェーンの作成に失敗", "Error", MB_OK);
@@ -427,17 +427,17 @@ bool DXManager::InitDepthBuffer(int width, int height)
 	SecureZeroMemory(&depthBuf, sizeof(depthBuf));
 
 	//デプスバッファ(Zバッファ)の設定
-	depthBuf.Width = width;											//幅
-	depthBuf.Height = height;										//高さ
-	depthBuf.MipLevels = 1;											//ミップマップ(テクスチャの画像を補完する)レベルの最大数
-	depthBuf.ArraySize = 1;											//テクスチャー配列内のテクスチャーの数
+	depthBuf.Width = width;								//幅
+	depthBuf.Height = height;							//高さ
+	depthBuf.MipLevels = 1;								//ミップマップ(テクスチャの画像を補完する)レベルの最大数
+	depthBuf.ArraySize = 1;								//テクスチャー配列内のテクスチャーの数
 	depthBuf.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;	//テキスチャーフォーマット
-	depthBuf.SampleDesc.Count = 1;								//マルチサンプリング(アンチエイリアシング)パラメーターを指定する構造体
-	depthBuf.SampleDesc.Quality = 0;							//マルチサンプリング(アンチエイリアシング)パラメーターを指定する構造体
-	depthBuf.Usage = D3D11_USAGE_DEFAULT;					//テクスチャーの読み込みおよび書き込み方法を識別する値
+	depthBuf.SampleDesc.Count = 1;						//マルチサンプリング(アンチエイリアシング)パラメーターを指定する構造体
+	depthBuf.SampleDesc.Quality = 0;					//マルチサンプリング(アンチエイリアシング)パラメーターを指定する構造体
+	depthBuf.Usage = D3D11_USAGE_DEFAULT;				//テクスチャーの読み込みおよび書き込み方法を識別する値
 	depthBuf.BindFlags = D3D11_BIND_DEPTH_STENCIL;		//パイプラインステージへのバインドに関するフラグ
-	depthBuf.CPUAccessFlags = 0;									//許可するCPUアクセスの種類を指定するフラグ
-	depthBuf.MiscFlags = 0;											//他の一般性の低いリソース オプションを識別するフラグ
+	depthBuf.CPUAccessFlags = 0;						//許可するCPUアクセスの種類を指定するフラグ
+	depthBuf.MiscFlags = 0;								//他の一般性の低いリソース オプションを識別するフラグ
 
 	//深度バッファの作成
 	hr = pDevice->CreateTexture2D(
@@ -459,13 +459,13 @@ bool DXManager::InitDepthStencilBuffer()
 	SecureZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
 
 	//デスクリプションの設定
-	depthStencilDesc.DepthEnable = true;											//深度テストを使用可能にする
+	depthStencilDesc.DepthEnable = true;							//深度テストを使用可能にする
 	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;	//深度ステンシルバッファーの中で、深度データによる変更が可能な部分を識別
-	depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;					//深度データを既存の深度データと比較する関数
+	depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;				//深度データを既存の深度データと比較する関数
 
-	depthStencilDesc.StencilEnable = true;										//ステンシルテストを使用可能にします。
-	depthStencilDesc.StencilReadMask = 0xFF;									//深度ステンシルバッファーの中で、ステンシルデータを読み取る部分を識別
-	depthStencilDesc.StencilWriteMask = 0xFF;									//深度ステンシルバッファーの中で、ステンシルデータを書き込む部分を識別
+	depthStencilDesc.StencilEnable = true;							//ステンシルテストを使用可能にします。
+	depthStencilDesc.StencilReadMask = 0xFF;						//深度ステンシルバッファーの中で、ステンシルデータを読み取る部分を識別
+	depthStencilDesc.StencilWriteMask = 0xFF;						//深度ステンシルバッファーの中で、ステンシルデータを書き込む部分を識別
 
 	//法線がカメラの方向を向いているサーフェス(表面)を持つピクセルの深度テストとステンシルテストの結果を使用する方法を識別
 	depthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
@@ -499,7 +499,7 @@ bool DXManager::InitStencilView()
 	SecureZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
 
 	//深度ステンシル ビューからアクセス可能なテクスチャーのサブリソースを指定する
-	depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;				//リソースのデータフォーマット
+	depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;		//リソースのデータフォーマット
 	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;	//リソースのタイプ
 	depthStencilViewDesc.Texture2D.MipSlice = 0;										
 
@@ -521,13 +521,13 @@ bool DXManager::InitRasterizerState()
 
 	rasterDesc.AntialiasedLineEnable = false;	//線のアンチエイリアシングを有効。線を描画中でMultisampleEnableがfalseの場合にのみ適用
 	rasterDesc.CullMode = D3D11_CULL_BACK;		//指定の方向を向いている三角形が描画されないことを示す
-	rasterDesc.DepthBias = 0;							//指定のピクセルに加算する深度値
-	rasterDesc.DepthBiasClamp = 0.0f;				//ピクセルの最大深度バイアス(偏り)
+	rasterDesc.DepthBias = 0;					//指定のピクセルに加算する深度値
+	rasterDesc.DepthBiasClamp = 0.0f;			//ピクセルの最大深度バイアス(偏り)
 	rasterDesc.DepthClipEnable = true;			//距離に基づいてクリッピングを有効
 	rasterDesc.FillMode = D3D11_FILL_SOLID;		//レンダリング時に使用する描画モードを決定
 	rasterDesc.FrontCounterClockwise = false;	//三角形が前向きか後ろ向きかを決定。のパラメーターがtrueの場合、三角形の頂点がレンダーターゲット上で左回りならば三角形は前向きと見なされ、右回りならば後ろ向きと見なされ、このパラメーターがfalseの場合は逆になる
 	rasterDesc.MultisampleEnable = false;		//マルチサンプリングのアンチエイリアシングを有効
-	rasterDesc.ScissorEnable = false;				//シザー矩形カリングを有効
+	rasterDesc.ScissorEnable = false;			//シザー矩形カリングを有効
 	rasterDesc.SlopeScaledDepthBias = 0.0f;		//指定のピクセルのスロープに対するスカラ
 
 	hr = pDevice->CreateRasterizerState(&rasterDesc, &pRasterState);
@@ -563,14 +563,14 @@ bool DXManager::InitAlphaBlending()
 	SecureZeroMemory(&blendStateDesc, sizeof(D3D11_BLEND_DESC));
 
 	//アルファブレンディングの設定
-	blendStateDesc.RenderTarget[0].BlendEnable = true;									//ブレンディングを有効(または無効) 
-	blendStateDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;				//最初のRGBデータソースを指定
+	blendStateDesc.RenderTarget[0].BlendEnable = true;							//ブレンディングを有効(または無効) 
+	blendStateDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;			//最初のRGBデータソースを指定
 	blendStateDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;		//2番目のRGBデータソースを指定
-	blendStateDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;					//RGBデータソースの組合せ方法を定義
+	blendStateDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;				//RGBデータソースの組合せ方法を定義
 	blendStateDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;				//最初のアルファ データ ソースを指定
 	blendStateDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;			//2番目のアルファデータソースを指定
 	blendStateDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;			//アルファ データ ソースの組合せ方法を定義
-	blendStateDesc.RenderTarget[0].RenderTargetWriteMask = 0x0f;					//書き込みマスク
+	blendStateDesc.RenderTarget[0].RenderTargetWriteMask = 0x0f;				//書き込みマスク
 
 	//有効なアルファブレンド状態を作成する
 	hr = pDevice->CreateBlendState(&blendStateDesc, &pAlphaEnableBlendingState);

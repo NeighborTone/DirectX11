@@ -10,6 +10,8 @@
     <ClCompile Include="TextureShader.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="AnimatedSprite.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FrameWork.h" />
@@ -22,6 +24,8 @@
     <ClInclude Include="TextureShader.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="Sprite.h" />
+    <ClInclude Include="AnimatedSprite.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shader">

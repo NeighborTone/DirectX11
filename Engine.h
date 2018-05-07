@@ -1,10 +1,8 @@
 #pragma once
 //この順番でインクルード
-#include "Texture.h"	//<d3d11_1.h>は先にインクルドする
+#include "Sprite.h"
 #include "Graphics.h"
-#include "Shader.h"
 #include "TextureShader.h"
-#include "VertexBuffer.h"
 
 class Engine final
 {
@@ -17,10 +15,6 @@ private:
 	Graphics* pGraphics;
 	static Engine* instance;
 
-	//TEMP
-	VertexBuffer*		vBuf;
-	TextureShader*	textureShader;
-	Texture*			texture;
 public:
 	
 	~Engine();
@@ -31,5 +25,6 @@ public:
 	Graphics* GetGraphics();
 	static Engine* GetInst();
 
+	Sprite* pSprite;
 };
 

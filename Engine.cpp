@@ -6,18 +6,13 @@ Engine* Engine::instance = nullptr;
 Engine::Engine()
 {
 	pGraphics = nullptr;
-	vBuf = nullptr;
-	textureShader = nullptr;
-	texture = nullptr;
+
 }
 
 Engine::~Engine()
 {
 	Memory::SafeDelete(pGraphics);
-	//‰¼
-	delete vBuf;
-	delete textureShader;
-	delete texture;
+	Memory::SafeDelete(pSprite);
 }
 
 
@@ -32,14 +27,9 @@ bool Engine::CreateGraphics(HWND hwnd)
 bool Engine::Create(HINSTANCE hinstance, HWND hwnd)
 {
 	pGraphics->Create();
-
-	textureShader = new TextureShader(pGraphics->GetDevice(),hwnd,"texture","VSMain","PSMain");
-
-	texture = new Texture();
-	texture->Create(pGraphics->GetDevice(), "ƒJ[ƒ\ƒ‹.png");
-
-	vBuf = new VertexBuffer();
-	vBuf->Create(pGraphics->GetDevice(), textureShader, 80.0f, false);
+	TextureShader* shader = new TextureShader(pGraphics->GetDevice(), hwnd,"texture", "VSMain", "PSMain");
+	pSprite = new Sprite(192.0f);
+	pSprite->Create(pGraphics->GetDevice(), shader, "mario-shell-sprite.png");
 	return true;
 }
 
@@ -84,9 +74,8 @@ void Engine::Draw()
 	pGraphics->BeginScene(0, 0, 0, 1);
 
 	//‚±‚±‚É•`‰æˆ—‚ð•`‚­
+	//‰¼‚ÌƒJƒƒ‰
 	D3DXMATRIX view ,proj,world;
-	
-
 	D3DXVECTOR3 pos = D3DXVECTOR3(0,0,-100.0f);
 	D3DXVECTOR3 up = D3DXVECTOR3(0,1.0f,0);
 	D3DXVECTOR3 lookAt = D3DXVECTOR3(0,0,1);
@@ -95,11 +84,8 @@ void Engine::Draw()
 	D3DXMatrixOrthoLH(&proj, (float)Defs::SCREEN_WIDTH, (float)Defs::SCREEN_HEIGHT, 0.1f, 1000.0f);
 	D3DXMatrixIdentity(&world);
 
-	textureShader->SetShaderParameters(pGraphics->GetDeviceContext(), texture->GetTexture());
-	textureShader->SetShaderParameters(pGraphics->GetDeviceContext(), world, view, proj);
-
-	vBuf->Draw(pGraphics->GetDeviceContext());
-
+	pSprite->Render(pGraphics->GetDeviceContext(), world, view, proj);
+	
 	//
 	pGraphics->EndScene();
 }

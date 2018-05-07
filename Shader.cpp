@@ -111,13 +111,13 @@ bool Shader::CreateShader(ID3D11Device* device, HWND hwnd, const char* vsPath, c
 	}
 
 	//シェーダに入るデータのレイアウトを設定する
-	polygonLayout[0].SemanticName = "POSITION";										//シェーダー入力署名でこの要素に関連付けられているHLSLセマンティクス(ソースコード中で利用されている変数や文が正しく動作するかを判断する基準)
-	polygonLayout[0].SemanticIndex = 0;													//要素のセマンティクスインデックス
-	polygonLayout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;						//要素データのデータ型
-	polygonLayout[0].InputSlot = 0;															//入力アセンブラーを識別する整数値
-	polygonLayout[0].AlignedByteOffset = 0;												//(省略可能)各要素間のオフセット (バイト単位)
+	polygonLayout[0].SemanticName = "POSITION";								//シェーダー入力署名でこの要素に関連付けられているHLSLセマンティクス(ソースコード中で利用されている変数や文が正しく動作するかを判断する基準)
+	polygonLayout[0].SemanticIndex = 0;										//要素のセマンティクスインデックス
+	polygonLayout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;					//要素データのデータ型
+	polygonLayout[0].InputSlot = 0;											//入力アセンブラーを識別する整数値
+	polygonLayout[0].AlignedByteOffset = 0;									//(省略可能)各要素間のオフセット (バイト単位)
 	polygonLayout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;			//単一の入力スロットの入力データ クラスを識別
-	polygonLayout[0].InstanceDataStepRate = 0;											//バッファーの中で要素の 1 つ分進む前に、インスタンス単位の同じデータを使用して描画するインスタンスの数
+	polygonLayout[0].InstanceDataStepRate = 0;								//バッファーの中で要素の 1 つ分進む前に、インスタンス単位の同じデータを使用して描画するインスタンスの数
 
 	polygonLayout[1].SemanticName = "TEXCOORD";
 	polygonLayout[1].SemanticIndex = 0;
