@@ -1,8 +1,8 @@
 #include "System.h"
-#include "SystemDefs.h"
+
 System::System()
 {
-	
+	SetWindowSize();
 }
 
 System::~System()
@@ -10,15 +10,19 @@ System::~System()
 	DestroyWindow(handle);		//ウィンドウの破棄
 }
 
+void System::SetWindowSize(UINT w, UINT h)
+{
+	SCREEN_W = w;
+	SCREEN_H = h;
+}
 
-LRESULT CALLBACK WndProc(HWND hwnd, UINT mes, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK WndProc(HWND hWnd, UINT mes, WPARAM wParam, LPARAM lParam)
 {
 
 	switch (mes)
 	{
 	case WM_DESTROY:
 		PostQuitMessage(0);		//アプリケーションの終了
-		DestroyWindow(hwnd);
 		return 0;
 
 
@@ -29,12 +33,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT mes, WPARAM wParam, LPARAM lParam)
 	if (GetKeyState(VK_ESCAPE) & 0x8000)
 	{
 		PostQuitMessage(0);		
-		DestroyWindow(hwnd);
 		return 0;
 	}
 
 	//デフォルトウィンドウ状態
-	return DefWindowProc(hwnd, mes, wParam, lParam);
+	return DefWindowProc(hWnd, mes, wParam, lParam);
 }
 bool System::Create(std::string str ,HINSTANCE& hInstance, int& nCmdShow)
 {
@@ -65,10 +68,10 @@ bool System::Create(std::string str ,HINSTANCE& hInstance, int& nCmdShow)
 				str.c_str(),				//ウィンドウクラスの名前
 				str.c_str(),				//タイトルバーのテキスト
 				WS_OVERLAPPEDWINDOW,	//ウィンドウのスタイル
-				Defs::WINDOW_POSX,		//ウィンドウの水平位置のデフォルト
-				Defs::WINDOW_POSY,		//ウィンドウの垂直位置のデフォルト
-				Defs::SCREEN_WIDTH,		//幅
-				Defs::SCREEN_HEIGHT,		//高さ
+				200,							//ウィンドウの水平位置のデフォルト
+				50,								//ウィンドウの垂直位置のデフォルト
+				Width(),						//幅
+				Height(),						//高さ
 				NULL,							//親ウィンドウなし
 				NULL,							//メニューなし
 				hInstance,					//アプリケーションインスタンスへのハンドル
@@ -82,7 +85,7 @@ bool System::Create(std::string str ,HINSTANCE& hInstance, int& nCmdShow)
 
 	//ウィンドウ作成
 	ShowWindow(handle, nCmdShow);
-	SetForegroundWindow(handle);
+
 	//ウィンドウプロシージャにWM_PAINTメッセージを送る
 	UpdateWindow(handle);
 	

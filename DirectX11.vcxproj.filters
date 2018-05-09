@@ -1,46 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="FrameWork.cpp" />
-    <ClCompile Include="DXManager.cpp" />
-    <ClCompile Include="Graphics.cpp" />
-    <ClCompile Include="Engine.cpp" />
-    <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="TextureShader.cpp" />
-    <ClCompile Include="VertexBuffer.cpp" />
-    <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="Sprite.cpp" />
-    <ClCompile Include="AnimatedSprite.cpp" />
-    <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="ResourceTexture.cpp" />
-    <ClCompile Include="ResourceShader.cpp" />
-    <ClCompile Include="ResourceManager.cpp" />
+    <ClInclude Include="System.h" />
+    <ClInclude Include="Mainloop.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FrameWork.h" />
-    <ClInclude Include="SystemDefs.h" />
-    <ClInclude Include="DXManager.h" />
-    <ClInclude Include="Graphics.h" />
-    <ClInclude Include="Engine.h" />
-    <ClInclude Include="Shader.h" />
-    <ClInclude Include="Matrix.hpp" />
-    <ClInclude Include="TextureShader.h" />
-    <ClInclude Include="VertexBuffer.h" />
-    <ClInclude Include="Texture.h" />
-    <ClInclude Include="Sprite.h" />
-    <ClInclude Include="AnimatedSprite.h" />
-    <ClInclude Include="Timer.h" />
-    <ClInclude Include="ResourceTexture.h" />
-    <ClInclude Include="ResourceShader.h" />
-    <ClInclude Include="ResourceManager.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="Shader">
-      <UniqueIdentifier>{312da80b-68f7-4f9e-b81c-b3b5288b715b}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
+    <ClCompile Include="WinMain.cpp" />
+    <ClCompile Include="Mainloop.cpp" />
+    <ClCompile Include="System.cpp" />
   </ItemGroup>
 </Project>

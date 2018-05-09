@@ -1,15 +1,15 @@
 #include "Mainloop.h"
-#include "SystemDefs.h"
+
 
 bool Mainloop::Init(HINSTANCE hInstance, int nCmdShow)
 {
 	//ウィンドウ生成
-	const bool iswin = 	window.Create("title",hInstance, nCmdShow);
+	const bool iswin = 	window.Create("MyFrame",hInstance, nCmdShow);
 	//DirectXのデバイス生成
-	const bool isEngine = Engine::GetInst()->Create(window.GetWindow());
+
 	//ウィンドウ描画
 	const bool isshow = ShowWindow(window.GetWindow(), nCmdShow);
-	if (iswin  && isshow && isEngine)
+	if (iswin  && isshow)
 	{
 		
 		return true;
@@ -34,13 +34,11 @@ void Mainloop::Run()
 		}
 		else
 		{
-		Engine::GetInst()->Run();
-		Engine::GetInst()->Draw();
-
+	
 		}
 
 	//	ShowCursor(false);	//マウス非表示
 	
 	}
-	Engine::GetInst()->Release();
+
 }
