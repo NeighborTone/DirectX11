@@ -1,13 +1,13 @@
 #pragma once
 #include "System.h"
-#include "DirectX11.h"
+#include "Graphic.h"
 //メインループ処理を行う
 class Mainloop final
 {
 private:
 	MSG msg;
 	System window;
-	DirectX11 dx;
+	Graphic* dx;
 
 public:
 	Mainloop() {};

@@ -6,10 +6,10 @@ bool Mainloop::Init(HINSTANCE hInstance, int nCmdShow)
 	//ウィンドウ生成
 	const bool iswin = 	window.Create("MyFrame",hInstance, nCmdShow);
 	//DirectXのデバイス生成
-
+	dx = new Graphic(window.GetWindow());
 	//ウィンドウ描画
 	const bool isshow = ShowWindow(window.GetWindow(), nCmdShow);
-	if (iswin  && isshow && dx.Create(SystemHelp::SCREEN_WIDTH,SystemHelp::SCREEN_HEIGHT,SystemHelp::VSYNC_ENABLED,window.GetWindow(),SystemHelp::FULL_SCREEN))
+	if (iswin  && isshow)
 	{
 		
 		return true;
@@ -34,12 +34,11 @@ void Mainloop::Run()
 		}
 		else
 		{
-			dx.BeginScene(0,0,0,1);
-			dx.EndScene();
+			dx->Run();
 		}
 
 	//	ShowCursor(false);	//マウス非表示
 	
 	}
-
+	delete dx;
 }
