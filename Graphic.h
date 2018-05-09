@@ -8,9 +8,12 @@ public:
 	~Graphic();
 
 	DirectX11 directx;
+	DirectX11* GetDX();
+	void Begine();
+	void End();
 	void Run();
 private:
 	HWND hwnd;
 	void Update();
-	void Draw();
+	
 };

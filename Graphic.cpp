@@ -11,10 +11,15 @@ Graphic::~Graphic()
 
 }
 
+DirectX11* Graphic::GetDX()
+{
+	return &directx;
+}
+
 void Graphic::Run()
 {
 	Update();
-	Draw();
+
 }
 
 void Graphic::Update()
@@ -22,8 +27,14 @@ void Graphic::Update()
 
 }
 
-void Graphic::Draw()
+void Graphic::Begine()
 {
+	directx.EnableAlphaBlending(true);
+	directx.EnableZBuffer(true);
 	directx.BeginScene(0, 0, 0, 1);
+}
+
+void Graphic::End()
+{
 	directx.EndScene();
 }

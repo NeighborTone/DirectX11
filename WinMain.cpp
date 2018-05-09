@@ -22,7 +22,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		main.Run();
 	}
 
-	
 	//èIóπ
 	return 0;
 	

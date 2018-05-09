@@ -1,13 +1,14 @@
 #pragma once
 #include "System.h"
-#include "Graphic.h"
+#include "Engine.h"
+#include <memory>
 //メインループ処理を行う
 class Mainloop final
 {
 private:
 	MSG msg;
 	System window;
-	Graphic* dx;
+	Engine* engine;
 
 public:
 	Mainloop() {};

@@ -56,7 +56,7 @@ private:
 	ID3D11Texture2D*				pDepthStencilBuffer;
 	ID3D11DepthStencilState* pDepthStencilState;
 	ID3D11DepthStencilView*	pDepthStencilView;
-	ID3D11RasterizerState*		pRasterState;
+	ID3D11RasterizerState*	pRasterState;
 	ID3D11BlendState*			pAlphaEnableBlendingState;
 	ID3D11BlendState*			pAlphaDisableBlendingState;
 	ID3D11DepthStencilState* pDepthDisabledStencilState;

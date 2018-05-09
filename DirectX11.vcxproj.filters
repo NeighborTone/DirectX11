@@ -8,6 +8,10 @@
     </ClInclude>
     <ClInclude Include="SystemHelp.h" />
     <ClInclude Include="Graphic.h" />
+    <ClInclude Include="Engine.h" />
+    <ClInclude Include="Vector.h" />
+    <ClInclude Include="Vertex.h" />
+    <ClInclude Include="Shader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp" />
@@ -17,10 +21,17 @@
       <Filter>DX</Filter>
     </ClCompile>
     <ClCompile Include="Graphic.cpp" />
+    <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="Vector.cpp" />
+    <ClCompile Include="Vertex.cpp" />
+    <ClCompile Include="Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="DX">
       <UniqueIdentifier>{f89b8fd4-7a67-466f-a77e-7fad5ec452ce}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shader.hlsl" />
   </ItemGroup>
 </Project>

@@ -6,7 +6,7 @@ bool Mainloop::Init(HINSTANCE hInstance, int nCmdShow)
 	//ウィンドウ生成
 	const bool iswin = 	window.Create("MyFrame",hInstance, nCmdShow);
 	//DirectXのデバイス生成
-	dx = new Graphic(window.GetWindow());
+	engine->GetEngine()->Create(window.GetWindow());
 	//ウィンドウ描画
 	const bool isshow = ShowWindow(window.GetWindow(), nCmdShow);
 	if (iswin  && isshow)
@@ -34,11 +34,11 @@ void Mainloop::Run()
 		}
 		else
 		{
-			dx->Run();
+			
+			engine->GetEngine()->Run();
 		}
 
 	//	ShowCursor(false);	//マウス非表示
-	
 	}
-	delete dx;
+	engine->GetEngine()->Release();
 }
