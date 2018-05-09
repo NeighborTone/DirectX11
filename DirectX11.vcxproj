@@ -25,6 +25,9 @@
     <ClCompile Include="FrameWork.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="ResourceShader.cpp" />
+    <ClCompile Include="ResourceTexture.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -39,6 +42,9 @@
     <ClInclude Include="FrameWork.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Matrix.hpp" />
+    <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="ResourceShader.h" />
+    <ClInclude Include="ResourceTexture.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SystemDefs.h" />
@@ -125,10 +131,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
     </Link>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

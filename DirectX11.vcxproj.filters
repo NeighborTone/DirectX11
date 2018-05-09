@@ -13,6 +13,9 @@
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="AnimatedSprite.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="ResourceTexture.cpp" />
+    <ClCompile Include="ResourceShader.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FrameWork.h" />
@@ -28,6 +31,9 @@
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="AnimatedSprite.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="ResourceTexture.h" />
+    <ClInclude Include="ResourceShader.h" />
+    <ClInclude Include="ResourceManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shader">

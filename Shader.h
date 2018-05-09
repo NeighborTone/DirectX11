@@ -4,6 +4,7 @@
 #include <D3DX10mesh.h>
 #include <D3DX11async.h>
 #include <fstream>
+#include <string>
 
 #pragma comment(lib,"d3d11.lib")
 #pragma comment(lib,"d3dx10.lib")
@@ -18,7 +19,7 @@ private:
 	ID3D11PixelShader*  pPixel;
 	ID3D11InputLayout*  pLayout;
 	ID3D11Buffer*         pMatrixBuf;
-	char*						name;
+	std::string				name;
 	
 	struct MatrixBufferType
 	{
@@ -39,7 +40,7 @@ public:
 	bool SetShaderParameters(ID3D11DeviceContext* context, ID3D11ShaderResourceView* texture);
 	bool SetShaderParameters(ID3D11DeviceContext* context, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX proj);
 
-	char* GetName();
+	std::string GetName();
 	bool IsInit();
 
 protected:

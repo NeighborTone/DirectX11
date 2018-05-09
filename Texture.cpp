@@ -1,5 +1,7 @@
 #include "Texture.h"
 #include "SystemDefs.h"
+using namespace std;
+
 Texture::Texture() :
 	pTexture(nullptr),
 	width(0),
@@ -57,7 +59,7 @@ ID3D11ShaderResourceView* Texture::GetTexture()
 	return pTexture;
 }
 
-char* Texture::GetName()
+string Texture::GetName()
 {
 	return name;
 }
