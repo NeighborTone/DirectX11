@@ -1,5 +1,5 @@
 #include "Mainloop.h"
-
+#include "SystemHelp.h"
 
 bool Mainloop::Init(HINSTANCE hInstance, int nCmdShow)
 {
@@ -9,7 +9,7 @@ bool Mainloop::Init(HINSTANCE hInstance, int nCmdShow)
 
 	//ウィンドウ描画
 	const bool isshow = ShowWindow(window.GetWindow(), nCmdShow);
-	if (iswin  && isshow)
+	if (iswin  && isshow && dx.Create(SystemHelp::SCREEN_WIDTH,SystemHelp::SCREEN_HEIGHT,SystemHelp::VSYNC_ENABLED,window.GetWindow(),SystemHelp::FULL_SCREEN))
 	{
 		
 		return true;
@@ -34,7 +34,8 @@ void Mainloop::Run()
 		}
 		else
 		{
-	
+			dx.BeginScene(0,0,0,1);
+			dx.EndScene();
 		}
 
 	//	ShowCursor(false);	//マウス非表示

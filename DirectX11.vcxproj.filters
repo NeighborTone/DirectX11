@@ -3,10 +3,24 @@
   <ItemGroup>
     <ClInclude Include="System.h" />
     <ClInclude Include="Mainloop.h" />
+    <ClInclude Include="DirectX11.h">
+      <Filter>DX</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemHelp.h" />
+    <ClInclude Include="Graphic.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp" />
     <ClCompile Include="Mainloop.cpp" />
     <ClCompile Include="System.cpp" />
+    <ClCompile Include="DirectX11.cpp">
+      <Filter>DX</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphic.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="DX">
+      <UniqueIdentifier>{f89b8fd4-7a67-466f-a77e-7fad5ec452ce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
