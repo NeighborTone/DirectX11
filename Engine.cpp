@@ -1,13 +1,17 @@
 #include "Engine.h"
+#include <memory>
 
+std::string Engine::title = "";
 
-Engine::Engine()
+Engine::Engine(std::string WindowTitle)
 {
+	title = WindowTitle;
 	COMInitialize();
 }
 
 Engine::~Engine()
 {
+
 }
 
 void Engine::COMInitialize()
@@ -26,11 +30,23 @@ void Engine::COMInitialize()
 
 bool Engine::Run()
 {
+	GetDirect3D().Run();
 	return GetWindow().Run();
+}
+
+HWND Engine::GetWindowHandle()
+{
+	return GetWindow().GetHwnd();
 }
 
 System& Engine::GetWindow()
 {
-	static std::unique_ptr<System>window(new System(Defs::WINDOW_TITLE));
+	static std::unique_ptr<System>window(new System(title));
 	return *window.get();
+}
+
+Direct3D & Engine::GetDirect3D()
+{
+	static std::unique_ptr<Direct3D> direct3D(new Direct3D());
+	return *direct3D.get();
 }

@@ -3,7 +3,7 @@
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow)
 {
 	//ƒQ[ƒ€ƒGƒ“ƒWƒ“¶¬
-	Engine ge;
+	Engine ge("hogehoge");
 	while (!ge.Run())
 	{
 

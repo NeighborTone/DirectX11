@@ -63,18 +63,18 @@ bool System::Create(std::string str)
 	HINSTANCE instance = GetModuleHandleW(nullptr);
 	SecureZeroMemory(&wcex, sizeof(wcex));
 	
-	wcex.lpfnWndProc = WndProc;												//ウィンドウプロシージャのｱﾄﾞﾚｽ
-	wcex.lpszClassName = str.c_str();											//ウィンドウクラスの名前
-	wcex.lpszMenuName = str.c_str();											//メニュー
-	wcex.style = WS_OVERLAPPED;												//ウィンドウスタイル
-	wcex.cbSize = sizeof(WNDCLASSEX);										//構造体のサイズ
-	wcex.cbClsExtra = 0;																//拡張クラスメモリなし
-	wcex.cbWndExtra = 0;															//拡張ウィンドウメモリなし
-	wcex.hInstance = instance;													//WinMain()のインスタンスハンドル
+	wcex.lpfnWndProc = WndProc;									//ウィンドウプロシージャのｱﾄﾞﾚｽ
+	wcex.lpszClassName = str.c_str();							//ウィンドウクラスの名前
+	wcex.lpszMenuName = str.c_str();							//メニュー
+	wcex.style = WS_OVERLAPPED;									//ウィンドウスタイル
+	wcex.cbSize = sizeof(WNDCLASSEX);							//構造体のサイズ
+	wcex.cbClsExtra = 0;												//拡張クラスメモリなし
+	wcex.cbWndExtra = 0;												//拡張ウィンドウメモリなし
+	wcex.hInstance = instance;										//WinMain()のインスタンスハンドル
 	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);		//クライアント領域の背景色(デフォルト)
-	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);					//事前定義されている矢印カーソル
-	wcex.hIcon = LoadIcon(instance, "MYICON");						//アイコン
-	wcex.hIconSm = NULL;															//小さいアイコン
+	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);			//事前定義されている矢印カーソル
+	wcex.hIcon = LoadIcon(instance, "MYICON");				//アイコン
+	wcex.hIconSm = NULL;												//小さいアイコン
 	ins = instance;
 	if (!RegisterClassEx(&wcex)) 
 	{
@@ -111,7 +111,7 @@ bool System::Create(std::string str)
 	return true;
 }
 
-HWND System::GetWindow()
+HWND System::GetHwnd()
 {
 
 	return handle;

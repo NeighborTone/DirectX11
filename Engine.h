@@ -8,7 +8,7 @@
 class Engine final
 {
 public:
-	Engine();
+	Engine(std::string WindowTitle);
 	~Engine();
 	/*!
 	* @brief COMの初期化を行います。複数回実行されません
@@ -19,7 +19,15 @@ public:
 	* @return 問題がなければtrueを返します
 	*/
 	static bool Run();
+
+	/*!
+	* @brief ウィンドウハンドルを返します
+	* @return HWND
+	*/
+	static HWND GetWindowHandle();
 private:
+	static std::string title;
 	static System& GetWindow();
+	static Direct3D& GetDirect3D();
 };
 

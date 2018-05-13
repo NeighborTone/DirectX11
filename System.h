@@ -19,8 +19,6 @@ public:
 	/*!
 	* @brief コンストラクタです。
 	* @param (title) ウィンドウタイトル
-	* @param (hInstance) WinMainのHINSTANCEを指定
-	* @param (nCmdShow)  WinMainのint&を指定
 	*/
 	System(std::string title);
 	System(const System&) = delete;
@@ -36,5 +34,5 @@ public:
 	* @brief ウィンドウハンドルを取得します
 	* @return HWND
 	*/
-	HWND GetWindow();
+	HWND GetHwnd();
 };
