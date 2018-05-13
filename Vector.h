@@ -95,3 +95,24 @@ public:
 	bool	operator!=(const Vec3 &v) const;
 
 };
+
+/*! @class Float4
+*   @brief 4つのfloatの値を扱います
+*   @detail DirectX11では、色の指定などに4つのfoat指定するのでそれに使います
+*/
+class Float4
+{
+public:
+	float x, y, z, w;
+	Float4();
+	Float4(float x, float y, float z, float w);
+	Float4(const Float4& f4);
+	~Float4();
+	Float4&	operator=(const Float4& v);
+	Float4& operator+=(const Float4& v);
+	Float4& operator-=(const Float4& v);
+	Float4& operator*=(const Float4& v);
+	Float4& operator/=(const Float4& v);
+	bool	operator==(const Float4 &v) const;
+	bool	operator!=(const Float4 &v) const;
+};

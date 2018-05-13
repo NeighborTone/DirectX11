@@ -196,3 +196,78 @@ bool Vec3::operator!=(const Vec3 &v) const
 {
 	return !(*this == v);
 }
+
+
+Float4::Float4():
+	x(0),
+	y(0),
+	z(0),
+	w(0)
+{
+}
+Float4::Float4(float x, float y, float z, float w)
+{
+	this->x = x;
+	this->y = y;
+	this->z = z;
+	this->w = w;
+}
+Float4::Float4(const Float4& f4)
+{
+	x = f4.x;
+	y = f4.y;
+	z = f4.z;
+	w = f4.w;
+}
+Float4::~Float4()
+{
+
+}
+Float4&	Float4::operator=(const Float4& v)
+{
+	x = v.x;
+	y = v.y;
+	z = v.z;
+	w = v.w;
+	return *this;
+}
+Float4& Float4::operator+=(const Float4& v)
+{
+	x += v.x;
+	y += v.y;
+	z += v.z;
+	w += v.w;
+	return *this;
+}
+Float4& Float4::operator-=(const Float4& v)
+{
+	x -= v.x;
+	y -= v.y;
+	z -= v.z;
+	w -= v.w;
+	return *this;
+}
+Float4& Float4::operator*=(const Float4& v)
+{
+	x *= v.x;
+	y *= v.y;
+	z *= v.z;
+	w *= v.w;
+	return *this;
+}
+Float4& Float4::operator/=(const Float4& v)
+{
+	x /= v.x;
+	y /= v.y;
+	z /= v.z;
+	w /= v.w;
+	return *this;
+}
+bool	Float4::operator==(const Float4 &v) const
+{
+	return (x == v.x && y == v.y && v.z == z && w == v.w);
+}
+bool	Float4::operator!=(const Float4 &v) const
+{
+	return !(*this == v);
+}
