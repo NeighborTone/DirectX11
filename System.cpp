@@ -1,19 +1,37 @@
 #include "System.h"
+#include "Engine.h"
 
-System::System()
+System::System(std::string title)
 {
-	SetWindowSize();
+	Engine::COMInitialize();
+	Create(title);
 }
 
 System::~System()
 {
 	DestroyWindow(handle);		//ウィンドウの破棄
+	CoUninitialize();				//COMの破棄
 }
 
-void System::SetWindowSize(UINT w, UINT h)
+bool System::Run()
 {
-	SCREEN_W = w;
-	SCREEN_H = h;
+	//メッセージを取得
+	GetMessage(&msg, NULL, 0, 0);
+	//メッセージループ(入力などの命令を読む)
+	while (msg.message != WM_QUIT)
+	{
+		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		{
+			//メッセージをデコードしてWinProcに渡す
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+	}
+
+	PostMessageW(handle, WM_APP, 0, 0);
+
+	return true;
+
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT mes, WPARAM wParam, LPARAM lParam)
@@ -39,9 +57,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT mes, WPARAM wParam, LPARAM lParam)
 	//デフォルトウィンドウ状態
 	return DefWindowProc(hWnd, mes, wParam, lParam);
 }
-bool System::Create(std::string str ,HINSTANCE& hInstance, int& nCmdShow)
+bool System::Create(std::string str)
 {
 	WNDCLASSEX wcex;
+	HINSTANCE instance = GetModuleHandleW(nullptr);
 	SecureZeroMemory(&wcex, sizeof(wcex));
 	
 	wcex.lpfnWndProc = WndProc;												//ウィンドウプロシージャのｱﾄﾞﾚｽ
@@ -51,12 +70,12 @@ bool System::Create(std::string str ,HINSTANCE& hInstance, int& nCmdShow)
 	wcex.cbSize = sizeof(WNDCLASSEX);										//構造体のサイズ
 	wcex.cbClsExtra = 0;																//拡張クラスメモリなし
 	wcex.cbWndExtra = 0;															//拡張ウィンドウメモリなし
-	wcex.hInstance = hInstance;													//WinMain()のインスタンスハンドル
+	wcex.hInstance = instance;													//WinMain()のインスタンスハンドル
 	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);		//クライアント領域の背景色(デフォルト)
 	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);					//事前定義されている矢印カーソル
-	wcex.hIcon = LoadIcon(hInstance, "MYICON");;						//アイコン
+	wcex.hIcon = LoadIcon(instance, "MYICON");						//アイコン
 	wcex.hIconSm = NULL;															//小さいアイコン
-	ins = hInstance;
+	ins = instance;
 	if (!RegisterClassEx(&wcex)) 
 	{
 		MessageBox(NULL, "ウィンドウの登録に失敗しました", "Error", MB_OK); 
@@ -68,13 +87,13 @@ bool System::Create(std::string str ,HINSTANCE& hInstance, int& nCmdShow)
 				str.c_str(),				//ウィンドウクラスの名前
 				str.c_str(),				//タイトルバーのテキスト
 				WS_OVERLAPPEDWINDOW,	//ウィンドウのスタイル
-				200,							//ウィンドウの水平位置のデフォルト
-				50,								//ウィンドウの垂直位置のデフォルト
-				Width(),						//幅
-				Height(),						//高さ
+				Defs::SCREEN_POSX,		//ウィンドウの水平位置のデフォルト
+				Defs::SCREEN_POSY,		//ウィンドウの垂直位置のデフォルト
+				Defs::SCREEN_WIDTH,		//幅
+				Defs::SCREEN_WIDTH, 		//高さ
 				NULL,							//親ウィンドウなし
 				NULL,							//メニューなし
-				hInstance,					//アプリケーションインスタンスへのハンドル
+				instance,					//アプリケーションインスタンスへのハンドル
 				NULL);						//ウィンドウパラメータなし
 	//生成チェック
 	if (!handle)
@@ -84,7 +103,7 @@ bool System::Create(std::string str ,HINSTANCE& hInstance, int& nCmdShow)
 	}
 
 	//ウィンドウ作成
-	ShowWindow(handle, nCmdShow);
+	ShowWindow(handle, SW_SHOWNORMAL);
 
 	//ウィンドウプロシージャにWM_PAINTメッセージを送る
 	UpdateWindow(handle);
@@ -94,5 +113,6 @@ bool System::Create(std::string str ,HINSTANCE& hInstance, int& nCmdShow)
 
 HWND System::GetWindow()
 {
+
 	return handle;
 }

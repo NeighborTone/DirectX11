@@ -1,27 +1,25 @@
 #pragma once
-#include "Graphic.h"
-#include "Shader.h"
-#include <memory>
-#include <DirectXMath.h>
+#include "System.h"
+#include "Direct3D.h"
 
-class Shader;
-
-class Engine
+/*! @class Engine
+*   @brief 描画等の更新処理や各ハンドルをまとめます
+*/
+class Engine final
 {
-private:
-	Engine();
-	static Engine* instance;
-	std::unique_ptr<Graphic> pGraphic;
-	void Update();
-	void Draw();
-	
 public:
-	void Run();
-	bool Create(HWND hwnd);
-	void Release();
-	std::unique_ptr<Shader> shader;
-	static Engine* GetEngine();
-	Graphic* GetGraphic();
+	Engine();
 	~Engine();
+	/*!
+	* @brief COMの初期化を行います。複数回実行されません
+	*/
+	static void COMInitialize();
+	/*!
+	* @brief 各機能の更新処理を行います
+	* @return 問題がなければtrueを返します
+	*/
+	static bool Run();
+private:
+	static System& GetWindow();
 };
 

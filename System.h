@@ -2,21 +2,39 @@
 #include <Windows.h>
 #include <tchar.h>
 #include <string>
-//ウィンドウ関連の処理を行う
+#include "SystemDefs.hpp"
+
+/*! @class System
+*   @brief ウィンドウを生成します
+*/
 class System final
 {
 private:
 	HWND handle;
-	UINT SCREEN_W;
-	UINT SCREEN_H;
+	MSG msg;
+	HINSTANCE ins;
+	bool Create(std::string str);
 public:
-	System();
+
+	/*!
+	* @brief コンストラクタです。
+	* @param (title) ウィンドウタイトル
+	* @param (hInstance) WinMainのHINSTANCEを指定
+	* @param (nCmdShow)  WinMainのint&を指定
+	*/
+	System(std::string title);
 	System(const System&) = delete;
 	~System();
-	void SetWindowSize(UINT w = 640, UINT h = 480);				//画面サイズ指定
-	bool Create(std::string str , HINSTANCE& hInstance, int& nCmdShow);		//ウィンドウ生成
-	UINT Width() { return SCREEN_W; }
-	UINT Height() { return SCREEN_H; }
-	HINSTANCE ins;
+
+	/*!
+	* @brief ウィンドウ更新
+	* @return 問題がなければtrue
+	*/
+	bool Run();
+
+	/*!
+	* @brief ウィンドウハンドルを取得します
+	* @return HWND
+	*/
 	HWND GetWindow();
 };
