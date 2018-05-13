@@ -6,12 +6,13 @@
     <ClCompile Include="Direct3D.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Vector.cpp" />
+    <ClCompile Include="Camera.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SystemDefs.hpp" />
     <ClInclude Include="System.h" />
     <ClInclude Include="Direct3D.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Vector.h" />
+    <ClInclude Include="Camera.h" />
   </ItemGroup>
 </Project>

@@ -1,9 +1,8 @@
 #include "Direct3D.h"
-#include "SystemDefs.hpp"
 #include "Engine.h"
 #include <array>
-
-Direct3D::Direct3D() :
+bool Direct3D::isFullScreen = false;
+Direct3D::Direct3D(bool isFullScreen) :
 	device3D(nullptr),
 	context3D(nullptr),
 	device2D(nullptr),
@@ -12,8 +11,9 @@ Direct3D::Direct3D() :
 	textureFactory(nullptr),
 	textFactory(nullptr)
 {
+	this->isFullScreen =  isFullScreen;
 	Engine::COMInitialize();
-	Create();
+	Create(this->isFullScreen);
 }
 
 
@@ -66,10 +66,10 @@ void Direct3D::Run()
 	swapChain->Present(1, 0);
 }
 
-bool Direct3D::Create()
+bool Direct3D::Create(bool isFull)
 {
 
-	if (!IsCreateSwapChain())
+	if (!IsCreateSwapChain(isFull))
 	{
 		MessageBox(NULL, "スワップチェーンの作成に失敗", "Error", MB_OK);
 		return false;
@@ -91,7 +91,7 @@ bool Direct3D::Create()
 	return true;
 }
 
-bool Direct3D::IsCreateSwapChain()
+bool Direct3D::IsCreateSwapChain(bool isFull)
 {
 	DXGI_SWAP_CHAIN_DESC swapDesc;
 	HRESULT hr;
@@ -106,8 +106,8 @@ bool Direct3D::IsCreateSwapChain()
 	swapDesc.BufferCount = 1;
 
 	//バックバッファのウィンドウ幅を設定
-	swapDesc.BufferDesc.Width = Defs::SCREEN_WIDTH;
-	swapDesc.BufferDesc.Height = Defs::SCREEN_HEIGHT;
+	swapDesc.BufferDesc.Width = Engine::GetWindowWidth();
+	swapDesc.BufferDesc.Height = Engine::GetWindowHeight();
 
 	//バックバッファを32bitに設定
 	swapDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -127,7 +127,7 @@ bool Direct3D::IsCreateSwapChain()
 	swapDesc.SampleDesc.Quality = 0;
 
 	//ウィンドウモード設定
-	swapDesc.Windowed = Defs::IS_FULLSCREEN;
+	swapDesc.Windowed = isFull;
 
 	//走査線の順序とスケーリングを不特定に設定する
 	swapDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
@@ -280,8 +280,8 @@ void Direct3D::SetViewport()
 	//ビューポートの作成
 	D3D11_VIEWPORT viewPort;
 	SecureZeroMemory(&viewPort,sizeof(viewPort));
-	viewPort.Width = static_cast<float>(Defs::SCREEN_WIDTH);
-	viewPort.Height = static_cast<float>(Defs::SCREEN_HEIGHT);
+	viewPort.Width = static_cast<float>(Engine::GetWindowWidth());
+	viewPort.Height = static_cast<float>(Engine::GetWindowHeight());
 	viewPort.MaxDepth = 1.0f;
 	context3D->RSSetViewports(1, &viewPort);
 }

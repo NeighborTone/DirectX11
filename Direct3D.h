@@ -22,7 +22,12 @@
 class Direct3D 
 {
 public:
-	Direct3D();
+
+	/*!
+	* @brief コンストラクタです。
+	* @param (isFullScreen) フルスクリーンにするか(falseで全画面)
+	*/
+	Direct3D(bool isFullScreen);
 	~Direct3D();
 	ID3D11Device& GetDevice3D() const;
 	ID3D11DeviceContext& GetContext3D() const;
@@ -42,12 +47,12 @@ private:
 	//ComPtrマイクロソフトのシェアポインタ
 	//CComPtrマイクロソフトのユニークポインタ
 
-	bool Create();
-	bool IsCreateSwapChain();
+	bool Create(bool isFullScreen);
+	bool IsCreateSwapChain(bool isFullScreen);
 	bool IsCreateBlendState();
 	bool IsCreateD2D();
 	void SetViewport();
-
+	static bool isFullScreen;
 	//! DirectX11のデバイス
 	ATL::CComPtr<ID3D11Device>			     device3D;
 	//! DirectX11のデバイスコンテキスト

@@ -1,10 +1,10 @@
 #include "System.h"
 #include "Engine.h"
 
-System::System(std::string title)
+System::System(std::string title, int width, int height)
 {
 	Engine::COMInitialize();
-	Create(title);
+	Create(title,width,height);
 }
 
 System::~System()
@@ -57,7 +57,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT mes, WPARAM wParam, LPARAM lParam)
 	//デフォルトウィンドウ状態
 	return DefWindowProc(hWnd, mes, wParam, lParam);
 }
-bool System::Create(std::string str)
+bool System::Create(std::string str, int width, int height)
 {
 	WNDCLASSEX wcex;
 	HINSTANCE instance = GetModuleHandleW(nullptr);
@@ -81,16 +81,17 @@ bool System::Create(std::string str)
 		MessageBox(NULL, "ウィンドウの登録に失敗しました", "Error", MB_OK); 
 		return false;
 	}
-
+	this->width = width;
+	this->height = height;
 	//ウインドウ生成
 	handle = CreateWindow(
 				str.c_str(),				//ウィンドウクラスの名前
 				str.c_str(),				//タイトルバーのテキスト
 				WS_OVERLAPPEDWINDOW,	//ウィンドウのスタイル
-				Defs::SCREEN_POSX,		//ウィンドウの水平位置のデフォルト
-				Defs::SCREEN_POSY,		//ウィンドウの垂直位置のデフォルト
-				Defs::SCREEN_WIDTH,		//幅
-				Defs::SCREEN_WIDTH, 		//高さ
+				200,							//ウィンドウの水平位置のデフォルト
+				50,								//ウィンドウの垂直位置のデフォルト
+				width,						//幅
+				height,			 			//高さ
 				NULL,							//親ウィンドウなし
 				NULL,							//メニューなし
 				instance,					//アプリケーションインスタンスへのハンドル
@@ -115,4 +116,14 @@ HWND System::GetHwnd()
 {
 
 	return handle;
+}
+
+int System::GetWidth()
+{
+	return width;
+}
+
+int System::GetHeight()
+{
+	return height;
 }

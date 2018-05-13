@@ -2,7 +2,7 @@
 #include <Windows.h>
 #include <tchar.h>
 #include <string>
-#include "SystemDefs.hpp"
+
 
 /*! @class System
 *   @brief ウィンドウを生成します
@@ -10,17 +10,21 @@
 class System final
 {
 private:
+	int width;
+	int height;
 	HWND handle;
 	MSG msg;
 	HINSTANCE ins;
-	bool Create(std::string str);
+	bool Create(std::string str, int width,int height);
 public:
 
 	/*!
 	* @brief コンストラクタです。
 	* @param (title) ウィンドウタイトル
+	* @param (width) ウィンドウ幅
+	* @param (height) ウィンドウ高さ
 	*/
-	System(std::string title);
+	System(std::string title, int width, int height);
 	System(const System&) = delete;
 	~System();
 
@@ -35,4 +39,14 @@ public:
 	* @return HWND
 	*/
 	HWND GetHwnd();
+	/*!
+	* @brief ウィンドウの幅を取得します
+	* @return int
+	*/
+	int GetWidth();
+	/*!
+	* @brief ウィンドウの高さを取得します
+	* @return int
+	*/
+	int GetHeight();
 };

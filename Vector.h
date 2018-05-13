@@ -98,7 +98,7 @@ public:
 
 /*! @class Float4
 *   @brief 4つのfloatの値を扱います
-*   @detail DirectX11では、色の指定などに4つのfoat指定するのでそれに使います
+*   @detail DirectX11では、色の指定などに4つのfoat指定するので主にそれに使います
 */
 class Float4
 {
