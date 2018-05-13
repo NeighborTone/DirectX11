@@ -44,6 +44,11 @@ public:
 	* @return int
 	*/
 	static int GetWindowHeight();
+	/*!
+	* @brief ウィンドウのクライアント領域を取得します
+	* @return DirectX::XINT2
+	*/
+	static DirectX::XMINT2 GetWindowSize();
 private:
 	static std::string title;
 	static int width;

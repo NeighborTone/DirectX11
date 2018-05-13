@@ -54,6 +54,11 @@ int Engine::GetWindowHeight()
 	return height;
 }
 
+DirectX::XMINT2 Engine::GetWindowSize()
+{
+	return GetWindow().GetSize();
+}
+
 System& Engine::GetWindow()
 {
 	static std::unique_ptr<System>window(new System(title,width,height));

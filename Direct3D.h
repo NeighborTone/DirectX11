@@ -19,7 +19,7 @@
 /*! @class Direct3D
 *   @brief DirectX11の初期化を行います
 */
-class Direct3D 
+class Direct3D : public System::Proceedable
 {
 public:
 
@@ -52,6 +52,7 @@ private:
 	bool IsCreateBlendState();
 	bool IsCreateD2D();
 	void SetViewport();
+	void OnProceed(HWND, UINT message, WPARAM, LPARAM) override;
 	static bool isFullScreen;
 	//! DirectX11のデバイス
 	ATL::CComPtr<ID3D11Device>			     device3D;

@@ -34,36 +34,52 @@ bool System::Run()
 
 }
 
-LRESULT CALLBACK WndProc(HWND hWnd, UINT mes, WPARAM wParam, LPARAM lParam)
+//LRESULT CALLBACK System::WndProc(HWND hWnd, UINT mes, WPARAM wParam, LPARAM lParam)
+//{
+//
+//	switch (mes)
+//	{
+//	case WM_DESTROY:
+//		PostQuitMessage(0);		//アプリケーションの終了
+//		return 0;
+//
+//
+//	default:
+//		break;
+//	}
+//	//ESCAPEでもアプリケーションの終了
+//	if (GetKeyState(VK_ESCAPE) & 0x8000)
+//	{
+//		PostQuitMessage(0);		
+//		return 0;
+//	}
+//
+//	//デフォルトウィンドウ状態
+//	return DefWindowProc(hWnd, mes, wParam, lParam);
+//}
+
+void System::SetSize(int width, int height)
 {
+	RECT windowRect = {};
+	RECT clientRect = {};
+	GetWindowRect(handle, &windowRect);
+	GetClientRect(handle, &clientRect);
 
-	switch (mes)
-	{
-	case WM_DESTROY:
-		PostQuitMessage(0);		//アプリケーションの終了
-		return 0;
+	int w = (windowRect.right - windowRect.left) - (clientRect.right - clientRect.left) + width;
+	int h = (windowRect.bottom - windowRect.top) - (clientRect.bottom - clientRect.top) + height;
+	int x = (GetSystemMetrics(SM_CXSCREEN) - w) / 2;
+	int y = (GetSystemMetrics(SM_CYSCREEN) - h) / 2;
 
-
-	default:
-		break;
-	}
-	//ESCAPEでもアプリケーションの終了
-	if (GetKeyState(VK_ESCAPE) & 0x8000)
-	{
-		PostQuitMessage(0);		
-		return 0;
-	}
-
-	//デフォルトウィンドウ状態
-	return DefWindowProc(hWnd, mes, wParam, lParam);
+	SetWindowPos(handle, nullptr, x, y, w, h, SWP_FRAMECHANGED);
 }
+
 bool System::Create(std::string str, int width, int height)
 {
 	WNDCLASSEX wcex;
 	HINSTANCE instance = GetModuleHandleW(nullptr);
 	SecureZeroMemory(&wcex, sizeof(wcex));
 	
-	wcex.lpfnWndProc = WndProc;									//ウィンドウプロシージャのｱﾄﾞﾚｽ
+	wcex.lpfnWndProc = WinProc;									//ウィンドウプロシージャのｱﾄﾞﾚｽ
 	wcex.lpszClassName = str.c_str();							//ウィンドウクラスの名前
 	wcex.lpszMenuName = str.c_str();							//メニュー
 	wcex.style = WS_OVERLAPPED;									//ウィンドウスタイル
@@ -103,6 +119,8 @@ bool System::Create(std::string str, int width, int height)
 		return false;
 	}
 
+	//ウィンドウサイズと初期座標位置
+	SetSize(width,height);
 	//ウィンドウ作成
 	ShowWindow(handle, SW_SHOWNORMAL);
 
@@ -127,3 +145,27 @@ int System::GetHeight()
 {
 	return height;
 }
+
+DirectX::XMINT2 System::GetSize()
+{
+	RECT clientRect = {};
+	GetClientRect(handle, &clientRect);
+
+	return DirectX::XMINT2(clientRect.right - clientRect.left, clientRect.bottom - clientRect.top);
+}
+
+LRESULT System::WinProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	{
+		for (auto it : GetProcedures())
+		{
+			it->OnProceed(window, message, wParam, lParam);
+		}
+
+		if (message == WM_DESTROY)
+			PostQuitMessage(0);
+
+		return DefWindowProcW(window, message, wParam, lParam);
+	}
+}
+

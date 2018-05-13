@@ -24,6 +24,7 @@ Direct3D::~Direct3D()
 	{
 		swapChain->SetFullscreenState(false, nullptr);
 	}
+	System::RemoveProcedure(this);
 }
 
 ID3D11Device& Direct3D::GetDevice3D() const
@@ -86,6 +87,7 @@ bool Direct3D::Create(bool isFull)
 		return false;
 	}
 
+	System::AddProcedure(this);
 	SetViewport();
 
 	return true;
@@ -284,4 +286,16 @@ void Direct3D::SetViewport()
 	viewPort.Height = static_cast<float>(Engine::GetWindowHeight());
 	viewPort.MaxDepth = 1.0f;
 	context3D->RSSetViewports(1, &viewPort);
+}
+
+void Direct3D::OnProceed(HWND, UINT message, WPARAM, LPARAM)
+{
+	//ウィンドウサイズが変更されたらメッセージを送る
+	if (message != WM_SIZE)
+		return;
+
+	if (Engine::GetWindowSize().x <= 0.0f || Engine::GetWindowSize().y <= 0.0f)
+		return;
+
+	SetViewport();
 }
