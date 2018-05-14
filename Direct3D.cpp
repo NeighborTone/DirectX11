@@ -274,6 +274,7 @@ bool Direct3D::IsCreateD2D()
 	{
 		return false;
 	}
+
 	return true;
 }
 

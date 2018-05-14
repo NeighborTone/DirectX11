@@ -18,6 +18,7 @@ public:
 	{
 	public:
 		virtual void OnProceed(HWND handle, UINT message, WPARAM wParam, LPARAM lParam) = 0;
+		
 	};
 
 private:

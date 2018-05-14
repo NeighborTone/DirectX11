@@ -16,7 +16,7 @@ Engine::Engine(std::string WindowTitle, int width, int height,bool isFullScreen)
 
 Engine::~Engine()
 {
-
+					
 }
 
 void Engine::COMInitialize()
@@ -36,8 +36,8 @@ void Engine::COMInitialize()
 bool Engine::Run()
 {
 	GetDirect3D().Run();
-	GetWindow().Run();
-	return true;
+	
+	return GetWindow().Run();
 }
 
 HWND Engine::GetWindowHandle()

@@ -8,7 +8,7 @@ Camera::Camera():
 	constantBuffer(nullptr),
 	pos(0,0,0),
 	angles(0, 0, 0),
-	color(1, 1, 1, 1),
+	color(0, 1, 1, 1),
 	isDepthTest(false)
 {
 	Engine::COMInitialize();

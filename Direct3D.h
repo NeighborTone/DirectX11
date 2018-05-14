@@ -28,7 +28,7 @@ public:
 	* @param (isFullScreen) フルスクリーンにするか(falseで全画面)
 	*/
 	Direct3D(bool isFullScreen);
-	~Direct3D();
+	virtual ~Direct3D();
 	ID3D11Device& GetDevice3D() const;
 	ID3D11DeviceContext& GetContext3D() const;
 	ID2D1Device& GetDevice2D() const;
@@ -65,7 +65,7 @@ private:
 	//! Direct2D.3Dで描画するためのスワップチェーン(画面出力)
 	ATL::CComPtr<IDXGISwapChain>			      swapChain;
 	//! Direct2Dで画像を描画するための情報を保持する
-	ATL::CComPtr<IWICImagingFactory>		  textureFactory;
+	ATL::CComPtr<IWICImagingFactory>  textureFactory;
 	//! フォントデーターなどの状態情報を保持する
 	Microsoft::WRL::ComPtr<IDWriteFactory> textFactory;		
 };

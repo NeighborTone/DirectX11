@@ -9,8 +9,8 @@ System::System(std::string title, int width, int height)
 
 System::~System()
 {
-	DestroyWindow(handle);		//ウィンドウの破棄
-	CoUninitialize();				//COMの破棄
+	
+	CoUninitialize();		//COMオブジェクトの破棄。必ずここで呼ぶ
 }
 
 bool System::Run()
@@ -18,19 +18,16 @@ bool System::Run()
 	//メッセージを取得
 	GetMessage(&msg, NULL, 0, 0);
 	//メッセージループ(入力などの命令を読む)
-	while (msg.message != WM_QUIT)
+	if (msg.message == WM_QUIT)
 	{
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-		{
-			//メッセージをデコードしてWinProcに渡す
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-			return true;
-		}
-		else
-		{
-
-		}
+		return false;
+	}
+	if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+	{
+		//メッセージをデコードしてWinProcに渡す
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+		
 	}
 	
 	PostMessage(handle, WM_APP, 0, 0);
@@ -38,30 +35,6 @@ bool System::Run()
 	return true;
 
 }
-
-//LRESULT CALLBACK System::WndProc(HWND hWnd, UINT mes, WPARAM wParam, LPARAM lParam)
-//{
-//
-//	switch (mes)
-//	{
-//	case WM_DESTROY:
-//		PostQuitMessage(0);		//アプリケーションの終了
-//		return 0;
-//
-//
-//	default:
-//		break;
-//	}
-//	//ESCAPEでもアプリケーションの終了
-//	if (GetKeyState(VK_ESCAPE) & 0x8000)
-//	{
-//		PostQuitMessage(0);		
-//		return 0;
-//	}
-//
-//	//デフォルトウィンドウ状態
-//	return DefWindowProc(hWnd, mes, wParam, lParam);
-//}
 
 void System::SetSize(int width, int height)
 {
@@ -81,7 +54,7 @@ void System::SetSize(int width, int height)
 bool System::Create(std::string str, int width, int height)
 {
 	WNDCLASSEX wcex;
-	HINSTANCE instance = GetModuleHandleW(nullptr);
+	HINSTANCE instance = GetModuleHandle(nullptr);
 	SecureZeroMemory(&wcex, sizeof(wcex));
 	
 	wcex.lpfnWndProc = WinProc;									//ウィンドウプロシージャのｱﾄﾞﾚｽ

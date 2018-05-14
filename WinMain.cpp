@@ -2,7 +2,6 @@
 #include "Camera.h"
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow)
 {
-	setlocale(LC_ALL, "japanese");
 	//ƒQ[ƒ€ƒGƒ“ƒWƒ“¶¬
 	Engine ge("hogehoge",640,480,true);
 	Camera camera;
