@@ -49,6 +49,43 @@ public:
 	* @return DirectX::XINT2
 	*/
 	static DirectX::XMINT2 GetWindowSize();
+	/*!
+	* @brief DirectX11のデバイスを取得します
+	* @return ID3D11Device&
+	*/
+	static ID3D11Device& GetDXDevice3D();
+	/*!
+	* @brief DirectX11のデバイスコンテキストを取得します
+	* @return ID3D11DeviceContext&
+	*/
+	static ID3D11DeviceContext& GetDXContext3D();
+	/*!
+	* @brief Direct2Dのデバイスを取得します
+	* @return ID2D1Device&
+	*/
+	static ID2D1Device& GetDXDevice2D();
+	/*!
+	* @brief Direct2Dのデバイスコンテキストを取得します
+	* @return ID2D1DeviceContext&
+	*/
+	static ID2D1DeviceContext& GetDXContext2D();
+	/*!
+	* @brief スワップチェインを取得します
+	* @return IDXGISwapChain&
+	*/
+	static IDXGISwapChain& GetDXSwapChain();
+	/*!
+	* @brief テクスチャーファクトリーを取得します
+	* @return IWICImagingFactory&
+	*/
+	static IWICImagingFactory& GetTextureFactory();
+	/*!
+	* @brief テキストファクトリーを取得します
+	* @return IDWriteFactory&
+	*/
+	static IDWriteFactory& GetTextFactory();
+	
+	
 private:
 	static std::string title;
 	static int width;

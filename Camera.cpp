@@ -8,18 +8,23 @@ Camera::Camera():
 	constantBuffer(nullptr),
 	pos(0,0,0),
 	angles(0, 0, 0),
-	color(1, 1, 1, 1)
+	color(1, 1, 1, 1),
+	isDepthTest(false)
 {
 	Engine::COMInitialize();
-
-
+	SetOrthographic(
+		static_cast<float>(Engine::GetWindowSize().y),
+		-D3D11_FLOAT32_MAX,
+		D3D11_FLOAT32_MAX);
+	System::AddProcedure(this);
 	Create();
+	
 }
 
 
 Camera::~Camera()
 {
-
+	System::RemoveProcedure(this);
 }
 
 void Camera::SetPerspective(float fieldOfView, float nearClip, float farClip)
@@ -51,8 +56,177 @@ void Camera::SetDepthTest(bool isDepthTest)
 
 void Camera::Update()
 {
+	constant.view = XMMatrixTranspose(
+		XMMatrixInverse(
+			nullptr,
+			XMMatrixRotationX(XMConvertToRadians(angles.x)) *
+			XMMatrixRotationY(XMConvertToRadians(angles.y)) *
+			XMMatrixRotationZ(XMConvertToRadians(angles.z)) *
+			XMMatrixTranslation(pos.x, pos.y, pos.z)
+		)
+	);
+
+	Engine::GetDXContext3D().UpdateSubresource(constantBuffer, 0, nullptr, &constant, 0, 0);
+	Engine::GetDXContext3D().VSSetConstantBuffers(0, 1, &constantBuffer.p);
+	Engine::GetDXContext3D().HSSetConstantBuffers(0, 1, &constantBuffer.p);
+	Engine::GetDXContext3D().DSSetConstantBuffers(0, 1, &constantBuffer.p);
+	Engine::GetDXContext3D().GSSetConstantBuffers(0, 1, &constantBuffer.p);
+	Engine::GetDXContext3D().PSSetConstantBuffers(0, 1, &constantBuffer.p);
+
+	float clearColor[4] = { color.x, color.y, color.z, color.w };
+	Engine::GetDXContext3D().ClearRenderTargetView(renderTargetView, clearColor);
+
+	if (isDepthTest)
+	{
+		Engine::GetDXContext3D().ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+		Engine::GetDXContext3D().OMSetRenderTargets(1, &renderTargetView.p, depthStencilView);
+	}
+	else
+	{
+		Engine::GetDXContext3D().OMSetRenderTargets(1, &renderTargetView.p, nullptr);
+
+	}
+
 }
 
-void Camera::Create()
+bool Camera::Create()
 {
+	HRESULT hr;
+	//先にクリアしておく
+	renderTexture.Release();	
+
+	//バックバッファーにアクセス
+	Engine::GetDXSwapChain().GetBuffer(
+		0,
+		__uuidof(ID3D11Texture2D),
+		reinterpret_cast<void**>(&renderTexture));
+
+	renderTargetView.Release();
+
+	//リソースデータへのアクセス用にレンダーターゲットビューを作成
+	hr = Engine::GetDXDevice3D().CreateRenderTargetView(
+		renderTexture,				//ID3D11Resourceへのポインタ
+		nullptr,					//D3D11_RENDER_TARGET_VIEW_DESCへのポインター
+		&renderTargetView);			//ID3D11RenderTargetViewへのポインターのアドレス
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, "レンダーターゲットビューの作成に失敗", "Error", MB_OK);
+		return false;
+	}
+	DXGI_SWAP_CHAIN_DESC swapChainDesc;
+	SecureZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
+	Engine::GetDXSwapChain().GetDesc(&swapChainDesc);
+	depthTexture.Release();
+
+	//2Dテクスチャーについて記述します
+	D3D11_TEXTURE2D_DESC textureDesc;
+	SecureZeroMemory(&textureDesc, sizeof(textureDesc));
+
+	textureDesc.Width = static_cast<UINT>(Engine::GetWindowSize().x);	//テクスチャーの幅です (テクセル単位)
+	textureDesc.Height = static_cast<UINT>(Engine::GetWindowSize().y);	//テクスチャーの高さです (テクセル単位)
+	textureDesc.MipLevels = 1;											//テクスチャー内のミップマップ レベルの最大数
+	textureDesc.ArraySize = 1;											//テクスチャー配列内のテクスチャーの数です。
+	textureDesc.Format = DXGI_FORMAT_R32_TYPELESS;						//テクスチャーフォーマット
+	textureDesc.SampleDesc.Count = swapChainDesc.SampleDesc.Count;		//ピクセル単位のマルチサンプリングの数
+	textureDesc.SampleDesc.Quality = swapChainDesc.SampleDesc.Quality;	//イメージの品質レベルです。品質が高いほど、パフォーマンスは低下します。有効な範囲は0から-1
+	textureDesc.Usage = D3D11_USAGE_DEFAULT;							//テクスチャーの読み込みおよび書き込み方法を識別する値
+	textureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;					//パイプラインステージへのバインドに関するフラグ
+	textureDesc.CPUAccessFlags = 0;										//許可するCPUアクセスの種類を指定するフラグ
+	textureDesc.MiscFlags = 0;											//他の一般性の低いリソースオプションを識別するフラグ
+
+	//2Dテクスチャーの配列を作成
+	hr = Engine::GetDXDevice3D().CreateTexture2D(
+		&textureDesc,	//2Dテクスチャーの記述へのポインター
+		nullptr,		//サブリソースの記述の配列へのポインター
+		&depthTexture);	//作成されるテクスチャーへのポインターのアドレス
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, "2Dテクスチャー配列の作成に失敗", "Error", MB_OK);
+		return false;
+	}
+	depthStencilView.Release();
+
+	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
+	SecureZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
+
+	depthStencilViewDesc.Format = DXGI_FORMAT_D32_FLOAT;	//リソースデータのフォーマット
+
+	if (swapChainDesc.SampleDesc.Count == 0)
+	{
+		depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;	//リソースのタイプ.リソースは2Dテクスチャーとしてアクセスされます。
+		depthStencilViewDesc.Texture2D.MipSlice = 0;		//最初に使用するミップマップ レベルのインデックス
+	}
+	else
+	{
+		depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;		//リソースはマルチサンプリングを使用する2Dテクスチャーとしてアクセスされます。
+	}
+
+	//リソースデータへのアクセス用に深度ステンシルビューを作成
+	hr = Engine::GetDXDevice3D().CreateDepthStencilView(
+		depthTexture,			 //深度ステンシルサーフェスとして機能するリソースへのポインター
+		&depthStencilViewDesc,  //深度ステンシルビューの記述へのポインター
+		&depthStencilView);		//ID3D11DepthStencilViewへのポインター
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, "深度ステンシルビューの作成に失敗", "Error", MB_OK);
+		return false;
+	}
+	constantBuffer.Release();
+	//コンスタントバッファー作成
+	D3D11_BUFFER_DESC constantBufferDesc;
+	SecureZeroMemory(&constantBufferDesc, sizeof(constantBufferDesc));
+	constantBufferDesc.ByteWidth = static_cast<UINT>(sizeof(Constant));
+	constantBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	constantBufferDesc.CPUAccessFlags = 0;
+	hr = Engine::GetDXDevice3D().CreateBuffer(
+		&constantBufferDesc,
+		nullptr, 
+		&constantBuffer);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, "深度ステンシルビューの作成に失敗", "Error", MB_OK);
+		return false;
+	}
+	return true;
+}
+
+void Camera::OnProceed(HWND, UINT message, WPARAM, LPARAM)
+{
+	//ウィンドウサイズが変更されたらメッセージを送る
+	if (message != WM_SIZE)
+		return;
+
+	if (Engine::GetWindowSize().x <= 0.0f || Engine::GetWindowSize().y <= 0.0f)
+		return;
+	DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
+	Engine::GetDXSwapChain().GetDesc(&swapChainDesc);
+
+	ATL::CComPtr<ID3D11RenderTargetView> nullRenderTarget = nullptr;
+	ATL::CComPtr<ID3D11DepthStencilView> nullDepthStencil = nullptr;
+	Engine::GetDXContext3D().OMSetRenderTargets(
+		1, 
+		&nullRenderTarget, 
+		nullDepthStencil
+	);
+	renderTargetView.Release();
+	depthStencilView.Release();
+	renderTexture.Release();
+	depthTexture.Release();
+	Engine::GetDXContext3D().Flush();
+	Engine::GetDXSwapChain().ResizeBuffers(
+		swapChainDesc.BufferCount, 
+		static_cast<UINT>(Engine::GetWindowSize().x), 
+		static_cast<UINT>(Engine::GetWindowSize().y),
+		swapChainDesc.BufferDesc.Format, 
+		swapChainDesc.Flags);
+
+	if (isPerspective)
+		SetPerspective(fieldOfView, nearClip, farClip);
+	else
+		SetOrthographic(size, nearClip, farClip);
+
+	Create();
+
 }

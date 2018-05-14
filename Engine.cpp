@@ -36,7 +36,8 @@ void Engine::COMInitialize()
 bool Engine::Run()
 {
 	GetDirect3D().Run();
-	return GetWindow().Run();
+	GetWindow().Run();
+	return true;
 }
 
 HWND Engine::GetWindowHandle()
@@ -59,10 +60,45 @@ DirectX::XMINT2 Engine::GetWindowSize()
 	return GetWindow().GetSize();
 }
 
+ID3D11Device& Engine::GetDXDevice3D()
+{
+	return GetDirect3D().GetDevice3D();
+}
+
+ID3D11DeviceContext& Engine::GetDXContext3D()
+{
+	return GetDirect3D().GetContext3D();
+}
+
+ID2D1Device& Engine::GetDXDevice2D()
+{
+	return GetDirect3D().GetDevice2D();
+}
+
+ID2D1DeviceContext& Engine::GetDXContext2D()
+{
+	return GetDirect3D().GetContext2D();
+}
+
+IDXGISwapChain& Engine::GetDXSwapChain()
+{
+	return GetDirect3D().GetSwapChain();
+}
+
+IWICImagingFactory& Engine::GetTextureFactory()
+{
+	return GetDirect3D().GetTextureFactory();
+}
+
+IDWriteFactory& Engine::GetTextFactory()
+{
+	return  GetDirect3D().GetTextFactory();
+}
+
 System& Engine::GetWindow()
 {
 	static std::unique_ptr<System>window(new System(title,width,height));
-	return *window.get();
+	return *window.get();	
 }
 
 Direct3D & Engine::GetDirect3D()

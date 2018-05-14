@@ -25,10 +25,15 @@ bool System::Run()
 			//メッセージをデコードしてWinProcに渡す
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
+			return true;
+		}
+		else
+		{
+
 		}
 	}
-
-	PostMessageW(handle, WM_APP, 0, 0);
+	
+	PostMessage(handle, WM_APP, 0, 0);
 
 	return true;
 
@@ -165,7 +170,7 @@ LRESULT System::WinProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam)
 		if (message == WM_DESTROY)
 			PostQuitMessage(0);
 
-		return DefWindowProcW(window, message, wParam, lParam);
+		return DefWindowProc(window, message, wParam, lParam);
 	}
 }
 
