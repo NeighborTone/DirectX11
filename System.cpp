@@ -1,5 +1,6 @@
 #include "System.h"
 #include "Engine.h"
+#include "Utility.hpp"
 
 System::System(std::string title, int width, int height)
 {
@@ -70,11 +71,9 @@ bool System::Create(std::string str, int width, int height)
 	wcex.hIcon = LoadIcon(instance, "MYICON");				//アイコン
 	wcex.hIconSm = NULL;												//小さいアイコン
 	ins = instance;
-	if (!RegisterClassEx(&wcex)) 
-	{
-		MessageBox(NULL, "ウィンドウの登録に失敗しました", "Error", MB_OK); 
-		return false;
-	}
+
+	ErrorMessage(RegisterClassEx(&wcex), "ウィンドウの登録に失敗しました", "Error");
+
 	this->width = width;
 	this->height = height;
 	//ウインドウ生成
@@ -91,11 +90,7 @@ bool System::Create(std::string str, int width, int height)
 				instance,					//アプリケーションインスタンスへのハンドル
 				NULL);						//ウィンドウパラメータなし
 	//生成チェック
-	if (!handle)
-	{ 
-		MessageBox(NULL, "ウィンドウの生成に失敗しました", "Error", MB_OK);
-		return false;
-	}
+	ErrorMessage(handle, "ウィンドウの生成に失敗しました", "Error");
 
 	//ウィンドウサイズと初期座標位置
 	SetSize(width,height);

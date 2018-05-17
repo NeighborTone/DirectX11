@@ -1,5 +1,6 @@
 #include "Direct3D.h"
 #include "Engine.h"
+#include "Utility.hpp"
 #include <array>
 bool Direct3D::isFullScreen = false;
 Direct3D::Direct3D(bool isFullScreen) :
@@ -69,24 +70,10 @@ void Direct3D::Run()
 
 bool Direct3D::Create(bool isFull)
 {
-
-	if (!IsCreateSwapChain(isFull))
-	{
-		MessageBox(NULL, "スワップチェーンの作成に失敗", "Error", MB_OK);
-		return false;
-	}
+	ErrorMessage(IsCreateSwapChain(isFull), "スワップチェーンの作成に失敗", "Error");
 	context3D->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	if (!IsCreateBlendState())
-	{
-		MessageBox(NULL, "アルファブレンドの設定に失敗", "Error", MB_OK);
-		return false;
-	}
-	if (!IsCreateD2D())
-	{
-		MessageBox(NULL, "Direct2Dの作成に失敗", "Error", MB_OK);
-		return false;
-	}
-
+	ErrorMessage(IsCreateBlendState(), "アルファブレンドの設定に失敗", "Error");
+	ErrorMessage(IsCreateD2D(), "Direct2Dの作成に失敗", "Error");
 	System::AddProcedure(this);
 	SetViewport();
 

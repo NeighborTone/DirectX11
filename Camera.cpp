@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include "Utility.hpp"
 using namespace DirectX;
 Camera::Camera():
 	renderTargetView(nullptr),
@@ -109,11 +110,9 @@ bool Camera::Create()
 		renderTexture,				//ID3D11Resourceへのポインタ
 		nullptr,					//D3D11_RENDER_TARGET_VIEW_DESCへのポインター
 		&renderTargetView);			//ID3D11RenderTargetViewへのポインターのアドレス
-	if (FAILED(hr))
-	{
-		MessageBox(NULL, "レンダーターゲットビューの作成に失敗", "Error", MB_OK);
-		return false;
-	}
+
+	ErrorMessage(hr, "レンダーターゲットビューの作成に失敗", "Error");
+	
 	DXGI_SWAP_CHAIN_DESC swapChainDesc;
 	SecureZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
 	Engine::GetDXSwapChain().GetDesc(&swapChainDesc);
@@ -140,11 +139,9 @@ bool Camera::Create()
 		&textureDesc,	//2Dテクスチャーの記述へのポインター
 		nullptr,		//サブリソースの記述の配列へのポインター
 		&depthTexture);	//作成されるテクスチャーへのポインターのアドレス
-	if (FAILED(hr))
-	{
-		MessageBox(NULL, "2Dテクスチャー配列の作成に失敗", "Error", MB_OK);
-		return false;
-	}
+
+	ErrorMessage(hr, "2Dテクスチャー配列の作成に失敗", "Error");
+
 	depthStencilView.Release();
 
 	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
@@ -167,11 +164,9 @@ bool Camera::Create()
 		depthTexture,			 //深度ステンシルサーフェスとして機能するリソースへのポインター
 		&depthStencilViewDesc,  //深度ステンシルビューの記述へのポインター
 		&depthStencilView);		//ID3D11DepthStencilViewへのポインター
-	if (FAILED(hr))
-	{
-		MessageBox(NULL, "深度ステンシルビューの作成に失敗", "Error", MB_OK);
-		return false;
-	}
+
+	ErrorMessage(hr, "深度ステンシルビューの作成に失敗", "Error");
+
 	constantBuffer.Release();
 	//コンスタントバッファー作成
 	D3D11_BUFFER_DESC constantBufferDesc;
@@ -184,11 +179,9 @@ bool Camera::Create()
 		&constantBufferDesc,
 		nullptr, 
 		&constantBuffer);
-	if (FAILED(hr))
-	{
-		MessageBox(NULL, "深度ステンシルビューの作成に失敗", "Error", MB_OK);
-		return false;
-	}
+	
+	ErrorMessage(hr, "コンスタントバッファーの作成に失敗", "Error");
+
 	return true;
 }
 
