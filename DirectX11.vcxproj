@@ -24,7 +24,6 @@
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="Vector.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -34,7 +33,6 @@
     <ClInclude Include="System.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Utility.hpp" />
-    <ClInclude Include="Vector.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
