@@ -5,7 +5,7 @@
 
 /*! @class Texture
 *   @brief  画像を使用するためのクラスです
-*   @detail このクラスは単体では使用しません。MeshやSpriteで使用します
+*   @detail このクラスは基本的に単体では使用しません。MeshやSpriteで使用します
 */
 class Texture
 {

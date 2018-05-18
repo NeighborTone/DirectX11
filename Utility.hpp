@@ -331,6 +331,11 @@ public:
 
 };
 
+/*! @class ErrorMessage
+*   @brief エラーメッセージをメッセージボックスで出します	
+*   @detail コンストラクタでチェック用変数と文字列を設定してください
+*   @detail HRUSULT, int, bool型のいずれかでチェックできます
+*/
 class ErrorMessage
 {
 public:
@@ -356,6 +361,11 @@ public:
 		}
 	}
 };
+
+/*! @class Vertex
+*   @brief 頂点用の構造体です
+*   @detail 位置情報、法線、UV値を格納できます
+*/
 struct Vertex
 {
 	Vec3 pos;
@@ -427,7 +437,7 @@ public:
 	* @brief 現在のカウンターの値を返します
 	* @return 現在のカウンターの値
 	*/
-	T GetCurrentTime()
+	T GetCurrentCount()
 	{
 		return now;
 	}

@@ -8,10 +8,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	camera.pos = Vec3(0.0f, 1.0f, -5.0f);
 	camera.SetPerspective(60.0f, 0.1f, 100.0f);
 	camera.SetDepthTest(true);
+
 	while (ge.Run())
 	{
 		camera.Update();
 	}
+
 	//èIóπ
 	return 0;
 

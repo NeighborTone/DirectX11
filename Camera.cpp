@@ -107,8 +107,8 @@ bool Camera::Create()
 
 	//リソースデータへのアクセス用にレンダーターゲットビューを作成
 	hr = Engine::GetDXDevice3D().CreateRenderTargetView(
-		renderTexture,				//ID3D11Resourceへのポインタ
-		nullptr,					//D3D11_RENDER_TARGET_VIEW_DESCへのポインター
+		renderTexture,					//ID3D11Resourceへのポインタ
+		nullptr,								//D3D11_RENDER_TARGET_VIEW_DESCへのポインター
 		&renderTargetView);			//ID3D11RenderTargetViewへのポインターのアドレス
 
 	ErrorMessage(hr, "レンダーターゲットビューの作成に失敗", "Error");
@@ -122,22 +122,22 @@ bool Camera::Create()
 	D3D11_TEXTURE2D_DESC textureDesc;
 	SecureZeroMemory(&textureDesc, sizeof(textureDesc));
 
-	textureDesc.Width = static_cast<UINT>(Engine::GetWindowSize().x);	//テクスチャーの幅です (テクセル単位)
-	textureDesc.Height = static_cast<UINT>(Engine::GetWindowSize().y);	//テクスチャーの高さです (テクセル単位)
-	textureDesc.MipLevels = 1;											//テクスチャー内のミップマップ レベルの最大数
-	textureDesc.ArraySize = 1;											//テクスチャー配列内のテクスチャーの数です。
-	textureDesc.Format = DXGI_FORMAT_R32_TYPELESS;						//テクスチャーフォーマット
+	textureDesc.Width = static_cast<UINT>(Engine::GetWindowSize().x);		//テクスチャーの幅です (テクセル単位)
+	textureDesc.Height = static_cast<UINT>(Engine::GetWindowSize().y);		//テクスチャーの高さです (テクセル単位)
+	textureDesc.MipLevels = 1;																		//テクスチャー内のミップマップレベルの最大数
+	textureDesc.ArraySize = 1;																		//テクスチャー配列内のテクスチャーの数です。
+	textureDesc.Format = DXGI_FORMAT_R32_TYPELESS;								//テクスチャーフォーマット
 	textureDesc.SampleDesc.Count = swapChainDesc.SampleDesc.Count;		//ピクセル単位のマルチサンプリングの数
 	textureDesc.SampleDesc.Quality = swapChainDesc.SampleDesc.Quality;	//イメージの品質レベルです。品質が高いほど、パフォーマンスは低下します。有効な範囲は0から-1
-	textureDesc.Usage = D3D11_USAGE_DEFAULT;							//テクスチャーの読み込みおよび書き込み方法を識別する値
-	textureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;					//パイプラインステージへのバインドに関するフラグ
-	textureDesc.CPUAccessFlags = 0;										//許可するCPUアクセスの種類を指定するフラグ
-	textureDesc.MiscFlags = 0;											//他の一般性の低いリソースオプションを識別するフラグ
+	textureDesc.Usage = D3D11_USAGE_DEFAULT;										//テクスチャーの読み込みおよび書き込み方法を識別する値
+	textureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;							//パイプラインステージへのバインドに関するフラグ
+	textureDesc.CPUAccessFlags = 0;															//許可するCPUアクセスの種類を指定するフラグ
+	textureDesc.MiscFlags = 0;																		//他の一般性の低いリソースオプションを識別するフラグ
 
 	//2Dテクスチャーの配列を作成
 	hr = Engine::GetDXDevice3D().CreateTexture2D(
 		&textureDesc,	//2Dテクスチャーの記述へのポインター
-		nullptr,		//サブリソースの記述の配列へのポインター
+		nullptr,				//サブリソースの記述の配列へのポインター
 		&depthTexture);	//作成されるテクスチャーへのポインターのアドレス
 
 	ErrorMessage(hr, "2Dテクスチャー配列の作成に失敗", "Error");
