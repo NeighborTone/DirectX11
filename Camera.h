@@ -17,7 +17,7 @@ public:
 	~Camera();
 
 	/*!
-	*   @brief　カメラが映す奥行きを設定します
+	*   @brief カメラが映す奥行きを設定します
 	*   @param (fieldOfView) 視野
 	*   @param (nearClip) 絵が見え始める距離
 	*   @param (farClip)  絵が見えなくなる距離
@@ -25,7 +25,7 @@ public:
 	void SetPerspective(float fieldOfView, float nearClip, float farClip);
 	
 	/*!
-	*   @brief　正射影変換を行います
+	*   @brief 正射影変換を行います
 	*   @param (size) クライアント領域のサイズ
 	*   @param (nearClip) 絵が見え始める距離
 	*   @param (farClip)  絵が見えなくなる距離
@@ -43,7 +43,7 @@ private:
 		DirectX::XMMATRIX projection;
 	};
 
-	//!深度テスト
+
 	bool isPerspective;
 	float fieldOfView;
 	float size;

@@ -1,5 +1,6 @@
 #include "Texture.h"
 #include "Engine.h"
+#include "Utility.hpp"
 #include <memory>
 Texture::Texture():
 	texture(nullptr),
@@ -27,43 +28,52 @@ Texture::~Texture()
 
 }
 
-void Texture::Load(const char * const filePath)
+void Texture::Load(const char* const filePath)
 {
-
+	HRESULT hr;
 	ATL::CComPtr<IWICBitmapDecoder> decoder = nullptr;
-	Engine::GetTextureFactory().CreateDecoderFromFilename(
+	hr = Engine::GetTextureFactory().CreateDecoderFromFilename(
 		(LPCWSTR)filePath,
 		0,
 		GENERIC_READ,
 		WICDecodeMetadataCacheOnDemand,
 		&decoder);
+	ErrorMessage(hr,"テクスチャーの読み込みに失敗","Error");
+
 	ATL::CComPtr<IWICBitmapFrameDecode> frame = nullptr;
 	decoder->GetFrame(0, &frame);
 	UINT width, height;
 	frame->GetSize(&width, &height);
 
 	WICPixelFormatGUID pixelFormat;
-	frame->GetPixelFormat(&pixelFormat);
+	hr = frame->GetPixelFormat(&pixelFormat);
+	ErrorMessage(hr, "テクスチャーの形式取得に失敗", "Error");
+
 	std::unique_ptr<BYTE[]> buffer(new BYTE[width * height * 4]);
 
 	if (pixelFormat != GUID_WICPixelFormat32bppBGRA)
 	{
+		//Direct2Dはビットマップしか描画できないのでpngから変換を行う
 		ATL::CComPtr<IWICFormatConverter> formatConverter = nullptr;
-		Engine::GetTextureFactory().CreateFormatConverter(&formatConverter);
-
-		formatConverter->Initialize(
+		hr = Engine::GetTextureFactory().CreateFormatConverter(&formatConverter);
+		ErrorMessage(hr,"コンバーターの作成に失敗","Error");
+	    
+		hr =	formatConverter->Initialize(
 			frame, 
 			GUID_WICPixelFormat32bppBGRA, 
 			WICBitmapDitherTypeErrorDiffusion, 
 			0, 
 			0, 
 			WICBitmapPaletteTypeCustom);
+		ErrorMessage(hr, "テクスチャーのコンバートに失敗", "Error");
 
-		formatConverter->CopyPixels(0, width * 4, width * height * 4, buffer.get());
+		hr = formatConverter->CopyPixels(0, width * 4, width * height * 4, buffer.get());
+		ErrorMessage(hr, "テクスチャー情報の取得に失敗", "Error");
 	}
 	else
 	{
-		frame->CopyPixels(0, width * 4, width * height * 4, buffer.get());
+		hr = frame->CopyPixels(0, width * 4, width * height * 4, buffer.get());
+		ErrorMessage(hr, "テクスチャー情報の取得に失敗", "Error");
 	}
 
 	Create(buffer.get(), width, height);
@@ -75,7 +85,8 @@ void Texture::Create(const BYTE * const buffer, int width, int height)
 
 	// レンダリングテクスチャを作成する
 	texture.Release();
-	D3D11_TEXTURE2D_DESC textureDesc = {};
+	D3D11_TEXTURE2D_DESC textureDesc;
+	SecureZeroMemory(&textureDesc, sizeof(textureDesc));
 	textureDesc.Width = width;
 	textureDesc.Height = height;
 	textureDesc.MipLevels = 1;
@@ -133,6 +144,7 @@ void Texture::Attach(int slot)
 	{
 		return;
 	}
+	//テクスチャーデータを格納,slotの値を変えて複数持たせる
 	Engine::GetDXContext3D().PSSetShaderResources(slot, 1, &shaderResourceView.p);
 	Engine::GetDXContext3D().PSSetSamplers(slot, 1, &samplerState.p);
 }
