@@ -3,6 +3,9 @@
 #include "Utility.hpp"
 #include <fstream>
 #include <vector>
+#include <d3dcompiler.h>
+#pragma comment(lib, "d3dcompiler.lib")
+
 
 Material::Material():
 	vertexShader(nullptr),
@@ -16,7 +19,7 @@ Material::~Material()
 {
 }
 
-Material::Material(const char * const filePath) :
+Material::Material(const char* const filePath) :
 	vertexShader(nullptr),
 	pixelShader(nullptr),
 	inputLayout(nullptr)
@@ -126,6 +129,7 @@ void Material::Create(const std::string & source)
 
 void Material::SetBuffer(int slot, void* cbuffer, size_t size)
 {
+	HRESULT hr;
 	constbuff[slot].ptr = cbuffer;
 
 	constbuff[slot].buffer.Release();
@@ -134,10 +138,12 @@ void Material::SetBuffer(int slot, void* cbuffer, size_t size)
 	constDesc.ByteWidth = size;
 	constDesc.Usage = D3D11_USAGE_DEFAULT;
 	constDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	Engine::GetDXDevice3D().CreateBuffer(
+	//バッファー(シェーダー定数バッファー) を作成
+	hr = Engine::GetDXDevice3D().CreateBuffer(
 		&constDesc, 
 		nullptr, 
 		&constbuff[slot].buffer);
+	ErrorMessage(hr,"シェーダー定数バッファーの作成に失敗","Error");
 }
 
 void Material::SetTexture(int slot, Texture* texture)
@@ -147,13 +153,74 @@ void Material::SetTexture(int slot, Texture* texture)
 
 void Material::Initialize()
 {
+	Engine::COMInitialize();
 
+	for (int i = 0; i < 10; i++)
+	{
+		textures[i] = nullptr;
+	}
 }
 
 void Material::CompileShader(const std::string& source, const char* const entryPoint, const char* const shaderModel, ID3DBlob** out)
 {
+	UINT shaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
+#if defined(_DEBUG)
+	shaderFlags |= D3DCOMPILE_DEBUG;
+#endif
 
+	ATL::CComPtr<ID3DBlob> errorBlob = nullptr;
+	//HLSLコードを特定のターゲットのバイトコードにコンパイル
+	D3DCompile(
+		source.c_str(),		//未コンパイルのシェーダーデータへのポインター
+		source.length(),		//↑の長さ
+		nullptr,					//(省略可能)シェーダー ファイルの名前
+		nullptr,					//(省略可能)NULL 終端マクロ定義の配列
+		D3D_COMPILE_STANDARD_FILE_INCLUDE, //(省略可能)インクルード ファイルを処理するためのID3D10Includeへのポインター。これをNULLに設定すると、シェーダーに#includeが記述されている場合はコンパイルエラーが発生
+		entryPoint,				//シェーダー エントリーポイント関数の名前
+		shaderModel,			//コンパイルの対象とするシェーダーターゲットまたはシェーダー機能セット
+		shaderFlags,			//シェーダーのコンパイルオプション
+		0,							//エフェクトのコンパイル オプション
+		out,						//コンパイルされたコードを格納するID3D10Blobのアドレス
+		&errorBlob);			//(省略可能)コンパイラのエラーメッセージを格納するID3D10Blobへのポインター。エラーがなかった場合はNULLが格納
+
+	//エラーが返ってて来た時
+	if (errorBlob != nullptr)
+	{
+		OutputDebugStringA(static_cast<char*>(errorBlob->GetBufferPointer()));
+		MessageBoxA(Engine::GetWindowHandle(), static_cast<char*>(errorBlob->GetBufferPointer()), "Shader Error", MB_OK);
+	}
 }
+
 void Material::Attach()
 {
+	//コンテキストにシェーダーと定数バッファを設定する
+	if (vertexShader != nullptr)
+		Engine::GetDXContext3D().VSSetShader(vertexShader, nullptr, 0);
+
+	if (pixelShader != nullptr)
+		Engine::GetDXContext3D().PSSetShader(pixelShader, nullptr, 0);
+
+	if (inputLayout != nullptr)
+		Engine::GetDXContext3D().IASetInputLayout(inputLayout);
+
+	for (int i = 0; i < 10; i++)
+	{
+		if (constbuff[i].ptr != nullptr)
+		{
+			Engine::GetDXContext3D().UpdateSubresource(constbuff[i].buffer, 0, nullptr, constbuff[i].ptr, 0, 0);
+			Engine::GetDXContext3D().VSSetConstantBuffers(i, 1, &constbuff[i].buffer.p);
+			Engine::GetDXContext3D().HSSetConstantBuffers(i, 1, &constbuff[i].buffer.p);
+			Engine::GetDXContext3D().DSSetConstantBuffers(i, 1, &constbuff[i].buffer.p);
+			Engine::GetDXContext3D().GSSetConstantBuffers(i, 1, &constbuff[i].buffer.p);
+			Engine::GetDXContext3D().PSSetConstantBuffers(i, 1, &constbuff[i].buffer.p);
+		}
+	}
+
+	for (int i = 0; i < 10; i++)
+	{
+		if (textures[i] != nullptr)
+		{
+			textures[i]->Attach(i);
+		}
+	}
 }

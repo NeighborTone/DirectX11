@@ -1,6 +1,11 @@
 #pragma once
 #include <string>
 #include "Texture.h"
+
+/*! @class Material
+*   @brief  シェーダーを使用するためのクラスです
+*   @detail このクラスは基本的に単体では使用しません。MeshやSpriteで使用します
+*/
 class Material
 {
 public:
@@ -24,11 +29,34 @@ public:
 	~Material();
 	Material(const char* const filePath);
 	Material(const std::string &source);
+	/*!
+	* @brief シェーダーファイルを読み込みます
+	* @param (filePath) シェーダーファイルのパス
+	* @detail 内部でシェーダーのコンパイルを行います
+	*/
 	void 	Load(const char* const filePath);
+	/*!
+	* @brief マテリアルを作成します
+	* @param (source) シェーダーのソース
+	* @detail 内部でシェーダーのコンパイルを行います
+	*/
 	void 	Create(const std::string &source);
+	/*!
+	* @brief シェーダーで使うコンスタントバッファーを設定します
+	* @param (slot) 設定する番号
+	* @param (cbuffer) コンスタントバッファーのポインタ
+	* @param (size) バッファの大きさ
+	*/
 	void 	SetBuffer(int slot, void* cbuffer, size_t size);
-	void 	SetTexture(int slot, Texture *texture);
+	/*!
+	* @brief シェーダーで使うテクスチャーを設定します
+	* @param (slot) 設定する番号
+	* @param (texture)  テクスチャーのポインタ
+	*/
+	void 	SetTexture(int slot, Texture* texture);
+	/*!
+	* @brief シェーダーをグラフィックスAPIに設定します
+	*/
 	void 	Attach();
 
 };
-

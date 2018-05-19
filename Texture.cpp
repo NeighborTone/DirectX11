@@ -144,6 +144,7 @@ void Texture::Attach(int slot)
 	{
 		return;
 	}
+	//テクスチャーデータを格納,slotの値を変えて複数持たせる
 	Engine::GetDXContext3D().PSSetShaderResources(slot, 1, &shaderResourceView.p);
 	Engine::GetDXContext3D().PSSetSamplers(slot, 1, &samplerState.p);
 }
