@@ -71,7 +71,6 @@ void Direct3D::Run()
 bool Direct3D::Create(bool isFull)
 {
 	ErrorMessage(IsCreateSwapChain(isFull), "スワップチェーンの作成に失敗", "Error");
-	context3D->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	ErrorMessage(IsCreateBlendState(), "アルファブレンドの設定に失敗", "Error");
 	ErrorMessage(IsCreateD2D(), "Direct2Dの作成に失敗", "Error");
 	System::AddProcedure(this);
@@ -181,13 +180,13 @@ bool Direct3D::IsCreateBlendState()
 	SecureZeroMemory(&blendDesc, sizeof(D3D11_BLEND_DESC));
 
 	//アルファブレンディングの設定
-	blendDesc.RenderTarget[0].BlendEnable = true;														//ブレンディングを有効(または無効) 
-	blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;								//最初のRGBデータソースを指定
+	blendDesc.RenderTarget[0].BlendEnable = true;																	//ブレンディングを有効(または無効) 
+	blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;										//最初のRGBデータソースを指定
 	blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;							//2番目のRGBデータソースを指定
-	blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;										//RGBデータソースの組合せ方法を定義
-	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;									//最初のアルファデータソースを指定
-	blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;								//2番目のアルファデータソースを指定
-	blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;								//アルファデータソースの組合せ方法を定義
+	blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;											//RGBデータソースの組合せ方法を定義
+	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;										//最初のアルファデータソースを指定
+	blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;										//2番目のアルファデータソースを指定
+	blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;									//アルファデータソースの組合せ方法を定義
 	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;	//書き込みマスク
 
 	float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };

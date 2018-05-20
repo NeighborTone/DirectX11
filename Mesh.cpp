@@ -1,5 +1,6 @@
 #include "Mesh.h"
 #include "Engine.h"
+using namespace DirectX;
 
 Mesh::Mesh():
 	vertexBuffer(nullptr),
@@ -59,14 +60,13 @@ Mesh::Mesh():
 
 	SetDrawMode(D3D11_CULL_NONE,D3D11_FILL_SOLID);
 
-	CreateCube();
-
 }
 
 Mesh::~Mesh()
 {
 
 }
+
 
 void Mesh::CreatePlane(Vec2 size, Vec3 offset, bool shouldClear, Vec3 leftDirection, Vec3 upDirection, Vec3 forwardDirection)
 {
@@ -112,6 +112,7 @@ void Mesh::CreateCube(bool shouldClear)
 	CreatePlane(Vec2(0.5f, 0.5f), Vec3(0.0f, -0.5f, 0.0f), false, Vec3(1.0f, 0.0f, 0.0f),  Vec3(0.0f, 0.0f, -1.0f), Vec3(0.0f, 1.0f, 0.0f));	// down
 
 }
+
 
 Material& Mesh::GetMaterial()
 {
@@ -160,16 +161,18 @@ void Mesh::Apply()
 void Mesh::Draw()
 {
 	if (vertexBuffer == nullptr)
+	{
 		return;
+	}
 
 	material.Attach();
 
-	constant.world = DirectX::XMMatrixTranspose(
-		DirectX::XMMatrixScaling(scale.x, scale.y, scale.z) *
-		DirectX::XMMatrixRotationX(DirectX::XMConvertToRadians(angle.x)) *
-		DirectX::XMMatrixRotationY(DirectX::XMConvertToRadians(angle.y)) *
-		DirectX::XMMatrixRotationZ(DirectX::XMConvertToRadians(angle.z)) *
-		DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z)
+	constant.world = XMMatrixTranspose(
+		XMMatrixScaling(scale.x, scale.y, scale.z) *
+		XMMatrixRotationX(DirectX::XMConvertToRadians(angle.x)) *
+		XMMatrixRotationY(DirectX::XMConvertToRadians(angle.y)) *
+		XMMatrixRotationZ(DirectX::XMConvertToRadians(angle.z)) *
+		XMMatrixTranslation(pos.x, pos.y, pos.z)
 	);
 
 	Engine::GetDXContext3D().RSSetState(rasterizerState);
@@ -177,7 +180,7 @@ void Mesh::Draw()
 	UINT stride = sizeof(Vertex);
 	UINT offset = 0;
 	Engine::GetDXContext3D().IASetVertexBuffers(0, 1, &vertexBuffer.p, &stride, &offset);
-
+	Engine::GetDXContext3D().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	if (indexBuffer == nullptr)
 	{
 		Engine::GetDXContext3D().Draw(vertex.size(), 0);

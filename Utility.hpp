@@ -426,71 +426,71 @@ typedef _Vec3<double>Vec3_d;
 class Float4
 {
 public:
-	float x, y, z, w;
+	float r, g, b, a;
 	Float4():
-		x(0),
-		y(0),
-		z(0),
-		w(0)
+		r(0),
+		g(0),
+		b(0),
+		a(0)
 	{}
 	Float4(float x, float y, float z, float w)
 	{
-		this->x = x;
-		this->y = y;
-		this->z = z;
-		this->w = w;
+		this->r = x;
+		this->g = y;
+		this->b = z;
+		this->a = w;
 	}
 	Float4(const Float4& f4)
 	{
-		x = f4.x;
-		y = f4.y;
-		z = f4.z;
-		w = f4.w;
+		r = f4.r;
+		g = f4.g;
+		b = f4.b;
+		a = f4.a;
 	}
 	~Float4() {};
 	Float4&	operator=(const Float4& v)
 	{
-		x = v.x;
-		y = v.y;
-		z = v.z;
-		w = v.w;
+		r = v.r;
+		g = v.g;
+		b = v.b;
+		a = v.a;
 		return *this;
 	}
 	Float4& operator+=(const Float4& v)
 	{
-		x += v.x;
-		y += v.y;
-		z += v.z;
-		w += v.w;
+		r += v.r;
+		g += v.g;
+		b += v.b;
+		a += v.a;
 		return *this;
 	}
 	Float4& operator-=(const Float4& v)
 	{
-		x -= v.x;
-		y -= v.y;
-		z -= v.z;
-		w -= v.w;
+		r -= v.r;
+		g -= v.g;
+		b -= v.b;
+		a -= v.a;
 		return *this;
 	}
 	Float4& operator*=(const Float4& v)
 	{
-		x *= v.x;
-		y *= v.y;
-		z *= v.z;
-		w *= v.w;
+		r *= v.r;
+		g *= v.g;
+		b *= v.b;
+		a *= v.a;
 		return *this;
 	}
 	Float4& operator/=(const Float4& v)
 	{
-		x /= v.x;
-		y /= v.y;
-		z /= v.z;
-		w /= v.w;
+		r /= v.r;
+		g /= v.g;
+		b /= v.b;
+		a /= v.a;
 		return *this;
 	}
 	bool	operator==(const Float4 &v) const
 	{
-		return (x == v.x && y == v.y && v.z == z && w == v.w);
+		return (r == v.r && g == v.g && v.b == b && a == v.a);
 	}
 	bool	operator!=(const Float4 &v) const
 	{

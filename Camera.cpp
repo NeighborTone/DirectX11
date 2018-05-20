@@ -74,7 +74,7 @@ void Camera::Update()
 	Engine::GetDXContext3D().GSSetConstantBuffers(0, 1, &constantBuffer.p);
 	Engine::GetDXContext3D().PSSetConstantBuffers(0, 1, &constantBuffer.p);
 
-	float clearColor[4] = { color.x, color.y, color.z, color.w };
+	float clearColor[4] = { color.r, color.g, color.b, color.a };
 	//îwåiêF
 	Engine::GetDXContext3D().ClearRenderTargetView(renderTargetView, clearColor);
 

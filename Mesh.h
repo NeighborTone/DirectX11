@@ -30,7 +30,6 @@ public:
 	void CreateCube(bool shouldClear = true);
 	Material& GetMaterial();
 	void SetDrawMode(D3D11_CULL_MODE cullingMode, D3D11_FILL_MODE fillMode);
-
 	void Apply();
 	void Draw();
 };

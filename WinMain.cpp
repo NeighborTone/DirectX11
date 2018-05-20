@@ -3,6 +3,11 @@
 #include "Mesh.h"
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow)
 {
+	//Memo//
+	//Primitiveの設定を描画命令に移したのでスプライトやテキストもそれぞれの描画関数内で設定する
+	//
+
+
 	//ゲームエンジン生成
 	Engine ge("Directx11",640,480,true);
 	Camera camera;
@@ -10,9 +15,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	//camera.SetPerspective(100.0f, 1, 100.0f);
 	camera.SetOrthographic(0,0.1f,100.0f);
 	camera.SetDepthTest(true);
+	//camera.color = Float4(1, 1, 1, 1);
+
 	Texture texture1("box.jpg");
 	Texture texture2("brick.jpg");
 	Texture texture3("brick2.jpg");
+	Texture texture4("p.png");
 
 	Mesh mesh;
 	mesh.CreateCube();
@@ -31,6 +39,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	mesh3.SetDrawMode(D3D11_CULL_BACK, D3D11_FILL_SOLID);
 	mesh3.GetMaterial().SetTexture(0, &texture3);
 	mesh3.scale *= 100;
+
+
 	float x = 0;
 	while (ge.Run())
 	{
@@ -49,8 +59,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		mesh3.angle.x -= 1.0f;
 		mesh3.pos.x = -200.0f;
 		mesh3.Draw();
-	}
 
+		
+	}
+	
 	//終了
 	return 0;
 
