@@ -18,7 +18,7 @@ public:
 
 	/*!
 	*   @brief カメラが映す奥行きを設定します
-	*   @param (fieldOfView) 視野
+	*   @param (fieldOfView) 視野(ディグリー単位)
 	*   @param (nearClip) 絵が見え始める距離
 	*   @param (farClip)  絵が見えなくなる距離
 	*/

@@ -9,7 +9,7 @@ Camera::Camera():
 	constantBuffer(nullptr),
 	pos(0,0,0),
 	angles(0, 0, 0),
-	color(0, 1, 1, 1),
+	color(0.4f, 0.5f, 0.8f, 1),
 	isDepthTest(false)
 {
 	Engine::COMInitialize();
@@ -34,7 +34,7 @@ void Camera::SetPerspective(float fieldOfView, float nearClip, float farClip)
 	this->fieldOfView = fieldOfView;
 	this->nearClip = nearClip;
 	this->farClip = farClip;
-	float aspectRatio = Engine::GetWindowWidth() / (float)Engine::GetWindowHeight();
+	float aspectRatio = Engine::GetWindowSize().x / (float)Engine::GetWindowSize().y;
 	constant.projection = XMMatrixTranspose(
 		XMMatrixPerspectiveFovLH(XMConvertToRadians(fieldOfView), aspectRatio, nearClip, farClip));
 }
@@ -45,9 +45,9 @@ void Camera::SetOrthographic(float size, float nearClip, float farClip)
 	this->size = size;
 	this->nearClip = nearClip;
 	this->farClip = farClip;
-	float aspectRatio = Engine::GetWindowWidth() / (float)Engine::GetWindowHeight();
+	float aspectRatio = Engine::GetWindowSize().x / (float)Engine::GetWindowSize().y;
 	constant.projection = XMMatrixTranspose(
-		XMMatrixOrthographicLH(size * aspectRatio, size, nearClip, farClip));
+		XMMatrixOrthographicLH((float)Engine::GetWindowSize().x, (float)Engine::GetWindowSize().y, nearClip, farClip));
 }
 
 void Camera::SetDepthTest(bool isDepthTest)
@@ -75,6 +75,7 @@ void Camera::Update()
 	Engine::GetDXContext3D().PSSetConstantBuffers(0, 1, &constantBuffer.p);
 
 	float clearColor[4] = { color.x, color.y, color.z, color.w };
+	//îwåiêF
 	Engine::GetDXContext3D().ClearRenderTargetView(renderTargetView, clearColor);
 
 	if (isDepthTest)

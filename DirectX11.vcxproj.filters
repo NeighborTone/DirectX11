@@ -8,6 +8,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Material.cpp" />
+    <ClCompile Include="Mesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h" />
@@ -17,5 +18,7 @@
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Utility.hpp" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="StringConverter.hpp" />
   </ItemGroup>
 </Project>

@@ -45,16 +45,6 @@ HWND Engine::GetWindowHandle()
 	return GetWindow().GetHwnd();
 }
 
-int Engine::GetWindowWidth()
-{
-	return width;
-}
-
-int Engine::GetWindowHeight()
-{
-	return height;
-}
-
 DirectX::XMINT2 Engine::GetWindowSize()
 {
 	return GetWindow().GetSize();

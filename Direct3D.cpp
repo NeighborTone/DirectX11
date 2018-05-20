@@ -95,8 +95,8 @@ bool Direct3D::IsCreateSwapChain(bool isFull)
 	swapDesc.BufferCount = 1;
 
 	//バックバッファのウィンドウ幅を設定
-	swapDesc.BufferDesc.Width = Engine::GetWindowWidth();
-	swapDesc.BufferDesc.Height = Engine::GetWindowHeight();
+	swapDesc.BufferDesc.Width = Engine::GetWindowSize().x;
+	swapDesc.BufferDesc.Height = Engine::GetWindowSize().y;
 
 	//バックバッファを32bitに設定
 	swapDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -270,8 +270,8 @@ void Direct3D::SetViewport()
 	//ビューポートの作成
 	D3D11_VIEWPORT viewPort;
 	SecureZeroMemory(&viewPort,sizeof(viewPort));
-	viewPort.Width = static_cast<float>(Engine::GetWindowWidth());
-	viewPort.Height = static_cast<float>(Engine::GetWindowHeight());
+	viewPort.Width = static_cast<float>(Engine::GetWindowSize().x);
+	viewPort.Height = static_cast<float>(Engine::GetWindowSize().y);
 	viewPort.MaxDepth = 1.0f;
 	context3D->RSSetViewports(1, &viewPort);
 }

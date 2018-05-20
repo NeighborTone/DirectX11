@@ -2,6 +2,7 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <atlbase.h>
+#include <string>
 
 /*! @class Texture
 *   @brief  画像を使用するためのクラスです
@@ -17,14 +18,14 @@ private:
 public:
 	Texture();
 	~Texture();
-	Texture(const char* const filePath);
+	Texture(const std::string filePath);
 	Texture(const BYTE* const buffer, int width, int height);
 
 	/*!
 	* @brief 画像を読み込みます。
 	* @param (filepath) ファイルパス
 	*/
-	void Load(const char* const filePath);
+	void Load(const std::string filePath);
 	/*!
 	* @brief テクスチャを作成します
 	* @param (buffer)　バッファ

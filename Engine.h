@@ -35,16 +35,6 @@ public:
 	*/
 	static HWND GetWindowHandle();
 	/*!
-	* @brief ウィンドウの幅を返します
-	* @return int
-	*/
-	static int GetWindowWidth();
-	/*!
-	* @brief ウィンドウの高さを返します
-	* @return int
-	*/
-	static int GetWindowHeight();
-	/*!
 	* @brief ウィンドウのクライアント領域を取得します
 	* @return DirectX::XINT2
 	*/

@@ -52,16 +52,6 @@ public:
 	* @return HWND
 	*/
 	HWND GetHwnd();
-	/*!
-	* @brief ウィンドウの幅を取得します
-	* @return int
-	*/
-	int GetWidth();
-	/*!
-	* @brief ウィンドウの高さを取得します
-	* @return int
-	*/
-	int GetHeight();
 
 	/*!
 	* @brief ウィンドウのクライアント領域を取得します

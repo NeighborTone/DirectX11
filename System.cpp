@@ -83,8 +83,8 @@ bool System::Create(std::string str, int width, int height)
 				WS_OVERLAPPEDWINDOW,	//ウィンドウのスタイル
 				200,							//ウィンドウの水平位置のデフォルト
 				50,								//ウィンドウの垂直位置のデフォルト
-				width,						//幅
-				height,			 			//高さ
+				0,						//幅
+				0,			 			//高さ
 				NULL,							//親ウィンドウなし
 				NULL,							//メニューなし
 				instance,					//アプリケーションインスタンスへのハンドル
@@ -109,15 +109,6 @@ HWND System::GetHwnd()
 	return handle;
 }
 
-int System::GetWidth()
-{
-	return width;
-}
-
-int System::GetHeight()
-{
-	return height;
-}
 
 DirectX::XMINT2 System::GetSize()
 {

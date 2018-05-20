@@ -1,7 +1,10 @@
 #include "Texture.h"
 #include "Engine.h"
 #include "Utility.hpp"
+#include "StringConverter.hpp"
 #include <memory>
+
+
 Texture::Texture():
 	texture(nullptr),
 	shaderResourceView(nullptr),
@@ -10,7 +13,7 @@ Texture::Texture():
 	Engine::COMInitialize();
 }
 
-Texture::Texture(const char * const filePath)
+Texture::Texture(const std::string  filePath)
 {
 	Engine::COMInitialize();
 	Load(filePath);
@@ -28,12 +31,15 @@ Texture::~Texture()
 
 }
 
-void Texture::Load(const char* const filePath)
+
+void Texture::Load(const std::string filePath)
 {
+
 	HRESULT hr;
 	ATL::CComPtr<IWICBitmapDecoder> decoder = nullptr;
+	
 	hr = Engine::GetTextureFactory().CreateDecoderFromFilename(
-		(LPCWSTR)filePath,
+		StringToWString(filePath).c_str(),
 		0,
 		GENERIC_READ,
 		WICDecodeMetadataCacheOnDemand,

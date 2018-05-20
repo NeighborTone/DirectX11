@@ -75,6 +75,56 @@ public:
 		return result;
 	}
 
+	_Vec2 operator+() const
+	{
+		return _Vec2(*this);
+	}
+
+	_Vec2 operator-() const
+	{
+		return _Vec2(-x, -y);
+	}
+
+	friend _Vec2 operator+(const _Vec2& t1, const _Vec2& t2)
+	{
+		return _Vec2(t1) += t2;
+	}
+
+	friend _Vec2 operator+(const _Vec2& t1, const T& t2)
+	{
+		return _Vec2(t1) += t2;
+	}
+
+	friend _Vec2 operator-(const _Vec2& t1, const _Vec2& t2)
+	{
+		return _Vec2(t1) -= t2;
+	}
+
+	friend _Vec2 operator-(const _Vec2& t1, const T& t2)
+	{
+		return _Vec2(t1) -= t2;
+	}
+
+	friend _Vec2 operator*(const _Vec2& t1, const _Vec2& t2)
+	{
+		return _Vec2(t1) *= t2;
+	}
+
+	friend _Vec2 operator*(const _Vec2& t1, const T& t2)
+	{
+		return _Vec2(t1) *= t2;
+	}
+
+	friend _Vec2 operator/(const _Vec2& t1, const _Vec2& t2)
+	{
+		return _Vec2(t1) /= t2;
+	}
+
+	friend _Vec2 operator/(const _Vec2& t1, const T& t2)
+	{
+		return _Vec2(t1) /= t2;
+	}
+
 	_Vec2& operator=(const _Vec2& v)
 	{
 		x = v.x;
@@ -87,24 +137,56 @@ public:
 		y += v.y;
 		return *this;
 	}
+
+	_Vec2& operator+=(const T& v)
+	{
+		x += v;
+		y += v;
+		return *this;
+	}
+
 	_Vec2& operator-=(const _Vec2& v)
 	{
 		x -= v.x;
 		y -= v.y;
 		return *this;
 	}
+
+	_Vec2& operator-=(const T& v)
+	{
+		x -= v;
+		y -= v;
+		return *this;
+	}
+
 	_Vec2& operator*=(const _Vec2& v)
 	{
 		x *= v.x;
 		y *= v.y;
 		return *this;
 	}
+
+	_Vec2& operator*=(const T& v)
+	{
+		x *= v;
+		y *= v;
+		return *this;
+	}
+
 	_Vec2& operator/=(const _Vec2& v)
 	{
 		x /= v.x;
 		y /= v.y;
 		return *this;
 	}
+
+	_Vec2& operator/=(const T& v)
+	{
+		x /= v;
+		y /= v;
+		return *this;
+	}
+
 	bool	operator==(const _Vec2 &v) const
 	{
 		return x == v.x && y == v.y;
@@ -208,6 +290,57 @@ public:
 		z = v.z;
 		return *this;
 	}
+
+	_Vec3 operator+() const
+	{
+		return _Vec3(*this);
+	}
+
+	_Vec3 operator-() const
+	{
+		return _Vec3(-this->x, -this->y, -this->z);
+	}
+
+	friend _Vec3 operator+(const _Vec3& t1, const _Vec3& t2)
+	{
+		return _Vec3(t1) += t2;
+	}
+
+	friend _Vec3 operator+(const _Vec3& t1, const T& t2)
+	{
+		return _Vec3(t1) += t2;
+	}
+
+	friend _Vec3 operator-(const _Vec3& t1, const _Vec3& t2)
+	{
+		return _Vec3(t1) -= t2;
+	}
+
+	friend _Vec3 operator-(const _Vec3& t1, const T& t2)
+	{
+		return _Vec3(t1) -= t2;
+	}
+
+	friend _Vec3 operator*(const _Vec3& t1, const _Vec3& t2)
+	{
+		return _Vec3(t1) *= t2;
+	}
+
+	friend _Vec3 operator*(const _Vec3& t1, const T& t2)
+	{
+		return _Vec3(t1) *= t2;
+	}
+
+	friend _Vec3 operator/(const _Vec3& t1, const _Vec3& t2)
+	{
+		return _Vec3(t1) /= t2;
+	}
+
+	friend _Vec3 operator/(const _Vec3& t1, const T& t2)
+	{
+		return _Vec3(t1) /= t2;
+	}
+
 	_Vec3& operator+=(const _Vec3& v)
 	{
 		x += v.x;
@@ -215,6 +348,15 @@ public:
 		z += v.z;
 		return *this;
 	}
+	
+	_Vec3& operator+=(const T& v)
+	{
+		x += v;
+		y += v;
+		z += v;
+		return *this;
+	}
+
 	_Vec3& operator-=(const _Vec3& v)
 	{
 		x -= v.x;
@@ -222,6 +364,15 @@ public:
 		z -= v.z;
 		return *this;
 	}
+
+	_Vec3& operator-=(const T& v)
+	{
+		x -= v;
+		y -= v;
+		z -= v;
+		return *this;
+	}
+
 	_Vec3& operator*=(const _Vec3& v)
 	{
 		x *= v.x;
@@ -229,14 +380,31 @@ public:
 		z *= v.z;
 		return *this;
 	}
+
+	_Vec3& operator*=(const T& v)
+	{
+		x *= v;
+		y *= v;
+		z *= v;
+		return *this;
+	}
+
 	_Vec3& operator/=(const _Vec3& v)
 	{
 		x /= v.x;
 		y /= v.y;
 		z /= v.z;
 		return *this;
-
 	}
+
+	_Vec3& operator/=(const T& v)
+	{
+		x /= v;
+		y /= v;
+		z /= v;
+		return *this;
+	}
+
 	bool	operator==(const _Vec3 &v) const
 	{
 		return (x == v.x && y == v.y && v.z == z);
@@ -371,6 +539,13 @@ struct Vertex
 	Vec3 pos;
 	Vec3 normal;
 	Vec2 uv;
+
+	Vertex(Vec3 pos, Vec3 normal, Vec2 uv)
+	{
+		this->pos = pos;
+		this->normal = normal;
+		this->uv = uv;
+	}
 };
 
 template <typename T>
