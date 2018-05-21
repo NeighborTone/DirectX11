@@ -187,11 +187,11 @@ public:
 		return *this;
 	}
 
-	bool	operator==(const _Vec2 &v) const
+	bool operator==(const _Vec2 &v) const
 	{
 		return x == v.x && y == v.y;
 	}
-	bool	operator!=(const _Vec2 &v) const
+	bool operator!=(const _Vec2 &v) const
 	{
 		return !(*this == v);
 	}

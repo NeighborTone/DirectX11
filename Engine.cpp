@@ -11,6 +11,9 @@ Engine::Engine(std::string WindowTitle, int width, int height,bool isFullScreen)
 	this->width = width;
 	this->height = height;
 	this->isFullScreen = isFullScreen;
+	in.CreateInput(GetWindow().GetHwnd());
+	pad.CreatePadInput(GetWindow().GetHwnd());
+	mouse.CreateMousenput(GetWindow().GetHwnd());
 	COMInitialize();
 }
 
@@ -35,8 +38,9 @@ void Engine::COMInitialize()
 
 bool Engine::Run()
 {
+	KeyBoard::Run();
+	Pad::Run();
 	GetDirect3D().Run();
-	
 	return GetWindow().Run();
 }
 
@@ -85,13 +89,20 @@ IDWriteFactory& Engine::GetTextFactory()
 	return  GetDirect3D().GetTextFactory();
 }
 
+SoundSystem& Engine::GetSoundSystem()
+{
+	static std::unique_ptr<SoundSystem>soundSystem(new SoundSystem);
+	return *soundSystem.get();
+}
+
+
 System& Engine::GetWindow()
 {
 	static std::unique_ptr<System>window(new System(title,width,height));
 	return *window.get();	
 }
 
-Direct3D & Engine::GetDirect3D()
+Direct3D& Engine::GetDirect3D()
 {
 	static std::unique_ptr<Direct3D> direct3D(new Direct3D(isFullScreen));
 	return *direct3D.get();

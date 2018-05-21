@@ -1,6 +1,13 @@
 #pragma once
+#include "audio.h"
+#include "Keyboard.h"
+#include "Pad.h"
+#include "Direct_Input.h"
 #include "System.h"
 #include "Direct3D.h"
+#include "Camera.h"
+#include "Mesh.h"
+
 
 /*! @class Engine
 *   @brief 描画等の更新処理や各ハンドルをまとめます
@@ -9,7 +16,6 @@
 class Engine final
 {
 public:
-
 	/*!
 	* @brief コンストラクタです。
 	* @param (title) ウィンドウタイトル
@@ -74,8 +80,14 @@ public:
 	* @return IDWriteFactory&
 	*/
 	static IDWriteFactory& GetTextFactory();
+	/*!
+	* @brief サウンドエンジンを取得します
+	* @return SoundSystem&
+	*/
+	static SoundSystem& GetSoundSystem();
 	
-	
+
+
 private:
 	static std::string title;
 	static int width;
@@ -83,5 +95,6 @@ private:
 	static bool isFullScreen;
 	static System& GetWindow();
 	static Direct3D& GetDirect3D();
+
 };
 

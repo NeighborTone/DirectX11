@@ -1,6 +1,5 @@
 #include "Engine.h"
-#include "Camera.h"
-#include "Mesh.h"
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow)
 {
 	//Memo//
@@ -10,12 +9,20 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 
 	//ゲームエンジン生成
 	Engine ge("Directx11",640,480,true);
+	
+	//カメラ生成
 	Camera camera;
 	camera.pos = Vec3(0.0f, 0.0f, -5.0f);
 	//camera.SetPerspective(100.0f, 1, 100.0f);
 	camera.SetOrthographic(0,0.1f,100.0f);
 	camera.SetDepthTest(true);
 	//camera.color = Float4(1, 1, 1, 1);
+	
+	//サウンドソースの登録
+	SoundSource source;
+	source.Load("Grass.wav");
+	Engine::GetSoundSystem().AddSource(source);
+	//source.PlayBGM();
 
 	Texture texture1("box.jpg");
 	Texture texture2("brick.jpg");
@@ -24,8 +31,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 
 	Mesh mesh;
 	mesh.CreateCube();
-	mesh.SetDrawMode(D3D11_CULL_BACK, D3D11_FILL_SOLID);
-	mesh.GetMaterial().SetTexture(0, &texture1);
+	mesh.SetDrawMode(D3D11_CULL_NONE, D3D11_FILL_WIREFRAME);
+	mesh.GetMaterial().SetTexture(0, &texture4);
 	mesh.scale *= 100;
 
 	Mesh mesh2;
@@ -44,6 +51,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	float x = 0;
 	while (ge.Run())
 	{
+		if (KeyBoard::Down(KeyBoard::Key::KEY_ESCAPE) ||
+			Pad::Down(Pad::Button::PAD_START))
+		{
+			break;
+		}
+		
 		camera.Update();
 		camera.pos.x += 1;
 
@@ -60,7 +73,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		mesh3.pos.x = -200.0f;
 		mesh3.Draw();
 
-		
 	}
 	
 	//終了

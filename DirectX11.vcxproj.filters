@@ -9,6 +9,11 @@
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="wav.cpp" />
+    <ClCompile Include="audio.cpp" />
+    <ClCompile Include="Direct_Input.cpp" />
+    <ClCompile Include="Pad.cpp" />
+    <ClCompile Include="Keyboard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h" />
@@ -20,5 +25,10 @@
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="StringConverter.hpp" />
+    <ClInclude Include="audio.h" />
+    <ClInclude Include="wav.h" />
+    <ClInclude Include="Direct_Input.h" />
+    <ClInclude Include="Keyboard.h" />
+    <ClInclude Include="Pad.h" />
   </ItemGroup>
 </Project>

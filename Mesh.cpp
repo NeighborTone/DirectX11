@@ -80,10 +80,22 @@ void Mesh::CreatePlane(Vec2 size, Vec3 offset, bool shouldClear, Vec3 leftDirect
 	upDirection.Normalize();
 	forwardDirection.Normalize();
 
-	vertex.push_back(Vertex(leftDirection * -size.x + upDirection * size.y + offset, -forwardDirection, Vec2(0.0f, 0.0f)));
-	vertex.push_back(Vertex(leftDirection * size.x + upDirection * size.y + offset, -forwardDirection, Vec2(1.0f, 0.0f)));
-	vertex.push_back(Vertex(leftDirection * -size.x + upDirection * -size.y + offset, -forwardDirection, Vec2(0.0f, 1.0f)));
-	vertex.push_back(Vertex(leftDirection * size.x + upDirection * -size.y + offset, -forwardDirection, Vec2(1.0f, 1.0f)));
+	vertex.push_back(Vertex(
+		leftDirection * -size.x + upDirection * size.y + offset,
+		-forwardDirection, 
+		Vec2(0.0f, 0.0f)));
+	vertex.push_back(Vertex(
+		leftDirection * size.x + upDirection * size.y + offset, 
+		-forwardDirection, 
+		Vec2(1.0f, 0.0f)));
+	vertex.push_back(Vertex(
+		leftDirection * -size.x + upDirection * -size.y + offset,
+		-forwardDirection, 
+		Vec2(0.0f, 1.0f)));
+	vertex.push_back(Vertex(
+		leftDirection * size.x + upDirection * -size.y + offset, 
+		-forwardDirection, 
+		Vec2(1.0f, 1.0f)));
 
 	size_t indexOffset = vertex.size() - 4;
 	index.push_back(indexOffset + 0);
