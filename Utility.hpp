@@ -291,6 +291,14 @@ public:
 		return *this;
 	}
 
+	_Vec3&	operator=(const  T& v)
+	{
+		x = v;
+		y = v;
+		z = v;
+		return *this;
+	}
+
 	_Vec3 operator+() const
 	{
 		return _Vec3(*this);

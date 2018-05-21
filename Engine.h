@@ -7,7 +7,7 @@
 #include "Direct3D.h"
 #include "Camera.h"
 #include "Mesh.h"
-
+#include "Sprite.h"
 
 /*! @class Engine
 *   @brief 描画等の更新処理や各ハンドルをまとめます
