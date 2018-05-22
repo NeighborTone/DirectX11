@@ -8,7 +8,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 
 
 	//ゲームエンジン生成
-	Engine ge("Directx11",640,480,true);
+	Engine ge("DirectX11",640,480,true);
 	
 	//カメラ生成
 	Camera camera;
@@ -52,8 +52,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	sp.pos.x = 5;
 	sp.scale = 1.0f / 80.0f;
 	float x = 0;
+	ci_ext::Console();
+	ShowConsole();
+
 	while (ge.Run())
 	{
+		
 		if (KeyBoard::Down(KeyBoard::Key::KEY_ESCAPE) ||
 			Pad::Down(Pad::Button::PAD_START))
 		{
@@ -99,6 +103,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		mesh3.pos.x = -2.0f;
 		mesh3.Draw();
 
+		std::cout << mesh.pos.x << "   ";
+		std::cout << mesh.pos.y << "   ";
+		std::cout << mesh.pos.z <<  std::endl;
 		sp.Draw();
 
 	}

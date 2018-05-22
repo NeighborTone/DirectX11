@@ -41,6 +41,7 @@
     <ClCompile Include="wav.cpp">
       <Filter>Lib</Filter>
     </ClCompile>
+    <ClCompile Include="Text.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="audio.h">
@@ -88,6 +89,7 @@
     <ClInclude Include="wav.h">
       <Filter>Lib</Filter>
     </ClInclude>
+    <ClInclude Include="Text.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Lib">
