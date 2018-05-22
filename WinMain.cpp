@@ -93,8 +93,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		{
 			camera.pos.y += 0.5f;
 		}
+	
 		camera.Update();
-
+		std::cout << Mouse::GetMousePos().x << ": " << Mouse::GetMousePos().y << "\n";
+		text.Draw();
 		for(int y = 0; y < 20; y++)
 		{
 			for (int x = 0; x < 20; x++)
@@ -103,7 +105,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 			}
 		}
 		text.angle.y += 2;
-		text.Draw();
+		
 	}
 	
 	//I—¹

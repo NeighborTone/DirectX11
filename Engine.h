@@ -1,6 +1,7 @@
 #pragma once
 #include "audio.h"
 #include "Keyboard.h"
+#include "Mouse.h"
 #include "Pad.h"
 #include "Direct_Input.h"
 #include "System.h"
@@ -84,8 +85,6 @@ public:
 	* @return SoundSystem&
 	*/
 	static SoundSystem& GetSoundSystem();
-	
-
 
 private:
 	static std::string title;
@@ -94,6 +93,6 @@ private:
 	static bool isFullScreen;
 	static System& GetWindow();
 	static Direct3D& GetDirect3D();
-
+	
 };
 

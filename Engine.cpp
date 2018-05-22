@@ -39,8 +39,8 @@ void Engine::COMInitialize()
 bool Engine::Run()
 {
 	KeyBoard::Run();
+	Mouse::Run();
 	Pad::Run();
-	mouse.Run();
 	GetDirect3D().Run();
 	return GetWindow().Run();
 }

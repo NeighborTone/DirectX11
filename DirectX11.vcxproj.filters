@@ -44,6 +44,9 @@
     <ClCompile Include="Text.cpp">
       <Filter>Lib</Filter>
     </ClCompile>
+    <ClCompile Include="Mouse.cpp">
+      <Filter>Lib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="audio.h">
@@ -92,6 +95,9 @@
       <Filter>Lib</Filter>
     </ClInclude>
     <ClInclude Include="Text.h">
+      <Filter>Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Mouse.h">
       <Filter>Lib</Filter>
     </ClInclude>
   </ItemGroup>

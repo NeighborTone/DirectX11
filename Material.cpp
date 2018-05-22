@@ -115,10 +115,38 @@ void Material::Create(const std::string & source)
 		24, 
 		D3D11_INPUT_PER_VERTEX_DATA, 
 		0 });
-	inputElementDesc.push_back({ "BLENDINDICES", 0, DXGI_FORMAT_R32G32B32A32_UINT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0 });
-	inputElementDesc.push_back({ "BLENDINDICES", 1, DXGI_FORMAT_R32G32B32A32_UINT, 0, 48, D3D11_INPUT_PER_VERTEX_DATA, 0 });
-	inputElementDesc.push_back({ "BLENDWEIGHT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 64, D3D11_INPUT_PER_VERTEX_DATA, 0 });
-	inputElementDesc.push_back({ "BLENDWEIGHT", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 80, D3D11_INPUT_PER_VERTEX_DATA, 0 });
+	inputElementDesc.push_back({
+		"BLENDINDICES",
+		0,
+		DXGI_FORMAT_R32G32B32A32_UINT,
+		0,
+		32,
+		D3D11_INPUT_PER_VERTEX_DATA,
+		0 });
+	inputElementDesc.push_back({ 
+		"BLENDINDICES",
+		1, 
+		DXGI_FORMAT_R32G32B32A32_UINT, 
+		0,
+		48,
+		D3D11_INPUT_PER_VERTEX_DATA, 
+		0 });
+	inputElementDesc.push_back({ 
+		"BLENDWEIGHT", 
+		0, 
+		DXGI_FORMAT_R32G32B32A32_FLOAT, 
+		0, 
+		64, 
+		D3D11_INPUT_PER_VERTEX_DATA, 
+		0 });
+	inputElementDesc.push_back({ 
+		"BLENDWEIGHT", 
+		1, 
+		DXGI_FORMAT_R32G32B32A32_FLOAT, 
+		0, 
+		80, 
+		D3D11_INPUT_PER_VERTEX_DATA, 
+		0 });
 	//頂点レイアウト(入力レイアウト)オブジェクトを作成しデバイスに登録
 	//インプットレイアウトは、頂点情報とシェーダーの情報を集約します
 	hr = Engine::GetDXDevice3D().CreateInputLayout(
