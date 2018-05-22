@@ -40,6 +40,7 @@ bool Engine::Run()
 {
 	KeyBoard::Run();
 	Pad::Run();
+	mouse.Run();
 	GetDirect3D().Run();
 	return GetWindow().Run();
 }

@@ -495,7 +495,7 @@ bool DxMouse::CreateMousenput(const HWND & hwnd)
 
 	return true;
 }
-void DxMouse::UpDate()
+void DxMouse::Run()
 {
 	// 読取前の値を保持します
 	DIMOUSESTATE g_zdiMouseState_bak;	// マウス情報(変化検知用)

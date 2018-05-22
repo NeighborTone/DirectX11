@@ -7,31 +7,31 @@ template <typename T>
 *   @brief 2次元ベクトルを扱います
 *   @detail 内積、外積、正規化、長さを測る機能があります
 */
-class _Vec2
+class TemplateVec2
 {
 public:
 	T x, y;
-	_Vec2():
+	TemplateVec2():
 	x(0),
 	y(0)
 	{};
-	_Vec2(T x, T y)
+	TemplateVec2(T x, T y)
 	{
 		this->x = x;
 		this->y = y;
 	};
-	_Vec2(const _Vec2& v)
+	TemplateVec2(const TemplateVec2& v)
 	{
 		x = v.x;
 		y = v.y;
 	}
-	~_Vec2() {};
+	~TemplateVec2() {};
 
 	/*!
 	* @brief 内積を返します
 	* @return 内積
 	*/
-	T Dot(_Vec2& v)
+	T Dot(TemplateVec2& v)
 	{
 		return x * v.x + y * v.y;
 	}
@@ -40,7 +40,7 @@ public:
 	* @brief 外積を返します
 	* @return 外積
 	*/
-	T Cross(_Vec2& v)
+	T Cross(TemplateVec2& v)
 	{
 		return x * v.y - v.x * y;
 	}
@@ -57,7 +57,7 @@ public:
 	* @brief 自分自身を正規化した値を返します
 	* @return Vec2
 	*/
-	_Vec2&  Normalize()
+	TemplateVec2&  Normalize()
 	{
 		T tmp = Length();
 		x /= tmp;
@@ -68,138 +68,162 @@ public:
 	* @brief 自分自身を正規化した値のコピーを返します。自身の値は変わりません
 	* @return Vec2
 	*/
-	_Vec2  GetNormalize() const
+	TemplateVec2  GetNormalize() const
 	{
-		_Vec2 result = *this;
+		TemplateVec2 result = *this;
 		result.Normalize();
 		return result;
 	}
 
-	_Vec2 operator+() const
+	TemplateVec2 operator+() const
 	{
-		return _Vec2(*this);
+		return TemplateVec2(*this);
 	}
 
-	_Vec2 operator-() const
+	TemplateVec2 operator-() const
 	{
-		return _Vec2(-x, -y);
+		return TemplateVec2(-x, -y);
 	}
 
-	friend _Vec2 operator+(const _Vec2& t1, const _Vec2& t2)
+	TemplateVec2 operator+(const TemplateVec2& v)
 	{
-		return _Vec2(t1) += t2;
+		TemplateVec2 ret(*this);
+		ret += v;
+		return ret;
 	}
 
-	friend _Vec2 operator+(const _Vec2& t1, const T& t2)
+	 TemplateVec2 operator+(const T& t)
 	{
-		return _Vec2(t1) += t2;
+		 TemplateVec2 ret(*this);
+		 ret += t;
+		 return ret;
 	}
 
-	friend _Vec2 operator-(const _Vec2& t1, const _Vec2& t2)
+	TemplateVec2 operator-(const TemplateVec2& v)
 	{
-		return _Vec2(t1) -= t2;
+		TemplateVec2 ret(*this);
+		ret -= v	;
+		return ret;
 	}
 
-	friend _Vec2 operator-(const _Vec2& t1, const T& t2)
+	TemplateVec2 operator-(const T& t)
 	{
-		return _Vec2(t1) -= t2;
+		TemplateVec2 ret(*this);
+		ret -= t;
+		return ret;
 	}
 
-	friend _Vec2 operator*(const _Vec2& t1, const _Vec2& t2)
+	TemplateVec2 operator*(const TemplateVec2& v)
 	{
-		return _Vec2(t1) *= t2;
+		TemplateVec2 ret(*this);
+		ret *= v;
+		return ret;
 	}
 
-	friend _Vec2 operator*(const _Vec2& t1, const T& t2)
+	TemplateVec2 operator*(const T& t)
 	{
-		return _Vec2(t1) *= t2;
+		TemplateVec2 ret(*this);
+		ret *= t;
+		return ret;
 	}
 
-	friend _Vec2 operator/(const _Vec2& t1, const _Vec2& t2)
+	TemplateVec2 operator/(const TemplateVec2& v)
 	{
-		return _Vec2(t1) /= t2;
+		TemplateVec2 ret(*this);
+		ret /= v;
+		return ret;
 	}
 
-	friend _Vec2 operator/(const _Vec2& t1, const T& t2)
+	TemplateVec2 operator/(const T& t)
 	{
-		return _Vec2(t1) /= t2;
+		TemplateVec2 ret(*this);
+		ret /= t;
+		return ret;
 	}
 
-	_Vec2& operator=(const _Vec2& v)
+	TemplateVec2& operator=(const TemplateVec2& v)
 	{
 		x = v.x;
 		y = v.y;
 		return *this;
 	}
-	_Vec2& operator+=(const _Vec2& v)
+
+	TemplateVec2& operator=(const T& v)
+	{
+		x = v;
+		y = v;
+		return *this;
+	}
+
+	TemplateVec2& operator+=(const TemplateVec2& v)
 	{
 		x += v.x;
 		y += v.y;
 		return *this;
 	}
 
-	_Vec2& operator+=(const T& v)
+	TemplateVec2& operator+=(const T& v)
 	{
 		x += v;
 		y += v;
 		return *this;
 	}
 
-	_Vec2& operator-=(const _Vec2& v)
+	TemplateVec2& operator-=(const TemplateVec2& v)
 	{
 		x -= v.x;
 		y -= v.y;
 		return *this;
 	}
 
-	_Vec2& operator-=(const T& v)
+	TemplateVec2& operator-=(const T& v)
 	{
 		x -= v;
 		y -= v;
 		return *this;
 	}
 
-	_Vec2& operator*=(const _Vec2& v)
+	TemplateVec2& operator*=(const TemplateVec2& v)
 	{
 		x *= v.x;
 		y *= v.y;
 		return *this;
 	}
 
-	_Vec2& operator*=(const T& v)
+	TemplateVec2& operator*=(const T& v)
 	{
 		x *= v;
 		y *= v;
 		return *this;
 	}
 
-	_Vec2& operator/=(const _Vec2& v)
+	TemplateVec2& operator/=(const TemplateVec2& v)
 	{
 		x /= v.x;
 		y /= v.y;
 		return *this;
 	}
 
-	_Vec2& operator/=(const T& v)
+	TemplateVec2& operator/=(const T& v)
 	{
 		x /= v;
 		y /= v;
 		return *this;
 	}
 
-	bool operator==(const _Vec2 &v) const
+	bool operator==(const TemplateVec2 &v) const
 	{
 		return x == v.x && y == v.y;
 	}
-	bool operator!=(const _Vec2 &v) const
+	bool operator!=(const TemplateVec2 &v) const
 	{
 		return !(*this == v);
 	}
 
 };
-typedef _Vec2<int>Vec2_i;
-typedef _Vec2<float>Vec2;
-typedef _Vec2<double>Vec2_d;
+typedef TemplateVec2<int>Vec2_i;
+typedef TemplateVec2<float>Vec2;
+typedef TemplateVec2<double>Vec2_d;
 
 
 template <typename T>
@@ -207,34 +231,34 @@ template <typename T>
 *   @brief 3次元ベクトルを扱います
 *   @detail 内積、外積、正規化、長さを測る機能があります
 */
-class _Vec3
+class TemplateVec3
 {
 public:
 	T x, y, z;
-	_Vec3() :
+	TemplateVec3() :
 		x(0),
 		y(0),
 		z(0)
 	{}
-	_Vec3(T x, T y, T z)
+	TemplateVec3(T x, T y, T z)
 	{
 		this->x = x;
 		this->y = y;
 		this->z = z;
 	}
-	_Vec3(const _Vec3& v)
+	TemplateVec3(const TemplateVec3& v)
 	{
 		x = v.x;
 		y = v.y;
 		z = v.z;
 	}
-	~_Vec3() {};
+	~TemplateVec3() {};
 
 	/*!
 	* @brief 内積を返します
 	* @return float
 	*/
-	float Dot(_Vec3& v)
+	float Dot(TemplateVec3& v)
 	{
 		return x * v.x + y * v.y + z * v.z;
 	}
@@ -243,9 +267,9 @@ public:
 	* @brief 外積を返します
 	* @return Vec3
 	*/
-	_Vec3 Cross(_Vec3& v)
+	TemplateVec3 Cross(TemplateVec3& v)
 	{
-		_Vec3 result;
+		TemplateVec3 result;
 		result.x = y * v.z - z * v.y;
 		result.y = z * v.x - x * v.z;
 		result.z = x * v.y - y * v.x;
@@ -264,7 +288,7 @@ public:
 	* @brief 自分自身を正規化した値を返します
 	* @return Vec3
 	*/
-	_Vec3&  Normalize()
+	TemplateVec3&  Normalize()
 	{
 		T tmp = Length();
 		x /= tmp;
@@ -276,14 +300,14 @@ public:
 	* @brief 自分自身を正規化した値のコピーを返します。自身の値は変わりません
 	* @return Vec3
 	*/
-	_Vec3  GetNormalize() const
+	TemplateVec3  GetNormalize() const
 	{
-		_Vec3 result = *this;
+		TemplateVec3 result = *this;
 		result.Normalize();
 		return result;
 	}
 
-	_Vec3&	operator=(const  _Vec3& v)
+	TemplateVec3&	operator=(const  TemplateVec3& v)
 	{
 		x = v.x;
 		y = v.y;
@@ -291,57 +315,81 @@ public:
 		return *this;
 	}
 
-	_Vec3 operator+() const
+	TemplateVec3&	operator=(const  T& v)
 	{
-		return _Vec3(*this);
+		x = v;
+		y = v;
+		z = v;
+		return *this;
 	}
 
-	_Vec3 operator-() const
+	TemplateVec3 operator+() const
 	{
-		return _Vec3(-this->x, -this->y, -this->z);
+		return TemplateVec3(*this);
 	}
 
-	friend _Vec3 operator+(const _Vec3& t1, const _Vec3& t2)
+	TemplateVec3 operator-() const
 	{
-		return _Vec3(t1) += t2;
+		return TemplateVec3(-this->x, -this->y, -this->z);
 	}
 
-	friend _Vec3 operator+(const _Vec3& t1, const T& t2)
+	TemplateVec3 operator+(const TemplateVec3& v)
 	{
-		return _Vec3(t1) += t2;
+		TemplateVec3 ret(*this);
+		ret += v;
+		return ret;
 	}
 
-	friend _Vec3 operator-(const _Vec3& t1, const _Vec3& t2)
+	 TemplateVec3 operator+(const T& t)
 	{
-		return _Vec3(t1) -= t2;
+		 TemplateVec3 ret(*this);
+		 ret += t;
+		 return ret;
 	}
 
-	friend _Vec3 operator-(const _Vec3& t1, const T& t2)
+	 TemplateVec3 operator-(const TemplateVec3& v)
 	{
-		return _Vec3(t1) -= t2;
+		 TemplateVec3 ret(*this);
+		 ret -= v;
+		return ret;
 	}
 
-	friend _Vec3 operator*(const _Vec3& t1, const _Vec3& t2)
+	TemplateVec3 operator-(const T& t)
 	{
-		return _Vec3(t1) *= t2;
+		TemplateVec3 ret(*this);
+		ret -= t;
+		return ret;
 	}
 
-	friend _Vec3 operator*(const _Vec3& t1, const T& t2)
+	TemplateVec3 operator*(const TemplateVec3& v)
 	{
-		return _Vec3(t1) *= t2;
+		TemplateVec3 ret(*this);
+		ret *= v;
+		return ret;
 	}
 
-	friend _Vec3 operator/(const _Vec3& t1, const _Vec3& t2)
+	TemplateVec3 operator*(const T& t)
 	{
-		return _Vec3(t1) /= t2;
+		TemplateVec3 ret(*this);
+		ret *= t;
+		return ret;
 	}
 
-	friend _Vec3 operator/(const _Vec3& t1, const T& t2)
+	TemplateVec3 operator/(const TemplateVec3& v)
 	{
-		return _Vec3(t1) /= t2;
+		TemplateVec3 ret(*this);
+		ret /= v;
+		return ret;
 	}
 
-	_Vec3& operator+=(const _Vec3& v)
+	 TemplateVec3 operator/(const T& t)
+	{
+		 TemplateVec3 ret(*this);
+		 ret /= t;
+		 return ret;
+	}
+
+	TemplateVec3& operator+=(const TemplateVec3& v)
 	{
 		x += v.x;
 		y += v.y;
@@ -349,7 +397,7 @@ public:
 		return *this;
 	}
 	
-	_Vec3& operator+=(const T& v)
+	TemplateVec3& operator+=(const T& v)
 	{
 		x += v;
 		y += v;
@@ -357,7 +405,7 @@ public:
 		return *this;
 	}
 
-	_Vec3& operator-=(const _Vec3& v)
+	TemplateVec3& operator-=(const TemplateVec3& v)
 	{
 		x -= v.x;
 		y -= v.y;
@@ -365,7 +413,7 @@ public:
 		return *this;
 	}
 
-	_Vec3& operator-=(const T& v)
+	TemplateVec3& operator-=(const T& v)
 	{
 		x -= v;
 		y -= v;
@@ -373,7 +421,7 @@ public:
 		return *this;
 	}
 
-	_Vec3& operator*=(const _Vec3& v)
+	TemplateVec3& operator*=(const TemplateVec3& v)
 	{
 		x *= v.x;
 		y *= v.y;
@@ -381,7 +429,7 @@ public:
 		return *this;
 	}
 
-	_Vec3& operator*=(const T& v)
+	TemplateVec3& operator*=(const T& v)
 	{
 		x *= v;
 		y *= v;
@@ -389,7 +437,7 @@ public:
 		return *this;
 	}
 
-	_Vec3& operator/=(const _Vec3& v)
+	TemplateVec3& operator/=(const TemplateVec3& v)
 	{
 		x /= v.x;
 		y /= v.y;
@@ -397,7 +445,7 @@ public:
 		return *this;
 	}
 
-	_Vec3& operator/=(const T& v)
+	TemplateVec3& operator/=(const T& v)
 	{
 		x /= v;
 		y /= v;
@@ -405,19 +453,19 @@ public:
 		return *this;
 	}
 
-	bool	operator==(const _Vec3 &v) const
+	bool	operator==(const TemplateVec3 &v) const
 	{
 		return (x == v.x && y == v.y && v.z == z);
 	}
-	bool	operator!=(const _Vec3 &v) const
+	bool	operator!=(const TemplateVec3 &v) const
 	{
 		return !(*this == v);
 	}
 
 };
-typedef _Vec3<int>Vec3_i;
-typedef _Vec3<float>Vec3;
-typedef _Vec3<double>Vec3_d;
+typedef TemplateVec3<int>Vec3_i;
+typedef TemplateVec3<float>Vec3;
+typedef TemplateVec3<double>Vec3_d;
 
 /*! @class Float4
 *   @brief 4つのfloatの値を扱います
@@ -539,7 +587,7 @@ struct Vertex
 	Vec3 pos;
 	Vec3 normal;
 	Vec2 uv;
-
+	
 	Vertex(Vec3 pos, Vec3 normal, Vec2 uv)
 	{
 		this->pos = pos;
@@ -554,7 +602,7 @@ template <typename T>
 *   @detail コンストラクタで初期値、加算値、下限値、上限値を設定してください
 *   @detail int(Counter), float(CounterF), double(CounterD)型がそれぞれあります
 */
-class _Counter
+class TemplateCounter
 {
 private:
 	T now;
@@ -564,7 +612,7 @@ private:
 	bool isMax;
 	bool isMin;
 public:
-	_Counter(T now, T add, T min, T max) :
+	TemplateCounter(T now, T add, T min, T max) :
 		isMax(false),
 		isMin(false)
 	{
@@ -644,6 +692,78 @@ public:
 	}
 };
 
-typedef _Counter<int>Counter;
-typedef _Counter<float>Counter_f;
-typedef _Counter<double>Counter_d;
+typedef TemplateCounter<int>Counter;
+typedef TemplateCounter<float>Counter_f;
+typedef TemplateCounter<double>Counter_d;
+
+#include <cstdio>
+#include <iostream>
+namespace ci_ext
+{
+
+	//Win32アプリでcin、coutを許可するクラス
+	class Console
+	{
+		std::FILE* in_;
+		std::FILE* out_;
+	public:
+		Console()
+		{
+			AllocConsole();
+			freopen_s(&out_, "CONOUT$", "w", stdout); //標準出力をコンソールにする
+			freopen_s(&in_, "CONIN$", "r", stdin);  //標準入力をコンソールにする
+		}
+		~Console()
+		{
+			std::fclose(in_);
+			std::fclose(out_);
+			FreeConsole();
+		}
+	};
+
+	//coutでデバッグウインドウに出力できるようになるクラス
+	class coutDbgString
+	{
+		class DbgStreambuf : public std::streambuf
+		{
+		public:
+			std::streamsize xsputn(const char* s, std::streamsize n)
+			{
+				OutputDebugString(s);
+				return n;
+			}
+			int_type overflow(int_type c = EOF)
+			{
+				if (c != EOF)
+				{
+					char buf[2] = { (char)c, '\0' };
+					OutputDebugString(buf);
+				}
+				return c;
+			}
+		};
+		std::streambuf* default_stream;
+		DbgStreambuf debug_stream;
+	public:
+		coutDbgString()
+		{
+			default_stream = std::cout.rdbuf(&debug_stream);
+		}
+		~coutDbgString()
+		{
+			std::cout.rdbuf(default_stream);
+		}
+	};
+
+#ifdef _DEBUG
+	//複数はサポートしない
+# define ShowConsole() ci_ext::Console c
+# define StartOutputDbgString() ci_ext::coutDbgString c
+#else
+# define ShowConsole() __noop
+# define StartOutputDbgString() __noop
+#endif
+
+#define dout std::cout << __FUNCTION__ << ":"
+#define FILENAME_AND_LINE __FILE__ << ":" << __LINE__
+}

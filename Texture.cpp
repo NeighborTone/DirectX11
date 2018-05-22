@@ -39,7 +39,7 @@ void Texture::Load(const std::string filePath)
 	ATL::CComPtr<IWICBitmapDecoder> decoder = nullptr;
 	
 	hr = Engine::GetTextureFactory().CreateDecoderFromFilename(
-		StringToWString(filePath).c_str(),
+		StringConverter::StringToWString(filePath).c_str(),
 		0,
 		GENERIC_READ,
 		WICDecodeMetadataCacheOnDemand,
@@ -124,9 +124,9 @@ void Texture::Create(const BYTE * const buffer, int width, int height)
 	samplerState.Release();
 	D3D11_SAMPLER_DESC samplerDesc = {};
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;		//テクスチャーのサンプリング時に使用するフィルタリングメソッド
-	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;		//0～1の範囲外にあるテクスチャー座標を解決するために使用されるメソッド
-	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;		//0～1の範囲外にあるテクスチャー座標を解決するために使用されるメソッド
-	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;		//0～1の範囲外にあるテクスチャー座標を解決するために使用されるメソッド
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;		//0～1の範囲外にあるテクスチャー座標を解決するために使用されるメソッド
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;		//0～1の範囲外にあるテクスチャー座標を解決するために使用されるメソッド
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;		//0～1の範囲外にあるテクスチャー座標を解決するために使用されるメソッド
 	samplerDesc.MipLODBias = 0.0f;													//計算されたミップマップレベルからのオフセット
 	samplerDesc.MaxAnisotropy = 1;													//Filter にD3D11_FILTER_ANISOTROPICまたはD3D11_FILTER_COMPARISON_ANISOTROPICが指定されている場合に使用されるクランプ(範囲固定)値
 	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;	//既存のサンプリングデータに対してデータを比較する関数
