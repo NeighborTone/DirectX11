@@ -93,7 +93,7 @@ public:
 	POINT pos;
 	bool CreateMousenput(const HWND& hwnd);
 
-	void UpDate();
+	void Run();
 	//‰Ÿ‚³‚ê‚Ä‚¢‚é
 	bool LPush();
 

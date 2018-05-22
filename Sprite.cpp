@@ -110,7 +110,7 @@ void Sprite::SetPivot(Vec2 pivot)
 	Vec2 offset = textureSize / 2.0f * -pivot;
 
 	mesh.CreatePlane(textureSize / 2.0f, Vec3(offset.x, offset.y, 0.0f));
-	mesh.Apply();
+	
 }
 
 Material & Sprite::GetMaterial()
