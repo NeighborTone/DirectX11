@@ -40,7 +40,7 @@ public:
 	/*!
 	*   @brief ‰æ–Ê‚ÌXVˆ—‚ğs‚¢‚Ü‚·
 	*/
-	void Run();
+	void UpDate();
 	
 
 private:

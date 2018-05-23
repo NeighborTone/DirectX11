@@ -1,6 +1,6 @@
 #include "Keyboard.h"
 
-void KeyBoard::Run()
+void KeyBoard::UpDate()
 {
 	in.UpDate();
 }

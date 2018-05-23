@@ -8,6 +8,7 @@
 #include "Direct3D.h"
 #include "Camera.h"
 #include "Text.h"
+#include "FPS.h"
 
 /*! @class Engine
 *   @brief 描画等の更新処理や各ハンドルをまとめます
@@ -85,6 +86,11 @@ public:
 	* @return SoundSystem&
 	*/
 	static SoundSystem& GetSoundSystem();
+	/*!
+	* @brief FPSクラスを取得します
+	* @return FPS&
+	*/
+	static FPS& GetFps();
 
 private:
 	static std::string title;

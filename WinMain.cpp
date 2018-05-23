@@ -14,7 +14,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 {
 	ci_ext::Console();
 	ShowConsole();
-
+	constexpr int MAX = 50;
 	//ゲームエンジン生成
 	Engine ge("DirectX11",640,480,true);
 	
@@ -39,12 +39,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 
 	Text text("あ",16);
 	text.pos.y = 5;
+	text.pos.z = 0;
 	text.scale = 0.1f;
-	Mesh m[20][20];
-	m[0][0].GetMaterial().SetTexture(0, &texture2);
-	for (int y = 0; y < 20; y++)
+	std::vector<std::vector<Mesh>> m;
+	m.resize(MAX);						//1次元目の要素数分確保
+	for (int i = 0; i < MAX; ++i)
 	{
-		for (int x = 0; x < 20; x++)
+		m[i].resize(MAX);				//2次元目の要素数分確保
+	}
+	m[0][0].GetMaterial().SetTexture(0, &texture2);
+	for (int y = 0; y < MAX; y++)
+	{
+		for (int x = 0; x < MAX; x++)
 		{
 			m[y][x].CreateCube();
 			m[y][x].SetDrawMode(D3D11_CULL_BACK, D3D11_FILL_SOLID);
@@ -52,7 +58,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 			m[y][x].pos.z += y;
 		}
 	}
-
+	
+	//Mesh p[10];
+	//p[0].GetMaterial().SetTexture(0, &texture4);
+	//for (int i = 0; i < 10; ++i)
+	//{
+	//	p[i].CreatePoint(Vec3(0, 0, 0));
+	//	p[i].SetDrawMode(D3D11_CULL_BACK, D3D11_FILL_SOLID);
+	//	p[i].pos.x = (float)i;
+	//}
+	
 	while (ge.Run())
 	{
 		
@@ -94,18 +109,24 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 			camera.pos.y += 0.5f;
 		}
 	
-		camera.Update();
-		std::cout << Mouse::GetMousePos().x << ": " << Mouse::GetMousePos().y << "\n";
+		camera.Run();
+		//std::cout << Mouse::GetMousePos().x << ": " << Mouse::GetMousePos().y << "\n";
 		text.Draw();
-		for(int y = 0; y < 20; y++)
+		for(int y = 0; y < MAX; y++)
 		{
-			for (int x = 0; x < 20; x++)
+			for (int x = 0; x < MAX; x++)
 			{
 				m[y][x].Draw();
 			}
 		}
 		text.angle.y += 2;
+
+	/*	for (auto &i : p)
+		{
+			i.DrawPoint();
+		}*/
 		
+		std::cout << Engine::GetFps().GetFrameRate() << std::endl;
 	}
 	
 	//終了

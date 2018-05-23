@@ -45,7 +45,6 @@ void Camera::SetOrthographic(float size, float nearClip, float farClip)
 	this->size = size;
 	this->nearClip = nearClip;
 	this->farClip = farClip;
-	float aspectRatio = Engine::GetWindowSize().x / (float)Engine::GetWindowSize().y;
 	constant.projection = XMMatrixTranspose(
 		XMMatrixOrthographicLH((float)Engine::GetWindowSize().x, (float)Engine::GetWindowSize().y, nearClip, farClip));
 }
@@ -55,7 +54,7 @@ void Camera::SetDepthTest(bool isDepthTest)
 	this->isDepthTest = isDepthTest;
 }
 
-void Camera::Update()
+void Camera::Run()
 {
 	constant.view = XMMatrixTranspose(
 		XMMatrixInverse(

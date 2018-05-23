@@ -32,9 +32,15 @@ public:
 	*   @detail 画面の奥行きの概念をなくした射影変換です
 	*/
 	void SetOrthographic(float size, float nearClip, float farClip);
-	
-	void SetDepthTest(bool isDepthTest);
-	void Update();
+	/*!
+	*   @brief 深度テストを設定します(ClearDepthStencilViewを行います)
+	*   @param (enable) 有効にするか
+	*/
+	void SetDepthTest(bool enable);
+	/*!
+	*   @brief カメラを更新します
+	*/
+	void Run();
 
 private:
 	struct Constant

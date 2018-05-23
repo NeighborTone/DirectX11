@@ -11,7 +11,7 @@ Mouse::~Mouse()
 {
 }
 
-void Mouse::Run()
+void Mouse::UpDate()
 {
 	mouse.Run();
 }

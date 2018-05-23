@@ -67,6 +67,57 @@ Mesh::~Mesh()
 
 }
 
+void Mesh::CreatePoint(Vec3 p1, Vec3 offset, Vec3 forwardDirection,bool shouldClear)
+{
+	if (shouldClear)
+	{
+		vertex.clear();
+		index.clear();
+	}
+	
+	forwardDirection.Normalize();
+
+	//1�ڂ̓_
+	vertex.push_back(Vertex(
+		p1 * + offset,
+		-forwardDirection,
+		Vec2(0.0f, 1.0f)));
+
+
+	size_t indexOffset = vertex.size() - 1;
+	index.push_back(indexOffset + 0);
+
+	Apply();
+}
+
+void Mesh::CreateLine(Vec3 p1, Vec3 p2, Vec3 offset, Vec3 forwardDirection, bool shouldClear)
+{
+	if (shouldClear)
+	{
+		vertex.clear();
+		index.clear();
+	}
+
+	forwardDirection.Normalize();
+
+	//1�ڂ̓_
+	vertex.push_back(Vertex(
+		p1 * +offset,
+		-forwardDirection,
+		Vec2(0.0f, 1.0f)));
+
+	vertex.push_back(Vertex(
+		p2 * +offset,
+		-forwardDirection,
+		Vec2(0.0f, 1.0f)));
+
+
+	size_t indexOffset = vertex.size() - 1;
+	index.push_back(indexOffset + 0);
+
+	Apply();
+}
+
 
 void Mesh::CreatePlane(Vec2 size, Vec3 offset, bool shouldClear, Vec3 leftDirection, Vec3 upDirection, Vec3 forwardDirection)
 {
@@ -177,8 +228,6 @@ void Mesh::Draw()
 		return;
 	}
 
-	
-
 	constant.world = XMMatrixTranspose(
 		XMMatrixScaling(scale.x, scale.y, scale.z) *
 		XMMatrixRotationX(DirectX::XMConvertToRadians(angle.x)) *
@@ -205,3 +254,38 @@ void Mesh::Draw()
 		Engine::GetDXContext3D().DrawIndexed(index.size(), 0, 0);
 	}
 }
+
+void Mesh::DrawPoint()
+{
+	if (vertexBuffer == nullptr)
+	{
+		return;
+	}
+
+	constant.world = XMMatrixTranspose(
+		XMMatrixScaling(scale.x, scale.y, scale.z) *
+		XMMatrixRotationX(DirectX::XMConvertToRadians(angle.x)) *
+		XMMatrixRotationY(DirectX::XMConvertToRadians(angle.y)) *
+		XMMatrixRotationZ(DirectX::XMConvertToRadians(angle.z)) *
+		XMMatrixTranslation(pos.x, pos.y, pos.z)
+	);
+
+	material.Attach();
+
+	Engine::GetDXContext3D().RSSetState(rasterizerState);
+
+	UINT stride = sizeof(Vertex);
+	UINT offset = 0;
+	Engine::GetDXContext3D().IASetVertexBuffers(0, 1, &vertexBuffer.p, &stride, &offset);
+	Engine::GetDXContext3D().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+	if (indexBuffer == nullptr)
+	{
+		Engine::GetDXContext3D().Draw(vertex.size(), 0);
+	}
+	else
+	{
+		Engine::GetDXContext3D().IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+		Engine::GetDXContext3D().DrawIndexed(index.size(), 0, 0);
+	}
+}
+

@@ -63,7 +63,7 @@ IDWriteFactory& Direct3D::GetTextFactory() const
 	return *textFactory.Get();
 }
 
-void Direct3D::Run()
+void Direct3D::UpDate()
 {
 	swapChain->Present(1, 0);
 }

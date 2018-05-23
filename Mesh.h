@@ -31,6 +31,27 @@ public:
 	Mesh();
 	~Mesh();
 	/*!
+	* @brief 点を作成します
+	* @param (p1)	ポリゴンの初期位置
+	* @param (offset) ポリゴンのオフセット値
+	* @param (shouldClear) 頂点、インデックスの初期化
+	* @param (forwardDirection) 法線の向き
+	*/
+	void CreatePoint(
+		Vec3 p1,
+		Vec3 offset = Vec3(0.0f, 0.0f, 0.0f),
+		Vec3 forwardDirection = Vec3(0.0f, 0.0f, 1.0f),
+		bool shouldClear = true
+		);
+
+	void CreateLine(
+		Vec3 p1,
+		Vec3 p2,
+		Vec3 offset = Vec3(0.0f, 0.0f, 0.0f),
+		Vec3 forwardDirection = Vec3(0.0f, 0.0f, 1.0f),
+		bool shouldClear = true
+	);
+	/*!
 	* @brief 平面を作成します
 	* @param (size)	ポリゴンのサイズ
 	* @param (offset) ポリゴンの初期位置
@@ -70,5 +91,10 @@ public:
 	* @brief Meshを描画します
 	*/
 	void Draw();
+	/*!
+	* @brief 点を描画します
+	*/
+	void DrawPoint();
+
 };
 

@@ -47,6 +47,9 @@
     <ClCompile Include="Mouse.cpp">
       <Filter>Lib</Filter>
     </ClCompile>
+    <ClCompile Include="FPS.cpp">
+      <Filter>Lib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="audio.h">
@@ -98,6 +101,9 @@
       <Filter>Lib</Filter>
     </ClInclude>
     <ClInclude Include="Mouse.h">
+      <Filter>Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="FPS.h">
       <Filter>Lib</Filter>
     </ClInclude>
   </ItemGroup>

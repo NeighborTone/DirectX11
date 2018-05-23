@@ -69,7 +69,7 @@ public:
 		KEY_F9,				//F9
 		KEY_F10,				//F10	
 	};
-	static void Run();
+	static void UpDate();
 	//‰Ÿ‚µ‚Ä‚¢‚é
 	static bool On(const Key& key);
 	//‰Ÿ‚µ‚½

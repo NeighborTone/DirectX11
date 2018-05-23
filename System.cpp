@@ -14,7 +14,7 @@ System::~System()
 	CoUninitialize();		//COMオブジェクトの破棄。必ずここで呼ぶ
 }
 
-bool System::Run()
+bool System::UpDate()
 {
 	//メッセージを取得
 	GetMessage(&msg, NULL, 0, 0);

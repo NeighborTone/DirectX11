@@ -40,7 +40,7 @@ public:
 		NONE,
 	};
  
-	static void Run();
+	static void UpDate();
 
 	static bool Down(const Button& key, const NO& no = Pad::NO::P1);
 

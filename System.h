@@ -45,7 +45,7 @@ public:
 	* @brief ウィンドウ更新
 	* @return 問題がなければtrue
 	*/
-	bool Run();
+	bool UpDate();
 
 	/*!
 	* @brief ウィンドウハンドルを取得します

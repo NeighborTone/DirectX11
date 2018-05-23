@@ -1,6 +1,6 @@
 #include "Pad.h"
 
-void Pad::Run()
+void Pad::UpDate()
 {
 	pad.UpDate();
 }

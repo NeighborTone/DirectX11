@@ -38,11 +38,12 @@ void Engine::COMInitialize()
 
 bool Engine::Run()
 {
-	KeyBoard::Run();
-	Mouse::Run();
-	Pad::Run();
-	GetDirect3D().Run();
-	return GetWindow().Run();
+	KeyBoard::UpDate();
+	Mouse::UpDate();
+	Pad::UpDate();
+	GetDirect3D().UpDate();
+	GetFps().UpDate();
+	return GetWindow().UpDate();
 }
 
 HWND Engine::GetWindowHandle()
@@ -96,7 +97,6 @@ SoundSystem& Engine::GetSoundSystem()
 	return *soundSystem.get();
 }
 
-
 System& Engine::GetWindow()
 {
 	static std::unique_ptr<System>window(new System(title,width,height));
@@ -107,4 +107,10 @@ Direct3D& Engine::GetDirect3D()
 {
 	static std::unique_ptr<Direct3D> direct3D(new Direct3D(isFullScreen));
 	return *direct3D.get();
+}
+
+FPS& Engine::GetFps()
+{
+	static std::unique_ptr<FPS> fps(new FPS());
+	return *fps.get();
 }

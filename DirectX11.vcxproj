@@ -24,6 +24,7 @@
     <ClCompile Include="Direct3D.cpp" />
     <ClCompile Include="Direct_Input.cpp" />
     <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="FPS.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -42,6 +43,7 @@
     <ClInclude Include="Direct3D.h" />
     <ClInclude Include="Direct_Input.h" />
     <ClInclude Include="Engine.h" />
+    <ClInclude Include="FPS.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
@@ -132,6 +134,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BrowseInformation>true</BrowseInformation>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
