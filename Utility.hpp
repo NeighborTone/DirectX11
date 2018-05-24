@@ -1,6 +1,8 @@
 #pragma once
 #include <Windows.h>
+#include <DirectXMath.h>
 #include <math.h>
+#include <stdint.h>
 
 template <typename T>
 /*! @class Vec2
@@ -587,7 +589,8 @@ struct Vertex
 	Vec3 pos;
 	Vec3 normal;
 	Vec2 uv;
-	
+	uint32_t blendIndices[8] = { 999, 999, 999, 999, 999, 999, 999, 999 };
+	float blendWeights[8] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
 	Vertex(Vec3 pos, Vec3 normal, Vec2 uv)
 	{
 		this->pos = pos;

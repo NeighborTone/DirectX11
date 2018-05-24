@@ -50,6 +50,7 @@
     <ClCompile Include="FPS.cpp">
       <Filter>Lib</Filter>
     </ClCompile>
+    <ClCompile Include="Model.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="audio.h">
@@ -106,6 +107,7 @@
     <ClInclude Include="FPS.h">
       <Filter>Lib</Filter>
     </ClInclude>
+    <ClInclude Include="Model.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Lib">
