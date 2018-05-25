@@ -255,7 +255,18 @@ public:
 		z = v.z;
 	}
 	~TemplateVec3() {};
-
+	/*!
+	* @brief オフセット値を返します
+	* @return Vec3
+	*/
+	TemplateVec3 OffSetCopy(const T x, const T y, const T z)
+	{
+		TemplateVec3 ret(*this);
+		ret.x += x;
+		ret.y += y;
+		ret.z += z;
+		return ret;
+	}
 	/*!
 	* @brief 内積を返します
 	* @return float
@@ -463,7 +474,7 @@ public:
 	{
 		return !(*this == v);
 	}
-
+	
 };
 typedef TemplateVec3<int>Vec3_i;
 typedef TemplateVec3<float>Vec3;
