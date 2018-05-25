@@ -61,9 +61,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	
 	Model model(L"sphere.fbx");
 	model.meshes[0]->GetMaterial().SetTexture(0, &texture4);
-	for (int i = 0; i < model.meshes.size(); i++) {
+	for (UINT i = 0; i < model.meshes.size(); i++) {
 		model.meshes[i]->GetMaterial().Load("Shader/test.hlsl");
-		model.meshes[i]->SetDrawMode(D3D11_CULL_FRONT, D3D11_FILL_SOLID);
+		model.meshes[i]->SetDrawMode(D3D11_CULL_FRONT, D3D11_FILL_WIREFRAME);
 	}
 	
 	//Mesh p[10];
@@ -120,7 +120,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 			camera.angles.x += 0.5f;
 		}
 		camera.Run();
-		for (int i = 0; i < model.meshes.size(); i++) {
+		for (UINT i = 0; i < model.meshes.size(); i++) {
 			model.meshes[i]->angle.y += Engine::GetFps().GetDeltaTime() * 50.0f;
 		}
 		model.Draw();

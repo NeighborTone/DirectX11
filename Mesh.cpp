@@ -13,7 +13,7 @@ Mesh::Mesh():
 	Engine::COMInitialize();
 
 	material.Create(
-		"cbuffer Camera : register(b0)"
+		"cbuffer Camera : register(b0)"	//定数バッファ
 		"{"
 		"    matrix view;"
 		"    matrix projection;"
@@ -22,21 +22,21 @@ Mesh::Mesh():
 		"{"
 		"    matrix world;"
 		"};"
-		"Texture2D texture0 : register(t0);"
-		"SamplerState sampler0 : register(s0);"
-		"struct Vertex"
+		"Texture2D texture0 : register(t0);"		//受け取ったテクスチャーを特定のレジスターに割り当てる
+		"SamplerState sampler0 : register(s0);"		//受け取ったサンプラーを特定のレジスターに割り当てる
+		"struct Vertex"								//頂点用構造体
 		"{"
-		"    float4 position : POSITION;"
-		"    float3 normal : NORMAL;"
-		"    float2 uv : TEXCOORD;"
+		"    float4 position : POSITION;"			//オブジェクト空間内の頂点位置。
+		"    float3 normal : NORMAL;"				//法線ベクトル
+		"    float2 uv : TEXCOORD;"					//テクスチャー座標
 		"};"
-		"struct Pixel"
+		"struct Pixel"								//ピクセル用構造体
 		"{"
 		"    float4 position : SV_POSITION;"
 		"    float3 normal : NORMAL;"
 		"    float2 uv : TEXCOORD;"
 		"};"
-		"Pixel VS(Vertex vertex)"
+		"Pixel VS(Vertex vertex)"					//頂点出力用関数
 		"{"
 		"    Pixel output;"
 		"    output.position = mul(vertex.position, world);"
@@ -46,15 +46,15 @@ Mesh::Mesh():
 		"    output.uv = vertex.uv;"
 		"    return output;"
 		"}"
-		"float4 PS(Pixel pixel) : SV_TARGET"
+		"float4 PS(Pixel pixel) : SV_TARGET"		//レンダリングターゲットに出力
 		"{"
 		"    float3 normal = normalize(pixel.normal);"
-		"    float3 lightDirection = normalize(float3(0.25, -1.0, 0.5));"
-		"    float3 lightColor = float3(1.0, 1.0, 1.0);"
-		"    float4 diffuseColor = texture0.Sample(sampler0, pixel.uv);"
-		"    float3 diffuseIntensity = dot(-lightDirection, normal) * lightColor;"
-		"    float3 ambientIntensity = lightColor * 0.5;"
-		"    return diffuseColor * float4(diffuseIntensity + ambientIntensity, 1);"
+		"    float3 lightDirection = normalize(float3(0.25, -1.0, 0.5));"			//ライトの向き
+		"    float3 lightColor = float3(1.0, 1.0, 1.0);"							//ライトの色
+		"    float4 diffuseColor = texture0.Sample(sampler0, pixel.uv);"			//拡散光
+		"    float3 diffuseIntensity = dot(-lightDirection, normal) * lightColor;"	//拡散光の強さ
+		"    float3 ambientIntensity = lightColor * 0.5;"							//環境光の強さ
+		"    return diffuseColor * float4(diffuseIntensity + ambientIntensity, 1);"	
 		"}"
 	);
 
@@ -79,7 +79,7 @@ void Mesh::CreatePoint(Vec3 p1, Vec3 offset, Vec3 forwardDirection,bool shouldCl
 
 	//1個目の点
 	vertex.push_back(Vertex(
-		p1 * + offset,
+		p1  + offset,
 		-forwardDirection,
 		Vec2(0.0f, 1.0f)));
 

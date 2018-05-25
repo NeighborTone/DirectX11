@@ -53,7 +53,7 @@ public:
 	virtual ~Model() {}
 	void Draw() 
 	{
-		for (int i = 0; i < meshes.size(); i++) {
+		for (UINT i = 0; i < meshes.size(); i++) {
 			meshes[i]->Draw();
 		}
 	}
