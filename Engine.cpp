@@ -41,6 +41,7 @@ bool Engine::Run()
 	KeyBoard::UpDate();
 	Mouse::UpDate();
 	Pad::UpDate();
+	GetPhysics().UpDate();
 	GetDirect3D().UpDate();
 	GetFps().UpDate();
 	return GetWindow().UpDate();
@@ -91,6 +92,7 @@ IDWriteFactory& Engine::GetTextFactory()
 	return  GetDirect3D().GetTextFactory();
 }
 
+
 SoundSystem& Engine::GetSoundSystem()
 {
 	static std::unique_ptr<SoundSystem>soundSystem(new SoundSystem);
@@ -114,3 +116,13 @@ FPS& Engine::GetFps()
 	static std::unique_ptr<FPS> fps(new FPS());
 	return *fps.get();
 }
+
+Physics& Engine::GetPhysics()
+{
+	static std::unique_ptr<Physics> physics(new Physics());
+	return *physics.get();
+}
+
+
+
+

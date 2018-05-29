@@ -69,6 +69,7 @@ public:
 		KEY_F9,				//F9
 		KEY_F10,				//F10	
 	};
+	 KeyBoard() = delete;
 	static void UpDate();
 	//‰Ÿ‚µ‚Ä‚¢‚é
 	static bool On(const Key& key);
