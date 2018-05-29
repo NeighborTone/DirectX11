@@ -45,10 +45,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	//ゲームエンジン生成
 	Engine ge("DirectX11",640,480,true);
 	EntityWorld entity;
-	entity.setupWorld();
+	entity.SetupWorld();
 	//カメラ生成
 	Camera camera;
-	camera.pos = Vec3(0.0f, 0.0f, -50.0f);
+	camera.pos = Vec3(0.0f, 7.0f, -20.0f);
 	camera.SetPerspective(45.0f, 1, 10000.0f);
 	//camera.SetOrthographic(0,0.1f,100.0f);
 	camera.SetDepthTest(true);
@@ -63,12 +63,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	mesh.CreateCube();
 	mesh.GetMaterial().SetTexture(0,&texture2);
 
+	Mesh ground;
+	ground.CreateCube();
+	ground.GetMaterial().SetTexture(0, &texture4);
+	ground.scale = 10;
+	ground.scale.y = 1;
 	while (ge.Run())
 	{
 		camera.Run();
-		entity.update();
-		mesh.pos = entity.pBox.get()->GetPosition();
-		mesh.Draw();
+		
 		if (KeyBoard::Down(KeyBoard::Key::KEY_ESCAPE) ||
 			Pad::Down(Pad::Button::PAD_START))
 		{
@@ -110,6 +113,20 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		{
 			camera.angles.x += 0.5f;
 		}
+		static bool go = false;
+		if (KeyBoard::On(KeyBoard::Key::KEY_S))
+		{
+			go = true;
+		}
+		if (go)
+		{
+			entity.UpDate();
+		}
+		
+		mesh.pos = entity.pBox.get()->GetPosition();
+		ground.Draw();
+		mesh.Draw();
+		
 
 	
 		std::cout << Engine::GetFps().GetFrameRate() << std::endl;
