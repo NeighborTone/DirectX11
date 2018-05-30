@@ -1,6 +1,6 @@
 #include "Engine.h"
-
-//仮
+#include "Model.h"
+//仮----------------------------------------------------
 bool HitBall(Vec3 &c1, Vec3& c2, float r,float r2)
 {
 	if ((c1.x - c2.x) * (c1.x - c2.x) + ((c1.y - c2.y) * (c1.y - c2.y)) + ((c1.z - c2.z) * (c1.z - c2.z)) <= (r + r) * (r2+ r2))
@@ -14,62 +14,56 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 {
 	ci_ext::Console();
 	ShowConsole();
-	constexpr int MAX = 50;
+	constexpr int MAX = 10;
 	//ゲームエンジン生成
 	Engine ge("DirectX11",640,480,true);
-	
+
 	//カメラ生成
 	Camera camera;
-	camera.pos = Vec3(0.0f, 0.0f, -50.0f);
+	camera.pos = Vec3(0.0f, 7.0f, -20.0f);
 	camera.SetPerspective(45.0f, 1, 10000.0f);
 	//camera.SetOrthographic(0,0.1f,100.0f);
 	camera.SetDepthTest(true);
-	//camera.color = Float4(1, 1, 1, 1);
-	
-	//サウンドソースの登録
-	SoundSource source;
-	source.Load("Grass.wav");
-	Engine::GetSoundSystem().AddSource(source);
-	source.PlayBGM();
 
 	Texture texture1("box.jpg");
 	Texture texture2("brick.jpg");
 	Texture texture3("brick2.jpg");
 	Texture texture4("p.png");
 
-	Text text("あ",16);
-	text.pos.y = 5;
-	text.pos.z = 0;
-	text.scale = 0.1f;
-	std::vector<std::vector<Mesh>> m;
-	m.resize(MAX);						//1次元目の要素数分確保
+	Mesh box[MAX];
 	for (int i = 0; i < MAX; ++i)
 	{
-		m[i].resize(MAX);				//2次元目の要素数分確保
+		box[i].CreateCube();
+		box[i].GetMaterial().SetTexture(0, &texture2);
 	}
-	m[0][0].GetMaterial().SetTexture(0, &texture2);
-	for (int y = 0; y < MAX; y++)
+	Mesh ground;
+	ground.CreateCube();
+	ground.GetMaterial().SetTexture(0, &texture4);
+	ground.scale = 10;
+	ground.scale.y = 1;
+
+	PhysicsWorld physicsWorld;
+	for (int i = 0; i < MAX; ++i)
 	{
-		for (int x = 0; x < MAX; x++)
-		{
-			m[y][x].CreateCube();
-			m[y][x].SetDrawMode(D3D11_CULL_BACK, D3D11_FILL_SOLID);
-			m[y][x].pos.x += x;
-			m[y][x].pos.z += y;
-		}
+		physicsWorld.AddDynamicBox(Vec3(1, 1, 1), 5);
 	}
+
+	physicsWorld.AddStaticBox(Vec3(10, 1, 10));
 	
-	//Mesh p[10];
-	//p[0].GetMaterial().SetTexture(0, &texture4);
-	//for (int i = 0; i < 10; ++i)
-	//{
-	//	p[i].CreatePoint(Vec3(0, 0, 0));
-	//	p[i].SetDrawMode(D3D11_CULL_BACK, D3D11_FILL_SOLID);
-	//	p[i].pos.x = (float)i;
-	//}
-	
+
+	physicsWorld.pDynamicBox[0]->SetPosition(Vec3(-5.5f, 10, 0));
+	physicsWorld.pDynamicBox[1]->SetPosition(Vec3(5.5f, 10, 0));
+	physicsWorld.pDynamicBox[2]->SetPosition(Vec3(0, 10, 0));
+	physicsWorld.pDynamicBox[3]->SetPosition(Vec3(0.5f, 11, 0));
+	physicsWorld.pDynamicBox[4]->SetPosition(Vec3(-2.7f, 11, 0));
+	physicsWorld.pDynamicBox[5]->SetPosition(Vec3(2.7f, 11, 0));
+	physicsWorld.pDynamicBox[6]->SetPosition(Vec3(-2.7f, 12, -0.7f));
+	physicsWorld.pDynamicBox[7]->SetPosition(Vec3(1.7f, 13, 0));
+	physicsWorld.pDynamicBox[8]->SetPosition(Vec3(-1.2f, 14, 0));
+	physicsWorld.pDynamicBox[9]->SetPosition(Vec3(0, 12, 1));
 	while (ge.Run())
 	{
+		camera.Run();
 		
 		if (KeyBoard::Down(KeyBoard::Key::KEY_ESCAPE) ||
 			Pad::Down(Pad::Button::PAD_START))
@@ -86,11 +80,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		}
 		if (KeyBoard::On(KeyBoard::Key::KEY_RIGHT))
 		{
-			camera.pos.x += 0.5f;
+			camera.pos.x += 3.5f;
 		}
 		if (KeyBoard::On(KeyBoard::Key::KEY_LEFT))
 		{
-			camera.pos.x -= 0.5f;
+			camera.pos.x -= 3.5f;
 		}
 		if (KeyBoard::On(KeyBoard::Key::KEY_RSHIFT))
 		{
@@ -102,33 +96,39 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		}
 		if (KeyBoard::On(KeyBoard::Key::KEY_LCONTROL))
 		{
-			camera.pos.y -= 0.5f;
+			camera.pos.y -= 3.5f;
 		}
 		if (KeyBoard::On(KeyBoard::Key::KEY_RCONTROL))
 		{
-			camera.pos.y += 0.5f;
+			camera.pos.y += 3.5f;
 		}
-	
-		camera.Run();
-		//std::cout << Mouse::GetMousePos().x << ": " << Mouse::GetMousePos().y << "\n";
-		text.Draw();
-		for(int y = 0; y < MAX; y++)
+		if (KeyBoard::On(KeyBoard::Key::KEY_SPACE))
 		{
-			for (int x = 0; x < MAX; x++)
-			{
-				m[y][x].Draw();
-			}
+			camera.angles.x += 0.5f;
 		}
-		text.angle.y += 2;
+		static bool go = false;
+		if (KeyBoard::On(KeyBoard::Key::KEY_S))
+		{
+			go = true;
+		}
+		if (go)
+		{
+			physicsWorld.UpDate();
+		}
+		static float y = 0;
+		//y -= 0.1f;
+		physicsWorld.pStaticBox[0]->SetPosition(Vec3(0, y, 0));
+		for (int i = 0; i < MAX; ++i)
+		{
+			box[i].pos = physicsWorld.pDynamicBox[i]->GetPosition();
+			box[i].Draw();
+		}
+		ground.pos = physicsWorld.pStaticBox[0]->GetPosition();
+		ground.Draw();
 
-	/*	for (auto &i : p)
-		{
-			i.DrawPoint();
-		}*/
-		
 		std::cout << Engine::GetFps().GetFrameRate() << std::endl;
 	}
-	
+
 	//終了
 	return 0;
 

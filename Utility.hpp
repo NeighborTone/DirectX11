@@ -1,6 +1,8 @@
 #pragma once
 #include <Windows.h>
+#include <DirectXMath.h>
 #include <math.h>
+#include <stdint.h>
 
 template <typename T>
 /*! @class Vec2
@@ -253,7 +255,18 @@ public:
 		z = v.z;
 	}
 	~TemplateVec3() {};
-
+	/*!
+	* @brief オフセット値を返します
+	* @return Vec3
+	*/
+	TemplateVec3 OffSetCopy(const T x, const T y, const T z)
+	{
+		TemplateVec3 ret(*this);
+		ret.x += x;
+		ret.y += y;
+		ret.z += z;
+		return ret;
+	}
 	/*!
 	* @brief 内積を返します
 	* @return float
@@ -461,7 +474,7 @@ public:
 	{
 		return !(*this == v);
 	}
-
+	
 };
 typedef TemplateVec3<int>Vec3_i;
 typedef TemplateVec3<float>Vec3;
@@ -587,7 +600,8 @@ struct Vertex
 	Vec3 pos;
 	Vec3 normal;
 	Vec2 uv;
-	
+	uint32_t blendIndices[8] = { 999, 999, 999, 999, 999, 999, 999, 999 };
+	float blendWeights[8] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
 	Vertex(Vec3 pos, Vec3 normal, Vec2 uv)
 	{
 		this->pos = pos;

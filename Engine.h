@@ -9,6 +9,7 @@
 #include "Camera.h"
 #include "Text.h"
 #include "FPS.h"
+#include "Physics.h"
 
 /*! @class Engine
 *   @brief 描画等の更新処理や各ハンドルをまとめます
@@ -92,6 +93,12 @@ public:
 	*/
 	static FPS& GetFps();
 
+	/*!
+	* @brief Physicsクラスを取得します
+	* @return Physics&
+	*/
+	static Physics& GetPhysics();
+
 private:
 	static std::string title;
 	static int width;
@@ -99,6 +106,6 @@ private:
 	static bool isFullScreen;
 	static System& GetWindow();
 	static Direct3D& GetDirect3D();
-	
+
 };
 
