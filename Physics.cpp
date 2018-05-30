@@ -9,8 +9,10 @@ Physics::Physics()
 	//ワールドの作成
 	world = dWorldCreate();
 	//重力の設定
-	dWorldSetGravity(world,0,-9.81,0);
+	dWorldSetGravity(world, 0, -9.81, 0);
+	//衝突検出計算
 	collSpace = dHashSpaceCreate(0);
+	//接触点の集まりが格納される
 	contactGroup = dJointGroupCreate(0);
 }
 
@@ -39,12 +41,13 @@ dJointGroupID Physics::GetContactGroup() const
 	return contactGroup;
 }
 
-void Physics::UpDate(float stepTime)
+void Physics::WorldStep(const float stepTime)
 {
 
 	dWorldStep(world, stepTime);
 
 }
+
 
 
 void DynamicBox::Create(const Vec3 & size, dReal totalMass)
@@ -96,7 +99,7 @@ Vec3 DynamicBox::GetPosition() const
 	return Vec3((float)values[0], (float)values[1], (float)values[2]);
 }
 
-void DynamicBox::SetPosition(const Vec3 & pos)
+void DynamicBox::SetPosition(const Vec3& pos)
 {
 	dBodySetPosition(body, pos.x, pos.y, pos.z);
 }
@@ -105,21 +108,38 @@ StaticBox::StaticBox(const Vec3& size)
 {
 	// ジオメトリの作成
 	geom = dCreateBox(Engine::GetPhysics().GetCollsionSpace(), size.x, size.y, size.z);
+	dGeomSetPosition(geom, 0, 0, 0);
 }
 
 StaticBox::~StaticBox()
 {
-	dGeomDestroy(geom);
+	if (geom != nullptr)
+	{
+		dGeomDestroy(geom);
+		geom = nullptr;
+	}
 }
+
+Vec3 StaticBox::GetPosition() const
+{
+	auto values = dGeomGetPosition(geom);
+	return Vec3((float)values[0], (float)values[1], (float)values[2]);
+}
+
+void StaticBox::SetPosition(const Vec3 & pos)
+{
+	dGeomSetPosition(geom, pos.x, pos.y, pos.z);
+}
+
 
 
 void PhysicsWorld::NearCallback(void *data, dGeomID o1, dGeomID o2)
 {
-	// nearCallback(近似的に衝突判定された2つのジオメトリの詳細な当たり判定を行う)
+	//NearCallback(近似的に衝突判定された2つのジオメトリの詳細な当たり判定を行う)
 	const int N = 10;
 	dContact contact[N];
-	int n = dCollide(o1, o2, N, &contact[0].geom, sizeof(dContact));	//Maybe:オブジェクトの総数
-
+	int n = dCollide(o1, o2, N, &contact[0].geom, sizeof(dContact));	//衝突していれば1以上が返る
+	//接触点を算出したり、接触点の性質などを設定
 	for (int i = 0; i < n; i++)
 	{
 		contact[i].surface.mode = dContactBounce;
@@ -133,18 +153,21 @@ void PhysicsWorld::NearCallback(void *data, dGeomID o1, dGeomID o2)
 
 void PhysicsWorld::AddDynamicBox(Vec3& size, dReal mass)
 {
-	pDynamicBox.push_back(std::make_unique<DynamicBox>(size, mass));
+	pDynamicBox.emplace_back(std::make_unique<DynamicBox>(size, mass));
 }
 
 void PhysicsWorld::AddStaticBox(Vec3& scale)
 {
-	pStaticBox.push_back(std::make_unique<StaticBox>(scale));
+	pStaticBox.emplace_back(std::make_unique<StaticBox>(scale));
 }
 
 void PhysicsWorld::UpDate()
 {
-	dSpaceCollide(Engine::GetPhysics().GetCollsionSpace(), nullptr, &PhysicsWorld::NearCallback);
-	Engine::GetPhysics().UpDate();	//ここで呼ばないと重力がおかしくなる
-	dJointGroupEmpty(Engine::GetPhysics().GetContactGroup());
+	//必ず物理世界の更新処理の一番始めで呼び出す
+	//衝突しそうな２つのジオメトリが発生したら、それらをNearCallback関数に渡す
+	dSpaceCollide(Engine::GetPhysics().GetCollsionSpace(), nullptr, &PhysicsWorld::NearCallback);	
+	Engine::GetPhysics().WorldStep(0.01f);	
+	//これを忘れると1ステップ前の接触点がおかしくなる
+	dJointGroupEmpty(Engine::GetPhysics().GetContactGroup());	
 }
 

@@ -1,6 +1,5 @@
 #pragma once
 #pragma warning (disable : 4819)	//ユニコード
-#pragma warning (disable : 4099)	//pdbが無いため
 #include <ode/ode.h>
 #include <memory>
 #include <vector>
@@ -19,13 +18,15 @@ private:
 	// 衝突関係(スペースと衝突点グループ)
 	dSpaceID collSpace;
 	dJointGroupID contactGroup;
+
 public:
 	Physics();
 	~Physics();
 	dWorldID GetWorld() const;
 	dSpaceID GetCollsionSpace() const;
 	dJointGroupID GetContactGroup() const;
-    void UpDate(float stepTime = 0.01);
+    void WorldStep(const float stepTime);
+
 };
 
 class DynamicBox
@@ -47,8 +48,10 @@ class StaticBox
 private:
 	dGeomID geom;
 public:
-	StaticBox(const Vec3& size);
+	StaticBox(const Vec3& scale);
 	~StaticBox();
+	Vec3 GetPosition() const;
+	void SetPosition(const Vec3& pos);
 };
 class PhysicsWorld final
 {

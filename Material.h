@@ -44,7 +44,7 @@ public:
 	/*!
 	* @brief シェーダーで使うコンスタントバッファーを設定します
 	* @param (slot) 設定する番号
-	* @param (cbuffer) コンスタントバッファーのポインタ
+	* @param (cbuffer) コンスタントバッファーのポインタ(色とか)
 	* @param (size) バッファの大きさ
 	*/
 	void 	SetBuffer(int slot, void* cbuffer, size_t size);
