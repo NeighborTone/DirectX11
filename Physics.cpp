@@ -23,7 +23,6 @@ Physics::~Physics()
 	dSpaceDestroy(collSpace);
 	dWorldDestroy(world);
 	dCloseODE();
-
 }
 
 dWorldID Physics::GetWorld() const
@@ -43,39 +42,44 @@ dJointGroupID Physics::GetContactGroup() const
 
 void Physics::WorldStep(const float stepTime)
 {
-
 	dWorldStep(world, stepTime);
-
 }
 
-
-
-void DynamicBox::Create(const Vec3 & size, dReal totalMass)
+void DynamicBox::Create(const Vec3& pos, const Vec3& scale, dReal totalMass)
 {
-	// ボディを作って質量を設定する
+	//ボディを作って質量を設定する
 	body = dBodyCreate(Engine::GetPhysics().GetWorld());
 	dMass mass;
 	dMassSetZero(&mass);
-	dMassSetBoxTotal(&mass, totalMass, size.x, size.y, size.z);
+	dMassSetBoxTotal(&mass, totalMass, scale.x, scale.y, scale.z);
 	dBodySetMass(body, &mass);
 
-	// ジオメトリを作成してボディをアタッチ
-	geom = dCreateBox(Engine::GetPhysics().GetCollsionSpace(), size.x, size.y, size.z);
+	//ジオメトリを作成してボディをアタッチ
+	geom = dCreateBox(Engine::GetPhysics().GetCollsionSpace(), scale.x, scale.y, scale.z);
 	dGeomSetBody(geom, body);
-
+	this->pos = pos;
 	//ポジション
-	dBodySetPosition(body, 0, 0, 0);
+	dBodySetPosition(body, this->pos.x, this->pos.y, this->pos.z);
 }
 
-DynamicBox::DynamicBox(const Vec3& size, dReal totalMass)
+DynamicBox::DynamicBox(const Vec3& pos, const Vec3& scale, dReal totalMass)
 {
-	Create(size, totalMass);
+	this->pos = pos;
+	Create(this->pos, scale, totalMass);
 }
 
-DynamicBox::DynamicBox(const DynamicBox & box)
+DynamicBox::DynamicBox(const DynamicBox& box)
 {
 	body = box.body;
 	geom = box.geom;
+}
+
+DynamicBox::DynamicBox():
+	body(nullptr),
+	geom(nullptr),
+	pos(0,0,0)
+{
+	dBodySetPosition(body,0,0,0);
 }
 
 DynamicBox::~DynamicBox()
@@ -90,7 +94,6 @@ DynamicBox::~DynamicBox()
 		dBodyDestroy(body);
 		body = nullptr;
 	}
-	
 }
 
 Vec3 DynamicBox::GetPosition() const
@@ -101,12 +104,14 @@ Vec3 DynamicBox::GetPosition() const
 
 void DynamicBox::SetPosition(const Vec3& pos)
 {
-	dBodySetPosition(body, pos.x, pos.y, pos.z);
+	this->pos = pos;
+	dBodySetPosition(body, this->pos.x, this->pos.y, this->pos.z);
 }
+
 
 StaticBox::StaticBox(const Vec3& size)
 {
-	// ジオメトリの作成
+	//ジオメトリの作成
 	geom = dCreateBox(Engine::GetPhysics().GetCollsionSpace(), size.x, size.y, size.z);
 	dGeomSetPosition(geom, 0, 0, 0);
 }
@@ -131,32 +136,36 @@ void StaticBox::SetPosition(const Vec3 & pos)
 	dGeomSetPosition(geom, pos.x, pos.y, pos.z);
 }
 
-
-
 void PhysicsWorld::NearCallback(void *data, dGeomID o1, dGeomID o2)
 {
 	//NearCallback(近似的に衝突判定された2つのジオメトリの詳細な当たり判定を行う)
-	const int N = 10;
+	static const int N = 20;		//接触点数の上限
 	dContact contact[N];
-	int n = dCollide(o1, o2, N, &contact[0].geom, sizeof(dContact));	//衝突していれば1以上が返る
+	int n = dCollide(o1, o2, N, &contact[0].geom, sizeof(dContact));	//nには衝突点数が返る
 	//接触点を算出したり、接触点の性質などを設定
 	for (int i = 0; i < n; i++)
 	{
 		contact[i].surface.mode = dContactBounce;
 		contact[i].surface.mu = dInfinity;
-		contact[i].surface.bounce = 0.35;	//0~1
+		contact[i].surface.mu2 = 0.0;
+		contact[i].surface.rho = 0.0;
+		contact[i].surface.rho2 = 0.0;
+		contact[i].surface.rhoN = 0.0;
+		contact[i].surface.bounce = 0.25;	//0~1
 		contact[i].surface.bounce_vel = 0.0;
+		contact[i].surface.slip1 = 0.0;
+		contact[i].surface.slip2 = 0.0;
 		auto joint = dJointCreateContact(Engine::GetPhysics().GetWorld(), Engine::GetPhysics().GetContactGroup(), &contact[i]);
 		dJointAttach(joint, dGeomGetBody(contact[i].geom.g1), dGeomGetBody(contact[i].geom.g2));
 	}
 }
 
-void PhysicsWorld::AddDynamicBox(Vec3& size, dReal mass)
+void PhysicsWorld::AddDynamicBox(const Vec3& pos,const Vec3& scale, const dReal mass)
 {
-	pDynamicBox.emplace_back(std::make_unique<DynamicBox>(size, mass));
+	pDynamicBox.emplace_back(std::make_unique<DynamicBox>(pos, scale, mass));
 }
 
-void PhysicsWorld::AddStaticBox(Vec3& scale)
+void PhysicsWorld::AddStaticBox(const Vec3& scale)
 {
 	pStaticBox.emplace_back(std::make_unique<StaticBox>(scale));
 }

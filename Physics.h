@@ -34,15 +34,18 @@ class DynamicBox
 private:
 	dBodyID body;		//剛体
 	dGeomID geom;		//衝突検知
-
-	void Create(const Vec3& scale, dReal totalMass);
+	Vec3 pos;
 public:
-	DynamicBox(const Vec3& scale, dReal totalMass);
+	DynamicBox(const Vec3& pos, const Vec3& scale, dReal totalMass);
 	DynamicBox(const DynamicBox& box);
+	DynamicBox();
 	~DynamicBox();
+	void Create(const Vec3& pos, const Vec3& scale, dReal totalMass);
 	Vec3 GetPosition() const;
 	void SetPosition(const Vec3& pos);
+
 };
+
 class StaticBox
 {
 private:
@@ -52,19 +55,21 @@ public:
 	~StaticBox();
 	Vec3 GetPosition() const;
 	void SetPosition(const Vec3& pos);
+
 };
+
 class PhysicsWorld final
 {
 private:
-	static void NearCallback(void *data, dGeomID o1, dGeomID o2);
+	static void NearCallback(void* data, dGeomID o1, dGeomID o2);
 public:
 	PhysicsWorld() {};
 	~PhysicsWorld() {};
 	std::vector<std::unique_ptr<DynamicBox>> pDynamicBox;
 	std::vector<std::unique_ptr<StaticBox>> pStaticBox;
 	// オブジェクトのセットアップを行う
-	void AddDynamicBox(Vec3& scale, dReal mass);
-	void AddStaticBox(Vec3& scale);
+	void AddDynamicBox(const Vec3& pos,const Vec3& scale,const dReal mass);
+	void AddStaticBox(const Vec3& scale);
 	// ワールドを更新
 	void UpDate();
 

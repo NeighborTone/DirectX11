@@ -20,7 +20,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 
 	//ÉJÉÅÉâê∂ê¨
 	Camera camera;
-	camera.pos = Vec3(0.0f, 7.0f, -20.0f);
+	camera.pos = Vec3(0.0f, 12.0f, -20.0f);
+	camera.angles.x = 20;
 	camera.SetPerspective(45.0f, 1, 10000.0f);
 	//camera.SetOrthographic(0,0.1f,100.0f);
 	camera.SetDepthTest(true);
@@ -42,15 +43,23 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	ground.scale = 10;
 	ground.scale.y = 1;
 
+	Mesh me;
+	me.CreateCube();
+	me.GetMaterial().SetTexture(0,&texture1);
+	me.scale = 1;
+	me.scale.x = 10;
+	me.pos.x = camera.pos.x;
+	me.pos.y = 1;
+	me.pos.z = -10;
 	PhysicsWorld physicsWorld;
 	for (int i = 0; i < MAX; ++i)
 	{
-		physicsWorld.AddDynamicBox(Vec3(1, 1, 1), 5);
+		physicsWorld.AddDynamicBox(box[i].pos, box[i].scale, 5);
 	}
 
-	physicsWorld.AddStaticBox(Vec3(10, 1, 10));
-	
-
+	physicsWorld.AddStaticBox(ground.scale);
+	physicsWorld.AddStaticBox(me.scale);
+	physicsWorld.pStaticBox[1]->SetPosition(me.pos);
 	physicsWorld.pDynamicBox[0]->SetPosition(Vec3(-5.5f, 10, 0));
 	physicsWorld.pDynamicBox[1]->SetPosition(Vec3(5.5f, 10, 0));
 	physicsWorld.pDynamicBox[2]->SetPosition(Vec3(0, 10, 0));
@@ -107,6 +116,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 			camera.angles.x += 0.5f;
 		}
 		static bool go = false;
+		static float speed = 0.06f;
+		static int dir = 1;
 		if (KeyBoard::On(KeyBoard::Key::KEY_S))
 		{
 			go = true;
@@ -114,18 +125,30 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		if (go)
 		{
 			physicsWorld.UpDate();
+			if (dir == -1 && me.pos.z <= -5)
+			{
+				dir = 1;
+			}
+			if(dir == 1 && me.pos.z >= 5)
+			{
+				dir = -1;
+			}
+			me.pos.z += speed * dir;
+			physicsWorld.pStaticBox[1]->SetPosition(me.pos);
 		}
+		
 		static float y = 0;
 		//y -= 0.1f;
 		physicsWorld.pStaticBox[0]->SetPosition(Vec3(0, y, 0));
-		for (int i = 0; i < MAX; ++i)
+		for (UINT i = 0; i < physicsWorld.pDynamicBox.size(); ++i)
 		{
 			box[i].pos = physicsWorld.pDynamicBox[i]->GetPosition();
 			box[i].Draw();
 		}
 		ground.pos = physicsWorld.pStaticBox[0]->GetPosition();
 		ground.Draw();
-
+		me.pos = physicsWorld.pStaticBox[1]->GetPosition();
+		me.Draw();
 		std::cout << Engine::GetFps().GetFrameRate() << std::endl;
 	}
 
