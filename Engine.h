@@ -11,8 +11,6 @@
 #include "FPS.h"
 #include "Physics.h"
 
-class Physics;
-
 /*! @class Engine
 *   @brief 描画等の更新処理や各ハンドルをまとめます
 *   @detail コンストラクタで生成されます。名前、幅、高さ、全画面にするか指定してください
@@ -95,7 +93,10 @@ public:
 	*/
 	static FPS& GetFps();
 
-	//物理世界
+	/*!
+	* @brief Physicsクラスを取得します
+	* @return Physics&
+	*/
 	static Physics& GetPhysics();
 
 private:

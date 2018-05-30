@@ -125,3 +125,28 @@ void Sprite::Draw()
 	mesh.scale = scale;
 	mesh.Draw();
 }
+
+bool Sprite::HitSprite(Sprite & s2)
+{
+	Vec3 leftTop1 = pos.OffSetCopy(-(GetSize().x / 2.0f), GetSize().y / 2.0f, pos.z);			//ç∂è„
+	Vec3 leftTop2 = s2.pos.OffSetCopy(-(s2.GetSize().x / 2.0f), s2.GetSize().y / 2.0f, s2.pos.z);
+	Vec3 buttom1 = pos.OffSetCopy(GetSize().x / 2.0f, -(GetSize().y / 2.0f), pos.z);			//âEâ∫
+	Vec3 buttom2 = s2.pos.OffSetCopy(s2.GetSize().x / 2.0f, -(s2.GetSize().y / 2.0f), s2.pos.z);
+
+	if (leftTop1.x < buttom2.x &&
+		leftTop2.x < buttom1.x &&
+		leftTop1.y > buttom2.y &&
+		leftTop2.y > buttom1.y)
+		return true;
+
+	return false;
+}
+
+bool Sprite::HitCircle(Sprite & c2)
+{
+	if ((pos.x - c2.pos.x) * (pos.x - c2.pos.x) +
+		((pos.y - c2.pos.y) * (pos.y - c2.pos.y)) <=
+		(GetSize().x / 2 + GetSize().y / 2) * (c2.GetSize().x / 2 + c2.GetSize().y / 2))
+		return true;
+	return false;
+}

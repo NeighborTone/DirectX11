@@ -2,8 +2,10 @@
 #pragma warning (disable : 4819)	//ユニコード
 #pragma warning (disable : 4099)	//pdbが無いため
 #include <ode/ode.h>
-#include "Engine.h"
 #include <memory>
+#include <vector>
+#include "Utility.hpp"
+
 #if defined(_DEBUG)
 #pragma comment(lib,"oded.lib")
 #else
@@ -26,36 +28,40 @@ public:
     void UpDate(float stepTime = 0.01);
 };
 
-class Box
+class DynamicBox
 {
 private:
 	dBodyID body;		//剛体
 	dGeomID geom;		//衝突検知
 
-	void Create(const Vec3& size, dReal totalMass);
+	void Create(const Vec3& scale, dReal totalMass);
 public:
-	Box(const Vec3& size, dReal totalMass);
-	~Box();
+	DynamicBox(const Vec3& scale, dReal totalMass);
+	DynamicBox(const DynamicBox& box);
+	~DynamicBox();
 	Vec3 GetPosition() const;
+	void SetPosition(const Vec3& pos);
 };
-class Ground
+class StaticBox
 {
 private:
 	dGeomID geom;
 public:
-	Ground(const Vec3& size);
-	~Ground();
+	StaticBox(const Vec3& size);
+	~StaticBox();
 };
-class EntityWorld final
+class PhysicsWorld final
 {
 private:
-	
 	static void NearCallback(void *data, dGeomID o1, dGeomID o2);
 public:
-	std::unique_ptr<Box> pBox;
-	std::unique_ptr<Ground> pGround;
+	PhysicsWorld() {};
+	~PhysicsWorld() {};
+	std::vector<std::unique_ptr<DynamicBox>> pDynamicBox;
+	std::vector<std::unique_ptr<StaticBox>> pStaticBox;
 	// オブジェクトのセットアップを行う
-	void SetupWorld();
+	void AddDynamicBox(Vec3& scale, dReal mass);
+	void AddStaticBox(Vec3& scale);
 	// ワールドを更新
 	void UpDate();
 

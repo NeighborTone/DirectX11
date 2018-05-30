@@ -1,5 +1,5 @@
 #include "Physics.h"
-
+#include "Engine.h"
 
 Physics::Physics()
 {
@@ -17,6 +17,8 @@ Physics::Physics()
 Physics::~Physics()
 {
 	//ワールドの削除
+	dJointGroupDestroy(contactGroup);
+	dSpaceDestroy(collSpace);
 	dWorldDestroy(world);
 	dCloseODE();
 
@@ -45,7 +47,7 @@ void Physics::UpDate(float stepTime)
 }
 
 
-void Box::Create(const Vec3 & size, dReal totalMass)
+void DynamicBox::Create(const Vec3 & size, dReal totalMass)
 {
 	// ボディを作って質量を設定する
 	body = dBodyCreate(Engine::GetPhysics().GetWorld());
@@ -59,46 +61,65 @@ void Box::Create(const Vec3 & size, dReal totalMass)
 	dGeomSetBody(geom, body);
 
 	//ポジション
-	dBodySetPosition(body, 0, 10, 0);
+	dBodySetPosition(body, 0, 0, 0);
 }
 
-Box::Box(const Vec3& size, dReal totalMass)
+DynamicBox::DynamicBox(const Vec3& size, dReal totalMass)
 {
 	Create(size, totalMass);
 }
 
-Box::~Box()
+DynamicBox::DynamicBox(const DynamicBox & box)
 {
-	dGeomDestroy(geom);
-	dBodyDestroy(body);
+	body = box.body;
+	geom = box.geom;
 }
 
-Vec3 Box::GetPosition() const
+DynamicBox::~DynamicBox()
+{
+	if (geom != nullptr)
+	{
+		dGeomDestroy(geom);
+		geom = nullptr;
+	}
+	if (body != nullptr)
+	{
+		dBodyDestroy(body);
+		body = nullptr;
+	}
+	
+}
+
+Vec3 DynamicBox::GetPosition() const
 {
 	auto values = dBodyGetPosition(body);
 	return Vec3((float)values[0], (float)values[1], (float)values[2]);
 }
 
-Ground::Ground(const Vec3& size)
+void DynamicBox::SetPosition(const Vec3 & pos)
+{
+	dBodySetPosition(body, pos.x, pos.y, pos.z);
+}
+
+StaticBox::StaticBox(const Vec3& size)
 {
 	// ジオメトリの作成
 	geom = dCreateBox(Engine::GetPhysics().GetCollsionSpace(), size.x, size.y, size.z);
 }
 
-Ground::~Ground()
+StaticBox::~StaticBox()
 {
 	dGeomDestroy(geom);
 }
 
 
-void EntityWorld::NearCallback(void *data, dGeomID o1, dGeomID o2)
+void PhysicsWorld::NearCallback(void *data, dGeomID o1, dGeomID o2)
 {
 	// nearCallback(近似的に衝突判定された2つのジオメトリの詳細な当たり判定を行う)
 	const int N = 10;
 	dContact contact[N];
-	
+	int n = dCollide(o1, o2, N, &contact[0].geom, sizeof(dContact));	//Maybe:オブジェクトの総数
 
-	int n = dCollide(o1, o2, N, &contact[0].geom, sizeof(dContact));
 	for (int i = 0; i < n; i++)
 	{
 		contact[i].surface.mode = dContactBounce;
@@ -110,15 +131,20 @@ void EntityWorld::NearCallback(void *data, dGeomID o1, dGeomID o2)
 	}
 }
 
-void EntityWorld::SetupWorld()
+void PhysicsWorld::AddDynamicBox(Vec3& size, dReal mass)
 {
-	pBox = std::make_unique<Box>(Vec3(1.0, 1.0, 1.0), 5);
-	pGround = std::make_unique<Ground>(Vec3(10, 1, 10));
+	pDynamicBox.push_back(std::make_unique<DynamicBox>(size, mass));
 }
 
-void EntityWorld::UpDate()
+void PhysicsWorld::AddStaticBox(Vec3& scale)
 {
-	dSpaceCollide(Engine::GetPhysics().GetCollsionSpace(), nullptr, &EntityWorld::NearCallback);
+	pStaticBox.push_back(std::make_unique<StaticBox>(scale));
+}
+
+void PhysicsWorld::UpDate()
+{
+	dSpaceCollide(Engine::GetPhysics().GetCollsionSpace(), nullptr, &PhysicsWorld::NearCallback);
 	Engine::GetPhysics().UpDate();	//ここで呼ばないと重力がおかしくなる
 	dJointGroupEmpty(Engine::GetPhysics().GetContactGroup());
 }
+

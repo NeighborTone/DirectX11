@@ -49,5 +49,18 @@ public:
 	* @brief スプライトを描画します
 	*/
 	void Draw();
+
+	/*!
+	* @brief 2次元限定のスプライトの矩形当たり判定
+	* @param (Sprite) 判定をしたい相手
+	*/
+	bool HitSprite(Sprite& s2);
+
+	/*!
+	* @brief 2次元限定のスプライトの円の当たり判定
+	* @param (Sprite) 判定をしたい相手
+	*/
+	bool HitCircle(Sprite& c2);
+
 };
 
