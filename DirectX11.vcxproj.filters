@@ -2,118 +2,141 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="WinMain.cpp" />
-    <ClCompile Include="audio.cpp">
-      <Filter>Lib</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Lib</Filter>
-    </ClCompile>
-    <ClCompile Include="Direct_Input.cpp">
-      <Filter>Lib</Filter>
+    <ClCompile Include="Engine.cpp">
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="Direct3D.cpp">
-      <Filter>Lib</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine.cpp">
-      <Filter>Lib</Filter>
-    </ClCompile>
-    <ClCompile Include="Keyboard.cpp">
-      <Filter>Lib</Filter>
+      <Filter>Engine\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Material.cpp">
-      <Filter>Lib</Filter>
+      <Filter>Engine\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
-      <Filter>Lib</Filter>
-    </ClCompile>
-    <ClCompile Include="Pad.cpp">
-      <Filter>Lib</Filter>
+      <Filter>Engine\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Sprite.cpp">
-      <Filter>Lib</Filter>
-    </ClCompile>
-    <ClCompile Include="System.cpp">
-      <Filter>Lib</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>Lib</Filter>
-    </ClCompile>
-    <ClCompile Include="wav.cpp">
-      <Filter>Lib</Filter>
+      <Filter>Engine\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Text.cpp">
-      <Filter>Lib</Filter>
+      <Filter>Engine\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Engine\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Direct_Input.cpp">
+      <Filter>Engine\Inputs</Filter>
+    </ClCompile>
+    <ClCompile Include="Keyboard.cpp">
+      <Filter>Engine\Inputs</Filter>
     </ClCompile>
     <ClCompile Include="Mouse.cpp">
-      <Filter>Lib</Filter>
+      <Filter>Engine\Inputs</Filter>
+    </ClCompile>
+    <ClCompile Include="Pad.cpp">
+      <Filter>Engine\Inputs</Filter>
     </ClCompile>
     <ClCompile Include="FPS.cpp">
-      <Filter>Lib</Filter>
+      <Filter>Engine\Utilitys</Filter>
     </ClCompile>
-    <ClCompile Include="Model.cpp" />
-    <ClCompile Include="Physics.cpp" />
+    <ClCompile Include="wav.cpp">
+      <Filter>Engine\Sounds</Filter>
+    </ClCompile>
+    <ClCompile Include="audio.cpp">
+      <Filter>Engine\Sounds</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Engine\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="System.cpp">
+      <Filter>Engine\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Engine\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics.cpp">
+      <Filter>Engine\Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="audio.h">
-      <Filter>Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="Direct_Input.h">
-      <Filter>Lib</Filter>
+    <ClInclude Include="Engine.h">
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Direct3D.h">
-      <Filter>Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine.h">
-      <Filter>Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="Keyboard.h">
-      <Filter>Lib</Filter>
+      <Filter>Engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Material.h">
-      <Filter>Lib</Filter>
+      <Filter>Engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Mesh.h">
-      <Filter>Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="Pad.h">
-      <Filter>Lib</Filter>
+      <Filter>Engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Sprite.h">
-      <Filter>Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="StringConverter.hpp">
-      <Filter>Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="System.h">
-      <Filter>Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="Utility.hpp">
-      <Filter>Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="wav.h">
-      <Filter>Lib</Filter>
+      <Filter>Engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Text.h">
-      <Filter>Lib</Filter>
+      <Filter>Engine\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Engine\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Direct_Input.h">
+      <Filter>Engine\Inputs</Filter>
+    </ClInclude>
+    <ClInclude Include="Keyboard.h">
+      <Filter>Engine\Inputs</Filter>
     </ClInclude>
     <ClInclude Include="Mouse.h">
-      <Filter>Lib</Filter>
+      <Filter>Engine\Inputs</Filter>
+    </ClInclude>
+    <ClInclude Include="Pad.h">
+      <Filter>Engine\Inputs</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility.hpp">
+      <Filter>Engine\Utilitys</Filter>
+    </ClInclude>
+    <ClInclude Include="StringConverter.hpp">
+      <Filter>Engine\Utilitys</Filter>
     </ClInclude>
     <ClInclude Include="FPS.h">
-      <Filter>Lib</Filter>
+      <Filter>Engine\Utilitys</Filter>
     </ClInclude>
-    <ClInclude Include="Model.h" />
-    <ClInclude Include="Physics.h" />
+    <ClInclude Include="wav.h">
+      <Filter>Engine\Sounds</Filter>
+    </ClInclude>
+    <ClInclude Include="audio.h">
+      <Filter>Engine\Sounds</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Engine\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="System.h">
+      <Filter>Engine\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Engine\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics.h">
+      <Filter>Engine\Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Lib">
+    <Filter Include="Engine">
       <UniqueIdentifier>{5f864b5e-af50-4bda-9cc9-6f83793bf98e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Graphics">
+      <UniqueIdentifier>{6a262f5c-4cc8-4996-9d64-11d6287bc811}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Inputs">
+      <UniqueIdentifier>{2d648b1e-9047-4054-9ede-1bf622590b90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Utilitys">
+      <UniqueIdentifier>{f9b3ab7b-331d-48e1-9907-d9cb23efb5ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Sounds">
+      <UniqueIdentifier>{f6e67b56-8a41-428f-b6fe-c940eeb9cca2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Physics">
+      <UniqueIdentifier>{d6780f38-b950-4052-a945-7cac1f78ddef}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

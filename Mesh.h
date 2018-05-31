@@ -44,13 +44,6 @@ public:
 		bool shouldClear = true
 		);
 
-	void CreateLine(
-		Vec3 p1,
-		Vec3 p2,
-		Vec3 offset = Vec3(0.0f, 0.0f, 0.0f),
-		Vec3 forwardDirection = Vec3(0.0f, 0.0f, 1.0f),
-		bool shouldClear = true
-	);
 	/*!
 	* @brief 平面を作成します
 	* @param (size)	ポリゴンのサイズ

@@ -90,35 +90,6 @@ void Mesh::CreatePoint(Vec3 p1, Vec3 offset, Vec3 forwardDirection,bool shouldCl
 	Apply();
 }
 
-void Mesh::CreateLine(Vec3 p1, Vec3 p2, Vec3 offset, Vec3 forwardDirection, bool shouldClear)
-{
-	if (shouldClear)
-	{
-		vertex.clear();
-		index.clear();
-	}
-
-	forwardDirection.Normalize();
-
-	//1�ڂ̓_
-	vertex.push_back(Vertex(
-		p1 * +offset,
-		-forwardDirection,
-		Vec2(0.0f, 1.0f)));
-
-	vertex.push_back(Vertex(
-		p2 * +offset,
-		-forwardDirection,
-		Vec2(0.0f, 1.0f)));
-
-
-	size_t indexOffset = vertex.size() - 1;
-	index.push_back(indexOffset + 0);
-
-	Apply();
-}
-
-
 void Mesh::CreatePlane(Vec2 size, Vec3 offset, bool shouldClear, Vec3 leftDirection, Vec3 upDirection, Vec3 forwardDirection)
 {
 	if (shouldClear)

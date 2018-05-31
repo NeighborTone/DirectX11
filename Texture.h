@@ -35,12 +35,12 @@ public:
 	void Create(const BYTE* const buffer, int width, int height);
 	/*!
 	* @brief  テクスチャのサイズを取得します。
-	* @return XMINT2
+	* @return XMINT2 
 	*/
 	DirectX::XMINT2 GetSize() const;
 	/*!
 	* @brief テクスチャをグラフィックスAPIに設定します
-	* @param (sloat) 
+	* @param (sloat) GPUに設定する場所です。シェーダーに渡します
 	*/
 	void Attach(int slot);
 	ID3D11Texture2D& GetInterface();

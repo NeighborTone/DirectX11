@@ -1,14 +1,5 @@
 #include "Engine.h"
 #include "Model.h"
-//‰¼----------------------------------------------------
-bool HitBall(Vec3 &c1, Vec3& c2, float r,float r2)
-{
-	if ((c1.x - c2.x) * (c1.x - c2.x) + ((c1.y - c2.y) * (c1.y - c2.y)) + ((c1.z - c2.z) * (c1.z - c2.z)) <= (r + r) * (r2+ r2))
-	{
-		return true;
-	}
-	return false;
-}
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow)
 {
@@ -70,51 +61,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	physicsWorld.pDynamicBox[7]->SetPosition(Vec3(1.7f, 13, 0));
 	physicsWorld.pDynamicBox[8]->SetPosition(Vec3(-1.2f, 14, 0));
 	physicsWorld.pDynamicBox[9]->SetPosition(Vec3(0, 12, 1));
+
 	while (ge.Run())
 	{
 		camera.Run();
-		
+	
 		if (KeyBoard::Down(KeyBoard::Key::KEY_ESCAPE) ||
 			Pad::Down(Pad::Button::PAD_START))
 		{
 			break;
 		}
-		if (KeyBoard::On(KeyBoard::Key::KEY_UP))
-		{
-			camera.pos.z += 0.5f;
-		}
-		if (KeyBoard::On(KeyBoard::Key::KEY_DOWN))
-		{
-			camera.pos.z -= 0.5f;
-		}
-		if (KeyBoard::On(KeyBoard::Key::KEY_RIGHT))
-		{
-			camera.pos.x += 3.5f;
-		}
-		if (KeyBoard::On(KeyBoard::Key::KEY_LEFT))
-		{
-			camera.pos.x -= 3.5f;
-		}
-		if (KeyBoard::On(KeyBoard::Key::KEY_RSHIFT))
-		{
-			camera.angles.y += 1.5f;
-		}
-		if (KeyBoard::On(KeyBoard::Key::KEY_LSHIFT))
-		{
-			camera.angles.y -= 1.5f;
-		}
-		if (KeyBoard::On(KeyBoard::Key::KEY_LCONTROL))
-		{
-			camera.pos.y -= 3.5f;
-		}
-		if (KeyBoard::On(KeyBoard::Key::KEY_RCONTROL))
-		{
-			camera.pos.y += 3.5f;
-		}
-		if (KeyBoard::On(KeyBoard::Key::KEY_SPACE))
-		{
-			camera.angles.x += 0.5f;
-		}
+
 		static bool go = false;
 		static float speed = 0.06f;
 		static int dir = 1;
@@ -125,11 +82,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		if (go)
 		{
 			physicsWorld.UpDate();
-			if (dir == -1 && me.pos.z <= -5)
+			if (dir == -1 && me.pos.z <= -8)
 			{
 				dir = 1;
 			}
-			if(dir == 1 && me.pos.z >= 5)
+			if(dir == 1 && me.pos.z >= 8)
 			{
 				dir = -1;
 			}
@@ -137,9 +94,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 			physicsWorld.pStaticBox[1]->SetPosition(me.pos);
 		}
 		
-		static float y = 0;
-		//y -= 0.1f;
-		physicsWorld.pStaticBox[0]->SetPosition(Vec3(0, y, 0));
+		physicsWorld.pStaticBox[0]->SetPosition(Vec3(0, 0, 0));
+	
 		for (UINT i = 0; i < physicsWorld.pDynamicBox.size(); ++i)
 		{
 			box[i].pos = physicsWorld.pDynamicBox[i]->GetPosition();
