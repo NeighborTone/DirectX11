@@ -46,6 +46,8 @@ public:
 	Vec3 GetPosition() const;
 	void SetPosition(const Vec3& pos);
 	void AddForce(const Vec3& force);
+	void SetAngle(Vec3& angle);
+	Vec3 GetAngle();
 };
 
 class StaticBox

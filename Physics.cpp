@@ -141,6 +141,18 @@ void DynamicBox::AddForce(const Vec3& force)
 	dBodyAddForce(body, force.x, force.y, force.z);
 }
 
+void DynamicBox::SetAngle(Vec3& angle)
+{
+	
+}
+
+Vec3 DynamicBox::GetAngle()
+{
+	auto val = dBodyGetQuaternion(body);
+
+	return Vec3(DirectX::XMConvertToDegrees((float)val[1]), DirectX::XMConvertToDegrees((float)val[2]), DirectX::XMConvertToDegrees((float)val[3]));
+}
+
 
 StaticBox::StaticBox(const Vec3& size)
 {

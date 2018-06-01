@@ -61,7 +61,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	physicsWorld.pDynamicBox[7]->SetPosition(Vec3(1.7f, 13, 0));
 	physicsWorld.pDynamicBox[8]->SetPosition(Vec3(-1.2f, 14, 0));
 	physicsWorld.pDynamicBox[9]->SetPosition(Vec3(0, 12, 1));
-
+	
 	while (ge.Run())
 	{
 		camera.Run();
@@ -99,6 +99,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		for (UINT i = 0; i < physicsWorld.pDynamicBox.size(); ++i)
 		{
 			box[i].pos = physicsWorld.pDynamicBox[i]->GetPosition();
+			box[i].angle = physicsWorld.pDynamicBox[i]->GetAngle();
 			box[i].Draw();
 		}
 		ground.pos = physicsWorld.pStaticBox[0]->GetPosition();
