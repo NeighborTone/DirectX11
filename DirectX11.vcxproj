@@ -139,12 +139,12 @@
       <BrowseInformation>true</BrowseInformation>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
-      <AdditionalIncludeDirectories>C:\Users\tonari\Desktop\D3D11\ODE\include;C:\Users\game\Desktop\DirectX11\ODE\include;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include\fbxsdk;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\game\Desktop\aa\ODE\include;C:\Users\tonari\Desktop\D3D11\ODE\include;C:\Users\game\Desktop\DirectX11\ODE\include;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include\fbxsdk;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>C:\Users\game\Desktop\DirectX11\ODE\lib\Debug;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\debug;C:\Users\tonari\Desktop\D3D11\ODE\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\game\Desktop\aa\ODE\lib\Debug;C:\Users\game\Desktop\DirectX11\ODE\lib\Debug;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\debug;C:\Users\tonari\Desktop\D3D11\ODE\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
     </Link>
     <Bscmake>
@@ -173,14 +173,14 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_CRTDBG_MAP_ALLOC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>C:\Users\tonari\Desktop\D3D11\ODE\include;C:\Users\game\Desktop\DirectX11\ODE\include;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include\fbxsdk;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\game\Desktop\aa\ODE\include;C:\Users\tonari\Desktop\D3D11\ODE\include;C:\Users\game\Desktop\DirectX11\ODE\include;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include\fbxsdk;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>C:\Users\game\Desktop\DirectX11\ODE\lib\Release;C:\Users\tonari\Desktop\D3D11\ODE\lib\Release;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\release;C:\Users\game\Desktop\DirectX11\ODE\lib\Debug;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\game\Desktop\aa\ODE\lib\Release;C:\Users\game\Desktop\DirectX11\ODE\lib\Release;C:\Users\tonari\Desktop\D3D11\ODE\lib\Release;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\release;C:\Users\game\Desktop\DirectX11\ODE\lib\Debug;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

@@ -5,7 +5,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 {
 	ci_ext::Console();
 	ShowConsole();
-	constexpr int MAX = 10;
+	constexpr int MAX = 100;
 	//ƒQ[ƒ€ƒGƒ“ƒWƒ“¶¬
 	Engine ge("DirectX11",640,480,true);
 
@@ -51,17 +51,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	physicsWorld.AddStaticBox(ground.scale);
 	physicsWorld.AddStaticBox(me.scale);
 	physicsWorld.pStaticBox[1]->SetPosition(me.pos);
-	physicsWorld.pDynamicBox[0]->SetPosition(Vec3(-5.5f, 10, 0));
-	physicsWorld.pDynamicBox[1]->SetPosition(Vec3(5.5f, 10, 0));
-	physicsWorld.pDynamicBox[2]->SetPosition(Vec3(0, 10, 0));
-	physicsWorld.pDynamicBox[3]->SetPosition(Vec3(0.5f, 11, 0));
-	physicsWorld.pDynamicBox[4]->SetPosition(Vec3(-2.7f, 11, 0));
-	physicsWorld.pDynamicBox[5]->SetPosition(Vec3(2.7f, 11, 0));
-	physicsWorld.pDynamicBox[6]->SetPosition(Vec3(-2.7f, 12, -0.7f));
-	physicsWorld.pDynamicBox[7]->SetPosition(Vec3(1.7f, 13, 0));
-	physicsWorld.pDynamicBox[8]->SetPosition(Vec3(-1.2f, 14, 0));
-	physicsWorld.pDynamicBox[9]->SetPosition(Vec3(0, 12, 1));
-	
+
+	for (int i = 0; i < MAX; ++i)
+	{
+		physicsWorld.pDynamicBox[i]->SetPosition(Vec3(-5.0f + (float)i * 0.09f, 10 + (float)i * 3.5f, 0));
+	}
 	while (ge.Run())
 	{
 		camera.Run();

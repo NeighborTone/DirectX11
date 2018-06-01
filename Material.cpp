@@ -202,16 +202,16 @@ void Material::CompileShader(const std::string& source, const char* const entryP
 	ATL::CComPtr<ID3DBlob> errorBlob = nullptr;
 	//HLSLコードを特定のターゲットのバイトコードにコンパイル
 	D3DCompile(
-		source.c_str(),		//未コンパイルのシェーダーデータへのポインター
+		source.c_str(),			//未コンパイルのシェーダーデータへのポインター
 		source.length(),		//↑の長さ
-		nullptr,					//(省略可能)シェーダー ファイルの名前
-		nullptr,					//(省略可能)NULL 終端マクロ定義の配列
+		nullptr,				//(省略可能)シェーダー ファイルの名前
+		nullptr,				//(省略可能)NULL 終端マクロ定義の配列
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, //(省略可能)インクルード ファイルを処理するためのID3D10Includeへのポインター。これをNULLに設定すると、シェーダーに#includeが記述されている場合はコンパイルエラーが発生
 		entryPoint,				//シェーダー エントリーポイント関数の名前
 		shaderModel,			//コンパイルの対象とするシェーダーターゲットまたはシェーダー機能セット
 		shaderFlags,			//シェーダーのコンパイルオプション
-		0,							//エフェクトのコンパイル オプション
-		out,						//コンパイルされたコードを格納するID3D10Blobのアドレス
+		0,						//エフェクトのコンパイル オプション
+		out,					//コンパイルされたコードを格納するID3D10Blobのアドレス
 		&errorBlob);			//(省略可能)コンパイラのエラーメッセージを格納するID3D10Blobへのポインター。エラーがなかった場合はNULLが格納
 
 	//エラーが返ってて来た時

@@ -17,9 +17,8 @@ Camera::Camera():
 		static_cast<float>(Engine::GetWindowSize().y),
 		-D3D11_FLOAT32_MAX,
 		D3D11_FLOAT32_MAX);
-	System::AddProcedure(this);
 	Create();
-	
+	System::AddProcedure(this);
 }
 
 
@@ -187,7 +186,7 @@ bool Camera::Create()
 
 void Camera::OnProceed(HWND, UINT message, WPARAM, LPARAM)
 {
-	//ウィンドウサイズが変更されたらメッセージを送る
+	//ウィンドウサイズが変更されたらメッセージを受け取って画面を構成しなおす
 	if (message != WM_SIZE)
 		return;
 

@@ -17,7 +17,6 @@ Direct3D::Direct3D(bool isFullScreen) :
 	Create(this->isFullScreen);
 }
 
-
 Direct3D::~Direct3D()
 {
 	//これがないとフルスクリーン終了時に盛大にバグる
@@ -277,7 +276,7 @@ void Direct3D::SetViewport()
 
 void Direct3D::OnProceed(HWND, UINT message, WPARAM, LPARAM)
 {
-	//ウィンドウサイズが変更されたらメッセージを送る
+	//ウィンドウサイズが変更されたらメッセージを受ける
 	if (message != WM_SIZE)
 		return;
 
