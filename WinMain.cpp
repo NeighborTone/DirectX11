@@ -1,5 +1,8 @@
 #include "Engine.h"
 #include "Model.h"
+#include "GeometricPrimitive.h"
+
+#pragma comment(lib,"DirectXTK.lib")
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow)
 {
