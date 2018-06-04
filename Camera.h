@@ -56,7 +56,7 @@ private:
 	float nearClip;
 	float farClip;
 	bool isDepthTest;
-	Constant constant;
+	;
 	ATL::CComPtr<ID3D11RenderTargetView> renderTargetView;
 	ATL::CComPtr<ID3D11DepthStencilView> depthStencilView;
 	ATL::CComPtr<ID3D11Texture2D>			 renderTexture;
@@ -65,5 +65,7 @@ private:
 	
 	bool Create();
 	void OnProceed(HWND, UINT message, WPARAM, LPARAM) override;
+public:
+	Constant constant;
 };
 

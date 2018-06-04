@@ -1,8 +1,6 @@
 #include "Engine.h"
 #include "Model.h"
-#include "GeometricPrimitive.h"
-
-#pragma comment(lib,"DirectXTK.lib")
+#include "BasicShapes.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow)
 {
@@ -24,6 +22,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	Texture texture2("brick.jpg");
 	Texture texture3("brick2.jpg");
 	Texture texture4("p.png");
+
+	BallShape ball;
+	ball.Create(0.5f, 24,camera);
+
 
 	Mesh box[MAX];
 	for (int i = 0; i < MAX; ++i)
@@ -68,7 +70,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		{
 			break;
 		}
-
+		if (KeyBoard::On(KeyBoard::Key::KEY_UP))
+		{
+			camera.pos.z += 0.6f;
+		}
+		if (KeyBoard::On(KeyBoard::Key::KEY_DOWN))
+		{
+			camera.pos.z -= 0.6f;
+		}
 		static bool go = false;
 		static float speed = 0.06f;
 		static int dir = 1;
@@ -104,6 +113,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		me.pos = physicsWorld.pStaticBox[1]->GetPosition();
 		me.Draw();
 		std::cout << Engine::GetFps().GetFrameRate() << std::endl;
+
+
+
+
+		ball.Draw(camera);
+
+
+		
 	}
 
 	//I—¹

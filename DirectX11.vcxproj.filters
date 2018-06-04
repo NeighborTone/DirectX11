@@ -56,6 +56,7 @@
     <ClCompile Include="Physics.cpp">
       <Filter>Engine\Physics</Filter>
     </ClCompile>
+    <ClCompile Include="BasicShapes.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -118,6 +119,7 @@
     <ClInclude Include="Physics.h">
       <Filter>Engine\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="BasicShapes.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Engine">
