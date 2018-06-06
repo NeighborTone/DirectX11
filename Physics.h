@@ -4,12 +4,16 @@
 #include <memory>
 #include <vector>
 #include "Utility.hpp"
+#include "RigidBody.h"
 
 #if defined(_DEBUG)
 #pragma comment(lib,"oded.lib")
 #else
 #pragma comment(lib,"ode.lib")		//マルチスレッドDLL
 #endif
+
+class DynamicBox;
+class DynamicSphere;
 
 class Physics
 {
@@ -31,25 +35,6 @@ public:
 
 };
 
-class DynamicBox
-{
-private:
-	dBodyID body;		//剛体
-	dGeomID geom;		//衝突検知
-	Vec3 pos;
-public:
-	DynamicBox(const Vec3& pos, const Vec3& scale, dReal totalMass);
-	DynamicBox(const DynamicBox& box);
-	DynamicBox();
-	~DynamicBox();
-	void Create(const Vec3& pos, const Vec3& scale, dReal totalMass);
-	Vec3 GetPosition() const;
-	void SetPosition(const Vec3& pos);
-	void AddForce(const Vec3& force);
-	void SetAngle(Vec3& angle);
-	Vec3 GetAngle();
-
-};
 
 class StaticBox
 {
@@ -78,8 +63,10 @@ public:
 	PhysicsWorld() {};
 	~PhysicsWorld() {};
 	std::vector<std::unique_ptr<DynamicBox>> pDynamicBox;
+	std::vector<std::unique_ptr<DynamicSphere>> pDynamicSphere;
 	std::vector<std::unique_ptr<StaticBox>> pStaticBox;
 	//オブジェクトのセットアップを行う
+	void AddDynamicSphere(const Vec3& pos, const dReal& r, dReal mass);
 	void AddDynamicBox(const Vec3& pos,const Vec3& scale,const dReal mass);
 	void AddStaticBox(const Vec3& scale);
 	//ワールドを更新

@@ -24,47 +24,34 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	Texture texture4("p.png");
 
 
-	Model model("Lightbulb.fbx");
+	Model model("ball.fbx");
 
-	model.pos.y = 2;
+	model.pos.y = 8;
 	model.angles.x = -90;
 
-	Mesh box[MAX];
-	for (int i = 0; i < MAX; ++i)
-	{
-		box[i].CreateCube();
-		box[i].GetMaterial().SetTexture(0, &texture2);
-	}
+	Mesh me;
+	me.CreateCube();
+	me.GetMaterial().SetTexture(0, &texture1);
+	me.scale = 1;
+	me.scale.x = 10;
+	me.pos.x = camera.pos.x;
+	me.pos.y = 1;
+	me.pos.z = -10;
+
 	Mesh ground;
 	ground.CreateCube();
 	ground.GetMaterial().SetTexture(0, &texture4);
 	ground.scale = 10;
 	ground.scale.y = 1;
 
-	Mesh me;
-	me.CreateCube();
-	me.GetMaterial().SetTexture(0,&texture1);
-	me.scale = 1;
-	me.scale.x = 10;
-	me.pos.x = camera.pos.x;
-	me.pos.y = 1;
-	me.pos.z = -10;
+
 	PhysicsWorld physicsWorld;
-	for (int i = 0; i < MAX; ++i)
-	{
-		physicsWorld.AddDynamicBox(box[i].pos, box[i].scale, 5);
-	}
+	physicsWorld.AddDynamicSphere(model.pos,0.5f,55);
+	physicsWorld.AddDynamicBox(Vec3(0,10,0),Vec3(1,1,1),5);
 
 	physicsWorld.AddStaticBox(ground.scale);
 	physicsWorld.AddStaticBox(me.scale);
 	physicsWorld.pStaticBox[1]->SetPosition(me.pos);
-
-
-	for (int i = 0; i < MAX; ++i)
-	{
-		physicsWorld.pDynamicBox[i]->SetPosition(Vec3(-5.0f + (float)i * 0.09f, 10 + (float)i * 3.5f, 0));
-	}
-
 
 	while (ge.Run())
 	{
@@ -89,39 +76,43 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		if (KeyBoard::On(KeyBoard::Key::KEY_S))
 		{
 			go = true;
+
 		}
 		if (go)
 		{
+			physicsWorld.UpDate();
 			physicsWorld.UpDate();
 			if (dir == -1 && me.pos.z <= -8)
 			{
 				dir = 1;
 			}
-			if(dir == 1 && me.pos.z >= 8)
+			if (dir == 1 && me.pos.z >= 8)
 			{
 				dir = -1;
 			}
 			me.pos.z += speed * dir;
 			physicsWorld.pStaticBox[1]->SetPosition(me.pos);
 		}
-		
-		physicsWorld.pStaticBox[0]->SetPosition(Vec3(0, 0, 0));
-	
-		for (UINT i = 0; i < physicsWorld.pDynamicBox.size(); ++i)
+		if (KeyBoard::On(KeyBoard::Key::KEY_Z))
 		{
-			box[i].pos = physicsWorld.pDynamicBox[i]->GetPosition();
-			box[i].angle = physicsWorld.pDynamicBox[i]->GetAngle();
-			box[i].Draw();
+
 		}
-		ground.pos = physicsWorld.pStaticBox[0]->GetPosition();
-		ground.Draw();
+		if (KeyBoard::On(KeyBoard::Key::KEY_X))
+		{
+
+		}
+		physicsWorld.pStaticBox[0]->SetPosition(Vec3(0, 0, 0));
 		me.pos = physicsWorld.pStaticBox[1]->GetPosition();
 		me.Draw();
+		model.pos = physicsWorld.pDynamicSphere[0]->GetPosition();
+		ground.pos = physicsWorld.pStaticBox[0]->GetPosition();
+		ground.Draw();
+		physicsWorld.pDynamicBox[0]->Draw(texture2);
 		std::cout << Engine::GetFps().GetFrameRate() << std::endl;
 
 		texture2.Attach(0);
 		model.Draw();
-	
+		model.angles = physicsWorld.pDynamicSphere[0]->GetAngle();
 
 	}
 

@@ -72,87 +72,6 @@ void Physics::WorldStep(const float stepTime)
 	dWorldStep(world, stepTime);
 }
 
-void DynamicBox::Create(const Vec3& pos, const Vec3& scale, dReal totalMass)
-{
-	//ボディを作って質量を設定する
-	body = dBodyCreate(Engine::GetPhysics().GetWorld());
-	dMass mass;
-	dMassSetZero(&mass);
-	dMassSetBoxTotal(&mass, totalMass, scale.x, scale.y, scale.z);
-	dBodySetMass(body, &mass);
-
-	//ジオメトリを作成してボディをアタッチ
-	geom = dCreateBox(Engine::GetPhysics().GetCollsionSpace(), scale.x, scale.y, scale.z);
-	dGeomSetBody(geom, body);
-	this->pos = pos;
-	//ポジション
-	dBodySetPosition(body, this->pos.x, this->pos.y, this->pos.z);
-}
-
-DynamicBox::DynamicBox(const Vec3& pos, const Vec3& scale, dReal totalMass)
-{
-	this->pos = pos;
-	Create(this->pos, scale, totalMass);
-}
-
-DynamicBox::DynamicBox(const DynamicBox& box)
-{
-	body = box.body;
-	geom = box.geom;
-}
-
-DynamicBox::DynamicBox():
-	body(nullptr),
-	geom(nullptr),
-	pos(0,0,0)
-{
-	dBodySetPosition(body,0,0,0);
-}
-
-DynamicBox::~DynamicBox()
-{
-	if (geom != nullptr)
-	{
-		dGeomDestroy(geom);
-		geom = nullptr;
-	}
-	if (body != nullptr)
-	{
-		dBodyDestroy(body);
-		body = nullptr;
-	}
-}
-
-Vec3 DynamicBox::GetPosition() const
-{
-	auto values = dBodyGetPosition(body);
-	return Vec3((float)values[0], (float)values[1], (float)values[2]);
-}
-
-void DynamicBox::SetPosition(const Vec3& pos)
-{
-	this->pos = pos;
-	dBodySetPosition(body, this->pos.x, this->pos.y, this->pos.z);
-}
-
-void DynamicBox::AddForce(const Vec3& force)
-{
-	//Memo::これを利用することで、剛体ごとに重力の値を設定できる
-	dBodyAddForce(body, force.x, force.y, force.z);
-}
-
-void DynamicBox::SetAngle(Vec3& angle)
-{
-	
-}
-
-Vec3 DynamicBox::GetAngle()
-{
-	auto val = dBodyGetQuaternion(body);
-
-	return Vec3(DirectX::XMConvertToDegrees((float)val[1]), DirectX::XMConvertToDegrees((float)val[2]), DirectX::XMConvertToDegrees((float)val[3]));
-}
-
 
 StaticBox::StaticBox(const Vec3& size)
 {
@@ -225,6 +144,11 @@ void PhysicsWorld::GetHit()
 {
 	//Memo::仮処理 : とりあえず床のジオメトリを指定
 	isHitGround = pStaticBox[0]->GetGeomID();
+}
+
+void PhysicsWorld::AddDynamicSphere(const Vec3 & pos, const dReal & r, dReal mass)
+{
+	pDynamicSphere.emplace_back(std::make_unique<DynamicSphere>(pos, r, mass));
 }
 
 void PhysicsWorld::AddDynamicBox(const Vec3& pos,const Vec3& scale, const dReal mass)
