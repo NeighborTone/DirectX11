@@ -71,21 +71,21 @@ void Mesh::CreatePoint(Vec3 p1, Vec3 offset, Vec3 forwardDirection,bool shouldCl
 {
 	if (shouldClear)
 	{
-		vertex.clear();
-		index.clear();
+		vertices.clear();
+		indices.clear();
 	}
 	
 	forwardDirection.Normalize();
 
 	//1�ڂ̓_
-	vertex.push_back(Vertex(
+	vertices.push_back(Vertex(
 		p1  + offset,
 		-forwardDirection,
 		Vec2(0.0f, 1.0f)));
 
 
-	size_t indexOffset = vertex.size() - 1;
-	index.push_back(indexOffset + 0);
+	size_t indexOffset = vertices.size() - 1;
+	indices.push_back(indexOffset + 0);
 
 	Apply();
 }
@@ -94,38 +94,38 @@ void Mesh::CreatePlane(Vec2 size, Vec3 offset, bool shouldClear, Vec3 leftDirect
 {
 	if (shouldClear)
 	{
-		vertex.clear();
-		index.clear();
+		vertices.clear();
+		indices.clear();
 	}
 
 	leftDirection.Normalize();
 	upDirection.Normalize();
 	forwardDirection.Normalize();
 
-	vertex.push_back(Vertex(
+	vertices.push_back(Vertex(
 		leftDirection * -size.x + upDirection * size.y + offset,
 		-forwardDirection, 
 		Vec2(0.0f, 0.0f)));
-	vertex.push_back(Vertex(
+	vertices.push_back(Vertex(
 		leftDirection * size.x + upDirection * size.y + offset, 
 		-forwardDirection, 
 		Vec2(1.0f, 0.0f)));
-	vertex.push_back(Vertex(
+	vertices.push_back(Vertex(
 		leftDirection * -size.x + upDirection * -size.y + offset,
 		-forwardDirection, 
 		Vec2(0.0f, 1.0f)));
-	vertex.push_back(Vertex(
+	vertices.push_back(Vertex(
 		leftDirection * size.x + upDirection * -size.y + offset, 
 		-forwardDirection, 
 		Vec2(1.0f, 1.0f)));
 
-	size_t indexOffset = vertex.size() - 4;
-	index.push_back(indexOffset + 0);
-	index.push_back(indexOffset + 1);
-	index.push_back(indexOffset + 2);
-	index.push_back(indexOffset + 3);
-	index.push_back(indexOffset + 2);
-	index.push_back(indexOffset + 1);
+	size_t indexOffset = vertices.size() - 4;
+	indices.push_back(indexOffset + 0);
+	indices.push_back(indexOffset + 1);
+	indices.push_back(indexOffset + 2);
+	indices.push_back(indexOffset + 3);
+	indices.push_back(indexOffset + 2);
+	indices.push_back(indexOffset + 1);
 
 	Apply();
 }
@@ -134,8 +134,8 @@ void Mesh::CreateCube(bool shouldClear)
 {
 	if (shouldClear)
 	{
-		vertex.clear();
-		index.clear();
+		vertices.clear();
+		indices.clear();
 	}
 
 	CreatePlane(Vec2(0.5f, 0.5f), Vec3(0.0f, 0.0f, -0.5f), false, Vec3(1.0f, 0.0f, 0.0f),  Vec3(0.0f, 1.0f, 0.0f),  Vec3(0.0f, 0.0f, 1.0f));	// front
@@ -166,26 +166,26 @@ void Mesh::SetDrawMode(D3D11_CULL_MODE cullingMode, D3D11_FILL_MODE fillMode)
 void Mesh::Apply()
 {
 	vertexBuffer.Release();
-	if (vertex.size() > 0)
+	if (vertices.size() > 0)
 	{
 		D3D11_BUFFER_DESC vertexBufferDesc = {};
-		vertexBufferDesc.ByteWidth = sizeof(Vertex) * vertex.size();
+		vertexBufferDesc.ByteWidth = sizeof(Vertex) * vertices.size();
 		vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		D3D11_SUBRESOURCE_DATA vertexSubresourceData = {};
-		vertexSubresourceData.pSysMem = vertex.data();
+		vertexSubresourceData.pSysMem = vertices.data();
 		Engine::GetDXDevice3D().CreateBuffer(&vertexBufferDesc, &vertexSubresourceData, &vertexBuffer);
 	}
 
 	indexBuffer.Release();
-	if (index.size() > 0)
+	if (indices.size() > 0)
 	{
 		D3D11_BUFFER_DESC indexBufferDesc = {};
-		indexBufferDesc.ByteWidth = sizeof(int) * index.size();
+		indexBufferDesc.ByteWidth = sizeof(int) * indices.size();
 		indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 		indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 		D3D11_SUBRESOURCE_DATA indexSubresourceData = {};
-		indexSubresourceData.pSysMem = index.data();
+		indexSubresourceData.pSysMem = indices.data();
 		Engine::GetDXDevice3D().CreateBuffer(&indexBufferDesc, &indexSubresourceData, &indexBuffer);
 	}
 
@@ -217,12 +217,12 @@ void Mesh::Draw()
 	Engine::GetDXContext3D().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	if (indexBuffer == nullptr)
 	{
-		Engine::GetDXContext3D().Draw(vertex.size(), 0);
+		Engine::GetDXContext3D().Draw(vertices.size(), 0);
 	}
 	else
 	{
 		Engine::GetDXContext3D().IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
-		Engine::GetDXContext3D().DrawIndexed(index.size(), 0, 0);
+		Engine::GetDXContext3D().DrawIndexed(indices.size(), 0, 0);
 	}
 }
 
@@ -251,12 +251,12 @@ void Mesh::DrawPoint()
 	Engine::GetDXContext3D().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 	if (indexBuffer == nullptr)
 	{
-		Engine::GetDXContext3D().Draw(vertex.size(), 0);
+		Engine::GetDXContext3D().Draw(vertices.size(), 0);
 	}
 	else
 	{
 		Engine::GetDXContext3D().IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
-		Engine::GetDXContext3D().DrawIndexed(index.size(), 0, 0);
+		Engine::GetDXContext3D().DrawIndexed(indices.size(), 0, 0);
 	}
 }
 

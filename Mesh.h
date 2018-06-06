@@ -26,8 +26,8 @@ public:
 	Vec3 angle;
 	Vec3 scale;
 
-	std::vector<Vertex> vertex;
-	std::vector<UINT> index;
+	std::vector<Vertex> vertices;
+	std::vector<UINT> indices;
 	Mesh();
 	~Mesh();
 	/*!
@@ -89,5 +89,14 @@ public:
 	*/
 	void DrawPoint();
 
+	void* operator new(size_t i)
+	{
+		return _mm_malloc(i, 16);
+	}
+
+	void operator delete(void* p)
+	{
+		_mm_free(p);
+	}
 };
 

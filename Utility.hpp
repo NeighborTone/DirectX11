@@ -602,6 +602,11 @@ struct Vertex
 	Vec2 uv;
 	uint32_t blendIndices[8] = { 999, 999, 999, 999, 999, 999, 999, 999 };
 	float blendWeights[8] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+	Vertex():
+		pos(0,0,0),
+		normal(0,0,0),
+		uv(0,0)
+	{}
 	Vertex(Vec3 pos, Vec3 normal, Vec2 uv)
 	{
 		this->pos = pos;

@@ -24,7 +24,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	Texture texture4("p.png");
 
 	BallShape ball;
-	ball.Create(0.5f, 24,camera);
+	ball.Create(2.5f, 24,camera);
 
 
 	Mesh box[MAX];
@@ -56,6 +56,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	physicsWorld.AddStaticBox(ground.scale);
 	physicsWorld.AddStaticBox(me.scale);
 	physicsWorld.pStaticBox[1]->SetPosition(me.pos);
+
+	Texture texture("crab.jpg");
+	texture.Attach(0);
+	Model model("crab.fbx");
+	model.pos.y = 2;
 
 	for (int i = 0; i < MAX; ++i)
 	{
@@ -114,13 +119,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		me.Draw();
 		std::cout << Engine::GetFps().GetFrameRate() << std::endl;
 
+		model.Draw();
+		//ball.Draw(camera);
 
-
-
-		ball.Draw(camera);
-
-
-		
 	}
 
 	//I—¹

@@ -21,7 +21,6 @@ private:
 public:
 	Vec3 pos;
 	Vec3 angle;
-	Vec3 scale;
 	float r;
 	BallShape();
 	~BallShape();
