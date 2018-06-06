@@ -1,4 +1,5 @@
 #include "Model.h"
+#include "StringConverter.hpp"
 /*~~~~~~~~~~~~~~~~~Memo~~~~~~~~~~~~~~~~~*/
 //FBXはマネージャーがすべてのノード(各機能)を管理する
 //コントロールポイントとはインデックスバッファの指し示すデータ(モデルの頂点)
@@ -13,24 +14,35 @@
 Model::Model():
 	pos(0,0,0),
 	angles(0,0,0),
-	scale(0,0,0)
+	scale(1,1,1),
+	startTime(0),
+	animName(0)
 {
-	Initialize();
+	
 }
 
-Model::Model(const char * const filePath)
+Model::Model(const std::string filePath) :
+	pos(0, 0, 0),
+	angles(0, 0, 0),
+	scale(1, 1, 1),
+	startTime(0),
+	animName(0)
 {
-	Initialize();
 	Load(filePath);
 }
 
-void Model::Load(const char* const filePath)
+void Model::Load(const std::string filePath)
 {
 	static std::unique_ptr<FbxManager, FbxManagerDeleter> manager(FbxManager::Create());
 
+	//ワイド文字でないと正しく読み込めないので変換
+	std::wstring path  = StringConverter::StringToWString(filePath);
+
 	//ファイル名取得
-	size_t length = strlen(filePath) + 1;
+	size_t length = wcslen(path.c_str()) + 1;
 	std::unique_ptr<char[]> charFilePath(new char[length]);
+	wcstombs_s(nullptr, charFilePath.get(), length, path.c_str(), _TRUNCATE);
+
 	//FbxImporterオブジェクトを作成
 	std::unique_ptr<FbxImporter, FbxImporterDeleter> importer(FbxImporter::Create(manager.get(), ""));
 	//読み込みと初期化
@@ -55,12 +67,43 @@ void Model::Play(int animName)
 
 }
 
-void Model::Draw()
+void Model::Draw(bool wireframeEnable)
 {
 	float time = Engine::GetFps().GetTime() - startTime;
 	int frame = (int)(time * 60.0f);
 	//60フレーム基準で指定したアニメーションを再生する
 	frame %= animations[animName].frames.size();
+
+	for (UINT i = 0; i < animations[animName].frames[frame].bones.size(); i++)
+	{
+		constant.bones[i] = XMMatrixTranspose(
+			animations[animName].frames[frame].bones[i]
+		);
+	}
+
+	if (wireframeEnable)
+	{
+		for (UINT i = 0; i < meshes.size(); i++)
+		{
+			meshes[i]->pos = pos;
+			meshes[i]->angle = angles;
+			meshes[i]->scale = scale;
+			meshes[i]->SetDrawMode(D3D11_CULL_BACK, D3D11_FILL_WIREFRAME);
+			meshes[i]->Draw();
+		}
+	}
+	else
+	{
+		for (UINT i = 0; i < meshes.size(); i++)
+		{
+			meshes[i]->pos = pos;
+			meshes[i]->angle = angles;
+			meshes[i]->scale = scale;
+			meshes[i]->SetDrawMode(D3D11_CULL_BACK, D3D11_FILL_SOLID);
+			meshes[i]->Draw();
+		}
+	}
+	
 }
 
 
@@ -226,7 +269,7 @@ void Model::LoadAnim(FbxScene* scene, FbxMesh* mesh, Mesh* item, bool isOptimize
 	//アニメーション情報取得
 	FbxArray<FbxString*> animStackList;		//アニメ情報リスト、連番で入る
 	scene->FillAnimStackNameArray(animStackList);
-	printf("anim %d\n", animStackList.Size());
+	/*printf("anim %d\n", animStackList.Size());*/
 
 	animations.resize(animStackList.Size());	//取得したアニメ数まで領域を変える
 
@@ -247,7 +290,7 @@ void Model::LoadSkin(FbxMesh* mesh, FbxAnimStack* animStack, int animNum, Mesh* 
 	int frameCount = (int)(length * 60.0f);
 	animations[animNum].frames.resize(frameCount);
 
-	printf("deformer %d\n", mesh->GetDeformerCount(FbxDeformer::eSkin));
+	/*printf("deformer %d\n", mesh->GetDeformerCount(FbxDeformer::eSkin));*/
 	for (int i = 0; i < mesh->GetDeformerCount(FbxDeformer::eSkin); i++)
 	{
 		LoadBones(mesh, animNum, i, frameCount, item, start, controlPointIndices, isOptimized);

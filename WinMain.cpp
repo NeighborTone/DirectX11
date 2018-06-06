@@ -23,9 +23,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	Texture texture3("brick2.jpg");
 	Texture texture4("p.png");
 
-	BallShape ball;
-	ball.Create(2.5f, 24,camera);
 
+	Model model("Lightbulb.fbx");
+
+	model.pos.y = 2;
+	model.angles.x = -90;
 
 	Mesh box[MAX];
 	for (int i = 0; i < MAX; ++i)
@@ -57,15 +59,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	physicsWorld.AddStaticBox(me.scale);
 	physicsWorld.pStaticBox[1]->SetPosition(me.pos);
 
-	Texture texture("crab.jpg");
-	texture.Attach(0);
-	Model model("crab.fbx");
-	model.pos.y = 2;
 
 	for (int i = 0; i < MAX; ++i)
 	{
 		physicsWorld.pDynamicBox[i]->SetPosition(Vec3(-5.0f + (float)i * 0.09f, 10 + (float)i * 3.5f, 0));
 	}
+
+
 	while (ge.Run())
 	{
 		camera.Run();
@@ -119,8 +119,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		me.Draw();
 		std::cout << Engine::GetFps().GetFrameRate() << std::endl;
 
+		texture2.Attach(0);
 		model.Draw();
-		//ball.Draw(camera);
+	
 
 	}
 

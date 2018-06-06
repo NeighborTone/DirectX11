@@ -74,10 +74,10 @@ public:
 	Vec3 angles;
 	Vec3 scale;
 	Model();
-	Model(const char* const filePath);
+	Model(const std::string filePath);
 	~Model() {};
-	void Load(const char* const filePath);
+	void Load(const std::string filePath);
 	void Play(int animName);
-	void Draw();
+	void Draw(bool wireframeEnable = false);
 
 };
