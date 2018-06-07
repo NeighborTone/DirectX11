@@ -60,6 +60,9 @@
     <ClCompile Include="RigidBody.cpp">
       <Filter>Engine\Physics</Filter>
     </ClCompile>
+    <ClCompile Include="Geometry.cpp">
+      <Filter>Engine\Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -124,6 +127,9 @@
     </ClInclude>
     <ClInclude Include="BasicShapes.h" />
     <ClInclude Include="RigidBody.h">
+      <Filter>Engine\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry.h">
       <Filter>Engine\Physics</Filter>
     </ClInclude>
   </ItemGroup>

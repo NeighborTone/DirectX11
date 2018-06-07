@@ -55,7 +55,6 @@ private:
 	float startTime;
 	int animName;
 
-	void Initialize();
 	void SearchNode(FbxScene* scene, FbxNode* node);
 	void LoadNode(FbxScene* scene, FbxNode* node);
 	bool IsOptimized(FbxMesh* mesh);

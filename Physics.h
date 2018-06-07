@@ -5,6 +5,7 @@
 #include <vector>
 #include "Utility.hpp"
 #include "RigidBody.h"
+#include "Geometry.h"
 
 #if defined(_DEBUG)
 #pragma comment(lib,"oded.lib")
@@ -16,6 +17,7 @@ class DynamicBox;
 class DynamicSphere;
 class DynamicCylinder;
 class DynamicCapsule;
+class StaticBox;
 
 class Physics
 {
@@ -37,18 +39,6 @@ public:
 
 };
 
-
-class StaticBox
-{
-private:
-	dGeomID geom;
-public:
-	StaticBox(const Vec3& scale);
-	~StaticBox();
-	Vec3 GetPosition() const;
-	void SetPosition(const Vec3& pos);
-	dGeomID GetGeomID();
-};
 
 class PhysicsWorld final
 {

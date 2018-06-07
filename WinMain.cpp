@@ -23,7 +23,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	Texture texture3("brick2.jpg");
 	Texture texture4("p.png");
 
-
 	Model model("ball.fbx");
 
 	model.pos.y = 8;

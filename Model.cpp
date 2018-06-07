@@ -116,13 +116,6 @@ void Model::Draw(bool wireframeEnable)
 //----------//
 /*privates*/
 //----------//
-void Model::Initialize()
-{
-	pos = Vec3(0.0f, 0.0f, 0.0f);
-	angles = Vec3(0.0f, 0.0f, 0.0f);
-	scale = Vec3(1.0f, 1.0f, 1.0f);
-}
-
 void Model::SearchNode(FbxScene* scene, FbxNode* node)
 {
 	//ƒm[ƒh‚ğ‚·‚×‚Ä’T‚µo‚·
