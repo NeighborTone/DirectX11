@@ -94,14 +94,14 @@ void PhysicsWorld::NearCallback(void *data, dGeomID o1, dGeomID o2)
 	//ê⁄êGì_ÇéZèoÇµÇΩÇËÅAê⁄êGì_ÇÃê´éøÇ»Ç«Çê›íË
 	for (int i = 0; i < n; i++)
 	{
-		contact[i].surface.mode = dContactBounce;
-		contact[i].surface.mu = dInfinity;
+		contact[i].surface.mode = dContactBounce;		//ê⁄êGì_Ç…Ç«ÇÃÇÊÇ§Ç»çÏópÇó^Ç¶ÇÈÇ©éwíË
+		contact[i].surface.mu = dInfinity;		//ñÄéCåWêî
 		contact[i].surface.mu2 = 0.0;
 		contact[i].surface.rho = 0.0;
 		contact[i].surface.rho2 = 0.0;
 		contact[i].surface.rhoN = 0.0;
-		contact[i].surface.bounce = 0.25;	//0~1
-		contact[i].surface.bounce_vel = 0.0;
+		contact[i].surface.bounce = 0.25;		//îΩî≠åWêî0~1
+		contact[i].surface.bounce_vel = 0.0;	//ç≈í·îΩéÀë¨ìx
 		contact[i].surface.slip1 = 0.0;
 		contact[i].surface.slip2 = 0.0;
 		auto joint = dJointCreateContact(Engine::GetPhysics().GetWorld(), Engine::GetPhysics().GetContactGroup(), &contact[i]);
@@ -125,12 +125,12 @@ void PhysicsWorld::AddDynamicBox(const Vec3& pos,const Vec3& scale, const dReal 
 	pDynamicBox.emplace_back(std::make_unique<DynamicBox>(pos, scale, mass));
 }
 
-void PhysicsWorld::AddDynamicCapsule(const Vec3& pos, const dReal totalMass, const int direction, const dReal radius, const dReal length)
+void PhysicsWorld::AddDynamicCapsule(const Vec3& pos, const dReal totalMass, const CylinderDir direction, const dReal radius, const dReal length)
 {
 	pDynamicCapsule.emplace_back(std::make_unique<DynamicCapsule>(pos, totalMass, direction, radius, length));
 }
 
-void PhysicsWorld::AddDynamicCylinder(const Vec3& pos, const dReal totalMass, const int direction, const dReal radius, const dReal length)
+void PhysicsWorld::AddDynamicCylinder(const Vec3& pos, const dReal totalMass, const CylinderDir direction, const dReal radius, const dReal length)
 {
 	pDynamicCylinder.emplace_back(std::make_unique<DynamicCylinder>(pos, totalMass, direction, radius, length));
 }
@@ -148,12 +148,12 @@ void PhysicsWorld::AddStaticSphere(const Vec3& pos, const dReal& radius)
 	pStaticSphere.emplace_back(std::make_unique<StaticSphere>(pos, radius));
 }
 
-void PhysicsWorld::AddStaticCapsule(const Vec3& pos, const int direction, const dReal radius, const dReal length)
+void PhysicsWorld::AddStaticCapsule(const Vec3& pos, const CylinderDir direction, const dReal radius, const dReal length)
 {
 	pStaticCapsule.emplace_back(std::make_unique<StaticCapsule>(pos, direction, radius, length));
 }
 
-void PhysicsWorld::AddStaticCylinder(const Vec3& pos, const int direction, const dReal radius, const dReal length)
+void PhysicsWorld::AddStaticCylinder(const Vec3& pos, const CylinderDir direction, const dReal radius, const dReal length)
 {
 	pStaticCylinder.emplace_back(std::make_unique<StaticCylinder>(pos, direction, radius, length));
 }

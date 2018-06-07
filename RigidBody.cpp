@@ -1,5 +1,6 @@
 #include "RigidBody.h"
 #include "Engine.h"
+#include <SimpleMath.h>
 
 RigidBody::RigidBody() :
 	body(nullptr),
@@ -49,8 +50,9 @@ Vec3 RigidBody::GetVelocity()
 	return Vec3((float)vel[0], (float)vel[1], (float)vel[2]);
 }
 
-void RigidBody::SetAngle(Vec3& angle)
+void RigidBody::SetQuaternion(Vec3& angle)
 {
+	//‚Ü‚¾‚È‚Ì‚Å“K“–
 	dQuaternion q = 
 	{  1,
 		DirectX::XMConvertToRadians(angle.x),
@@ -62,8 +64,9 @@ void RigidBody::SetAngle(Vec3& angle)
 
 }
 
-Vec3 RigidBody::GetAngle()
+Vec3 RigidBody::GetQuaternion()
 {
+	//‚Ü‚¾‚È‚Ì‚Å“K“–
 	auto val = dBodyGetQuaternion(body);
 
 	return Vec3(
@@ -71,6 +74,23 @@ Vec3 RigidBody::GetAngle()
 		DirectX::XMConvertToDegrees((float)val[2]), 
 		DirectX::XMConvertToDegrees((float)val[3])
 	);
+}
+
+void RigidBody::SetRotation(Vec3& angle)
+{
+	//‚Ü‚¾
+}
+
+Vec3 RigidBody::GetRotation()
+{
+	//‚Ü‚¾‚È‚Ì‚Å“K“–
+	const dReal* R;
+	R = dBodyGetRotation(body);
+	
+	return Vec3(
+		DirectX::XMConvertToDegrees((float)R[0]),
+		DirectX::XMConvertToDegrees((float)R[5]), 
+		DirectX::XMConvertToDegrees((float)R[10]));
 }
 
 void RigidBody::BodyEnable()
@@ -107,10 +127,10 @@ void DynamicBox::Draw(Texture& tex)
 	{
 		mesh.CreateCube();
 		mesh.GetMaterial().SetTexture(0, &tex);
-		mesh.SetDrawMode(D3D11_CULL_BACK, D3D11_FILL_WIREFRAME);
+		mesh.SetDrawMode(D3D11_CULL_BACK, D3D11_FILL_SOLID);
 	}
 	mesh.pos = GetPosition();
-	mesh.angle = GetAngle();
+	mesh.angle = GetQuaternion();
 	mesh.Draw();
 }
 

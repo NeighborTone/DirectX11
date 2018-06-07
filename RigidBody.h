@@ -18,8 +18,10 @@ public:
 	void AddForce(const Vec3& force);
 	void AddVelocity(const Vec3& velocity);
 	Vec3 GetVelocity();
-	void SetAngle(Vec3& angle);
-	Vec3 GetAngle();
+	void SetQuaternion(Vec3& angle);
+	Vec3 GetQuaternion();
+	void SetRotation(Vec3& angle);
+	Vec3 GetRotation();
 	void BodyEnable();
 	void BodyDisable();
 	virtual void Draw(Texture& tex) = 0;

@@ -42,6 +42,13 @@ public:
 
 };
 
+//シリンダーとカプセルのlengthに平行な軸
+enum  CylinderDir
+{
+	X = 1,
+	Y = 2,
+	Z = 3,
+};
 
 class PhysicsWorld final
 {
@@ -55,6 +62,7 @@ private:
 	//--------------------------------
 
 public:
+	
 	PhysicsWorld() {};
 	~PhysicsWorld() {};
 	std::vector<std::unique_ptr<DynamicBox>> pDynamicBox;
@@ -68,12 +76,12 @@ public:
 	//オブジェクトのセットアップを行う
 	void AddDynamicBox(const Vec3& pos,const Vec3& scale,const dReal mass);
 	void AddDynamicSphere(const Vec3& pos, const dReal& r, dReal mass);
-	void AddDynamicCapsule(const Vec3& pos, const dReal totalMass, const int direction, const dReal radius, const dReal length);
-	void AddDynamicCylinder(const Vec3& pos, const dReal totalMass, const int direction, const dReal radius, const dReal length);
+	void AddDynamicCapsule(const Vec3& pos, const dReal totalMass, const CylinderDir direction, const dReal radius, const dReal length);
+	void AddDynamicCylinder(const Vec3& pos, const dReal totalMass, const CylinderDir direction, const dReal radius, const dReal length);
 	void AddStaticBox(const Vec3& pos, const Vec3& scale);
 	void AddStaticSphere(const Vec3& pos, const dReal& radius);
-	void AddStaticCapsule(const Vec3& pos, const int direction, const dReal radius, const dReal length);
-	void AddStaticCylinder(const Vec3& pos, const int direction, const dReal radius, const dReal length);
+	void AddStaticCapsule(const Vec3& pos, const CylinderDir direction, const dReal radius, const dReal length);
+	void AddStaticCylinder(const Vec3& pos, const CylinderDir direction, const dReal radius, const dReal length);
 	//ワールドを更新
 	void UpDate();
 	void SetGravity(const Vec3_d& gravity);

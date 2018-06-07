@@ -18,19 +18,24 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	//camera.SetOrthographic(0,0.1f,100.0f);
 	camera.SetDepthTest(true);
 
-	Texture texture1("box.jpg");
-	Texture texture2("brick.jpg");
-	Texture texture3("brick2.jpg");
-	Texture texture4("p.png");
-
-	Model rigidBall("ball.fbx");
+	Texture texture1("Resource/box.jpg");
+	Texture texture2("Resource/brick.jpg");
+	Texture texture3("Resource/white.png");
+	Texture texture4("Resource/cursor.png");
+	Texture texture5("Resource/white.png");
+	Model rigidBall("Resource/ball.fbx");
 
 	rigidBall.pos.y = 8;
 	rigidBall.angles.x = 0;
 
-	Model geomBall("ball.fbx");
+	Model geomBall("Resource/ball.fbx");
 	geomBall.pos.y = 5;
-	
+	geomBall.pos.z = 1;
+
+	Model cylinder("Resource/cylinder.fbx");
+	cylinder.pos.y = 12;
+	cylinder.pos.z = -1;
+	cylinder.angles.x = -90;
 
 	Mesh me;
 	me.CreateCube();
@@ -50,8 +55,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 
 	PhysicsWorld physicsWorld;
 	physicsWorld.AddDynamicSphere(rigidBall.pos,1,55);
-	physicsWorld.pDynamicSphere[0]->SetAngle(rigidBall.angles);
-	physicsWorld.AddDynamicBox(Vec3(0,10,0),Vec3(1,1,1),5);
+	physicsWorld.pDynamicSphere[0]->SetQuaternion(rigidBall.angles);
+
+	for (int i = 0; i < MAX; ++i)
+	{
+		physicsWorld.AddDynamicBox(Vec3(0, 0, 0), Vec3(1, 1, 1), 5);
+		physicsWorld.pDynamicBox[i]->SetPosition(Vec3(-5.0f + (float)i * 0.09f, 10 + (float)i * 3.5f, 0));
+	}
+
+	physicsWorld.AddDynamicCylinder(cylinder.pos,55,CylinderDir::Y,1,2);
+
 
 	physicsWorld.AddStaticBox(ground.pos, ground.scale);
 	physicsWorld.AddStaticBox(me.pos, me.scale);
@@ -86,7 +99,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		if (go)
 		{
 			physicsWorld.UpDate();
-			physicsWorld.UpDate();
 			if (dir == -1 && me.pos.z <= -8)
 			{
 				dir = 1;
@@ -106,23 +118,31 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		{
 
 		}
-		physicsWorld.pStaticBox[0]->SetPosition(Vec3(0, 0, 0));
 		me.pos = physicsWorld.pStaticBox[1]->GetPosition();
 		me.Draw();
+
 		rigidBall.pos = physicsWorld.pDynamicSphere[0]->GetPosition();
 		ground.pos = physicsWorld.pStaticBox[0]->GetPosition();
 		ground.Draw();
-		physicsWorld.pDynamicBox[0]->Draw(texture2);
-		std::cout << Engine::GetFps().GetFrameRate() << std::endl;
+		for (int i = 0; i < MAX; ++i)
+		{
+			physicsWorld.pDynamicBox[i]->Draw(texture2);
+		}
 
 		texture2.Attach(0);
 		rigidBall.Draw();
-		rigidBall.angles = physicsWorld.pDynamicSphere[0]->GetAngle();
+		rigidBall.angles = physicsWorld.pDynamicSphere[0]->GetQuaternion();
 
 		texture3.Attach(0);
 		geomBall.pos = physicsWorld.pStaticSphere[0]->GetPosition();
 		geomBall.Draw();
 
+		texture5.Attach(0);
+		cylinder.pos = physicsWorld.pDynamicCylinder[0]->GetPosition();
+		cylinder.Draw();
+
+
+		std::cout << Engine::GetFps().GetFrameRate() << std::endl;
 	}
 
 	//I—¹
