@@ -12,7 +12,6 @@ bool Pad::Down(const Button& key, const NO& no)
 
 bool Pad::On(const Button& key, const NO& no)
 {
-
 	return pad.Press((int)key, (int)no);
 }
 

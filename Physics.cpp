@@ -156,6 +156,16 @@ void PhysicsWorld::AddDynamicBox(const Vec3& pos,const Vec3& scale, const dReal 
 	pDynamicBox.emplace_back(std::make_unique<DynamicBox>(pos, scale, mass));
 }
 
+void PhysicsWorld::AddDynamicCapsule(const Vec3& pos, const dReal totalMass, const int direction, const dReal radius, const dReal length)
+{
+	pDynamicCapsule.emplace_back(std::make_unique<DynamicCapsule>(pos, totalMass, direction, radius, length));
+}
+
+void PhysicsWorld::AddDynamicCylinder(const Vec3& pos, const dReal totalMass, const int direction, const dReal radius, const dReal length)
+{
+	pDynamicCylinder.emplace_back(std::make_unique<DynamicCylinder>(pos, totalMass, direction, radius, length));
+}
+
 void PhysicsWorld::AddStaticBox(const Vec3& scale)
 {
 	pStaticBox.emplace_back(std::make_unique<StaticBox>(scale));

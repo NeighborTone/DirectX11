@@ -101,7 +101,9 @@ void Mesh::CreatePlane(Vec2 size, Vec3 offset, bool shouldClear, Vec3 leftDirect
 	leftDirection.Normalize();
 	upDirection.Normalize();
 	forwardDirection.Normalize();
-
+	//•½–Ê‚Ì•û’ö® : ax+by+cz+d=0
+	//n = (a,b,c)‚ª•½–Ê‚Ì–@ü
+	//d‚ÍŒ´“_‚©‚ç‚Ì•„†•t‹——£
 	vertices.push_back(Vertex(
 		leftDirection * -size.x + upDirection * size.y + offset,
 		-forwardDirection, 

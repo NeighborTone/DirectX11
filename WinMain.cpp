@@ -27,7 +27,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	Model model("ball.fbx");
 
 	model.pos.y = 8;
-	model.angles.x = -90;
+	model.angles.x = 0;
 
 	Mesh me;
 	me.CreateCube();
@@ -47,6 +47,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 
 	PhysicsWorld physicsWorld;
 	physicsWorld.AddDynamicSphere(model.pos,0.5f,55);
+	physicsWorld.pDynamicSphere[0]->SetAngle(model.angles);
 	physicsWorld.AddDynamicBox(Vec3(0,10,0),Vec3(1,1,1),5);
 
 	physicsWorld.AddStaticBox(ground.scale);

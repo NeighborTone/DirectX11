@@ -61,7 +61,7 @@ public:
 		Vec3 upDirection = Vec3(0.0f, 1.0f, 0.0f), 
 		Vec3 forwardDirection = Vec3(0.0f, 0.0f, 1.0f));
 	/*!
-	* @brief 四面体を作成します
+	* @brief 直方体を作成します
 	* @param (shouldClear) 頂点、インデックスの初期化
 	*/
 	void CreateCube(bool shouldClear = true);

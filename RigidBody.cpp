@@ -51,7 +51,12 @@ Vec3 RigidBody::GetVelocity()
 
 void RigidBody::SetAngle(Vec3& angle)
 {
-	dQuaternion q = { 1,angle.x,angle.y,angle.z };
+	dQuaternion q = 
+	{  1,
+		DirectX::XMConvertToRadians(angle.x),
+		DirectX::XMConvertToRadians(angle.y),
+		DirectX::XMConvertToRadians(angle.z) 
+	};
 
 	dBodySetQuaternion(body, q);
 
@@ -61,7 +66,11 @@ Vec3 RigidBody::GetAngle()
 {
 	auto val = dBodyGetQuaternion(body);
 
-	return Vec3(DirectX::XMConvertToDegrees((float)val[1]), DirectX::XMConvertToDegrees((float)val[2]), DirectX::XMConvertToDegrees((float)val[3]));
+	return Vec3(
+		DirectX::XMConvertToDegrees((float)val[1]), 
+		DirectX::XMConvertToDegrees((float)val[2]), 
+		DirectX::XMConvertToDegrees((float)val[3])
+	);
 }
 
 void RigidBody::BodyEnable()
@@ -177,6 +186,17 @@ DynamicCylinder::DynamicCylinder(const Vec3& pos, const dReal totalMass, const i
 	Create(this->pos,  totalMass, direction, radius, length);
 }
 
+DynamicCylinder::DynamicCylinder(const DynamicCylinder & cylinder)
+{
+	body = cylinder.body;
+	geom = cylinder.geom;
+}
+
+DynamicCylinder::DynamicCylinder()
+{
+	dBodySetPosition(body, 0, 0, 0);
+}
+
 DynamicCylinder::~DynamicCylinder()
 {
 
@@ -202,3 +222,47 @@ void DynamicCylinder::Draw(Texture & tex)
 {
 	//まだなし
 }
+
+DynamicCapsule::DynamicCapsule(const Vec3& pos, const dReal totalMass, const int direction, const dReal radius, const dReal length)
+{
+	this->pos = pos;
+	Create(this->pos, totalMass, direction, radius, length);
+}
+
+DynamicCapsule::DynamicCapsule(const DynamicCapsule& capsule)
+{
+	body = capsule.body;
+	geom = capsule.geom;
+}
+
+DynamicCapsule::DynamicCapsule()
+{
+	dBodySetPosition(body, 0, 0, 0);
+}
+
+DynamicCapsule::~DynamicCapsule()
+{
+
+}
+
+void DynamicCapsule::Create(const Vec3 & pos, const dReal totalMass, const int direction, const dReal radius, const dReal length)
+{
+	//ボディを作って質量を設定する
+	body = dBodyCreate(Engine::GetPhysics().GetWorld());
+	dMass mass;
+	dMassSetZero(&mass);
+	dMassSetCapsuleTotal(&mass, totalMass, direction, radius, length);
+	dBodySetMass(body, &mass);
+	//ジオメトリを作成してボディをアタッチ
+	geom = dCreateCapsule(Engine::GetPhysics().GetCollsionSpace(), radius, length);
+	dGeomSetBody(geom, body);
+	this->pos = pos;
+	//ポジション
+	dBodySetPosition(body, this->pos.x, this->pos.y, this->pos.z);
+}
+
+void DynamicCapsule::Draw(Texture & tex)
+{
+	//今なし
+}
+

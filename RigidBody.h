@@ -4,7 +4,6 @@
 #include "Mesh.h"
 //とりあえずテンプレートメソッドパターンで実装
 
-
 class RigidBody
 {
 protected:
@@ -63,8 +62,22 @@ public:
 
 class DynamicCylinder : public RigidBody
 {
+public:
 	DynamicCylinder(const Vec3& pos, const dReal totalMass, const int direction, const dReal radius, const dReal length);
+	DynamicCylinder(const DynamicCylinder& cylinder);
+	DynamicCylinder();
 	~DynamicCylinder();
 	void Create(const Vec3& pos , const dReal total_mass, const int direction, const dReal radius, const dReal length);
+	void Draw(Texture& tex) override;
+};
+ 
+class DynamicCapsule : public RigidBody
+{
+public:
+	DynamicCapsule(const Vec3& pos, const dReal totalMass, const int direction, const dReal radius, const dReal length);
+	DynamicCapsule(const DynamicCapsule& capsule);
+	DynamicCapsule();
+	~DynamicCapsule();
+	void Create(const Vec3& pos, const dReal totalMass, const int direction, const dReal radius, const dReal length);
 	void Draw(Texture& tex) override;
 };
