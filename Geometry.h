@@ -19,9 +19,9 @@ public:
 class StaticBox : public Geometry
 {
 public:
-	StaticBox(const Vec3& scale);
+	StaticBox(const Vec3& pos, const Vec3& scale);
 	StaticBox();
-	void Create(const Vec3& scale);
+	void Create(const Vec3& pos, const Vec3& scale);
 	~StaticBox();
 	
 };
@@ -29,10 +29,10 @@ public:
 class StaticSphere : public Geometry
 {
 public:
-	StaticSphere(const Vec3 & pos, const dReal & radius);
+	StaticSphere(const Vec3& pos, const dReal& radius);
 	StaticSphere();
 	~StaticSphere();
-	void Create(const Vec3 & pos, const dReal & radius);
+	void Create(const Vec3& pos, const dReal& radius);
 };
 
 class StaticCylinder : public Geometry

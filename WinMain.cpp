@@ -23,10 +23,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	Texture texture3("brick2.jpg");
 	Texture texture4("p.png");
 
-	Model model("ball.fbx");
+	Model rigidBall("ball.fbx");
 
-	model.pos.y = 8;
-	model.angles.x = 0;
+	rigidBall.pos.y = 8;
+	rigidBall.angles.x = 0;
+
+	Model geomBall("ball.fbx");
+	geomBall.pos.y = 5;
+	
 
 	Mesh me;
 	me.CreateCube();
@@ -45,12 +49,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 
 
 	PhysicsWorld physicsWorld;
-	physicsWorld.AddDynamicSphere(model.pos,0.5f,55);
-	physicsWorld.pDynamicSphere[0]->SetAngle(model.angles);
+	physicsWorld.AddDynamicSphere(rigidBall.pos,1,55);
+	physicsWorld.pDynamicSphere[0]->SetAngle(rigidBall.angles);
 	physicsWorld.AddDynamicBox(Vec3(0,10,0),Vec3(1,1,1),5);
 
-	physicsWorld.AddStaticBox(ground.scale);
-	physicsWorld.AddStaticBox(me.scale);
+	physicsWorld.AddStaticBox(ground.pos, ground.scale);
+	physicsWorld.AddStaticBox(me.pos, me.scale);
+	physicsWorld.AddStaticSphere(geomBall.pos,1);
 	physicsWorld.pStaticBox[1]->SetPosition(me.pos);
 
 	while (ge.Run())
@@ -104,15 +109,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		physicsWorld.pStaticBox[0]->SetPosition(Vec3(0, 0, 0));
 		me.pos = physicsWorld.pStaticBox[1]->GetPosition();
 		me.Draw();
-		model.pos = physicsWorld.pDynamicSphere[0]->GetPosition();
+		rigidBall.pos = physicsWorld.pDynamicSphere[0]->GetPosition();
 		ground.pos = physicsWorld.pStaticBox[0]->GetPosition();
 		ground.Draw();
 		physicsWorld.pDynamicBox[0]->Draw(texture2);
 		std::cout << Engine::GetFps().GetFrameRate() << std::endl;
 
 		texture2.Attach(0);
-		model.Draw();
-		model.angles = physicsWorld.pDynamicSphere[0]->GetAngle();
+		rigidBall.Draw();
+		rigidBall.angles = physicsWorld.pDynamicSphere[0]->GetAngle();
+
+		texture3.Attach(0);
+		geomBall.pos = physicsWorld.pStaticSphere[0]->GetPosition();
+		geomBall.Draw();
 
 	}
 

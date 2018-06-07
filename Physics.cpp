@@ -115,7 +115,7 @@ void PhysicsWorld::GetHit()
 	isHitGround = pStaticBox[0]->GetGeomID();
 }
 
-void PhysicsWorld::AddDynamicSphere(const Vec3 & pos, const dReal & r, dReal mass)
+void PhysicsWorld::AddDynamicSphere(const Vec3& pos, const dReal& r, dReal mass)
 {
 	pDynamicSphere.emplace_back(std::make_unique<DynamicSphere>(pos, r, mass));
 }
@@ -135,10 +135,27 @@ void PhysicsWorld::AddDynamicCylinder(const Vec3& pos, const dReal totalMass, co
 	pDynamicCylinder.emplace_back(std::make_unique<DynamicCylinder>(pos, totalMass, direction, radius, length));
 }
 
-void PhysicsWorld::AddStaticBox(const Vec3& scale)
+void PhysicsWorld::AddStaticBox(const Vec3& pos, const Vec3& scale)
 {
-	pStaticBox.emplace_back(std::make_unique<StaticBox>(scale));
+	pStaticBox.emplace_back(std::make_unique<StaticBox>(pos, scale));
+
+	//‰¼
 	GetHit();
+}
+
+void PhysicsWorld::AddStaticSphere(const Vec3& pos, const dReal& radius)
+{
+	pStaticSphere.emplace_back(std::make_unique<StaticSphere>(pos, radius));
+}
+
+void PhysicsWorld::AddStaticCapsule(const Vec3& pos, const int direction, const dReal radius, const dReal length)
+{
+	pStaticCapsule.emplace_back(std::make_unique<StaticCapsule>(pos, direction, radius, length));
+}
+
+void PhysicsWorld::AddStaticCylinder(const Vec3& pos, const int direction, const dReal radius, const dReal length)
+{
+	pStaticCylinder.emplace_back(std::make_unique<StaticCylinder>(pos, direction, radius, length));
 }
 
 void PhysicsWorld::UpDate()
