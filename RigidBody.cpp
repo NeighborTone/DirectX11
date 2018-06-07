@@ -137,23 +137,23 @@ DynamicBox::~DynamicBox()
 }
 
 
-void DynamicSphere::Create(const Vec3 & pos, const dReal & r, const dReal totalMass)
+void DynamicSphere::Create(const Vec3& pos, const dReal& radius, const dReal totalMass)
 {
 	//ボディを作って質量を設定する
 	body = dBodyCreate(Engine::GetPhysics().GetWorld());
 	dMass mass;
 	dMassSetZero(&mass);
-	dMassSetSphereTotal(&mass, totalMass, r);
+	dMassSetSphereTotal(&mass, totalMass, radius);
 	dBodySetMass(body, &mass);
 	//ジオメトリを作成してボディをアタッチ
-	geom = dCreateSphere(Engine::GetPhysics().GetCollsionSpace(), r);
+	geom = dCreateSphere(Engine::GetPhysics().GetCollsionSpace(), radius);
 	dGeomSetBody(geom, body);
 	this->pos = pos;
 	//ポジション
 	dBodySetPosition(body, this->pos.x, this->pos.y, this->pos.z);
 }
 
-void DynamicSphere::Draw(Texture & tex)
+void DynamicSphere::Draw(Texture& tex)
 {
 	//今のところなし
 }
@@ -186,7 +186,7 @@ DynamicCylinder::DynamicCylinder(const Vec3& pos, const dReal totalMass, const i
 	Create(this->pos,  totalMass, direction, radius, length);
 }
 
-DynamicCylinder::DynamicCylinder(const DynamicCylinder & cylinder)
+DynamicCylinder::DynamicCylinder(const DynamicCylinder& cylinder)
 {
 	body = cylinder.body;
 	geom = cylinder.geom;
@@ -218,7 +218,7 @@ void DynamicCylinder::Create(const Vec3& pos, const dReal totalMass, const int d
 	dBodySetPosition(body, this->pos.x, this->pos.y, this->pos.z);
 }
 
-void DynamicCylinder::Draw(Texture & tex)
+void DynamicCylinder::Draw(Texture& tex)
 {
 	//まだなし
 }
@@ -245,7 +245,7 @@ DynamicCapsule::~DynamicCapsule()
 
 }
 
-void DynamicCapsule::Create(const Vec3 & pos, const dReal totalMass, const int direction, const dReal radius, const dReal length)
+void DynamicCapsule::Create(const Vec3& pos, const dReal totalMass, const int direction, const dReal radius, const dReal length)
 {
 	//ボディを作って質量を設定する
 	body = dBodyCreate(Engine::GetPhysics().GetWorld());
@@ -261,7 +261,7 @@ void DynamicCapsule::Create(const Vec3 & pos, const dReal totalMass, const int d
 	dBodySetPosition(body, this->pos.x, this->pos.y, this->pos.z);
 }
 
-void DynamicCapsule::Draw(Texture & tex)
+void DynamicCapsule::Draw(Texture& tex)
 {
 	//今なし
 }

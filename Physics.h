@@ -18,6 +18,9 @@ class DynamicSphere;
 class DynamicCylinder;
 class DynamicCapsule;
 class StaticBox;
+class StaticSphere;
+class StaticCylinder;
+class StaticCapsule;
 
 class Physics
 {
