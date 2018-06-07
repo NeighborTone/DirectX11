@@ -51,6 +51,7 @@ private:
 	Constant constant;
 	std::vector<std::unique_ptr<Mesh>> meshes;
 	std::vector<Animation> animations;
+	FbxArray<FbxString*> animStackList;		//アニメ情報リスト、連番で入る
 	float startTime;
 	int animName;
 
@@ -75,7 +76,7 @@ public:
 	Vec3 scale;
 	Model();
 	Model(const std::string filePath);
-	~Model() {};
+	~Model();
 	void Load(const std::string filePath);
 	void Play(int animName);
 	void Draw(bool wireframeEnable = false);

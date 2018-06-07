@@ -18,7 +18,7 @@ Model::Model():
 	startTime(0),
 	animName(0)
 {
-	
+	Engine::COMInitialize();
 }
 
 Model::Model(const std::string filePath) :
@@ -28,7 +28,15 @@ Model::Model(const std::string filePath) :
 	startTime(0),
 	animName(0)
 {
+	Engine::COMInitialize();
 	Load(filePath);
+}
+
+Model::~Model()
+{
+	animations.clear();
+	animations.shrink_to_fit();
+	FbxArrayDelete(animStackList);	//これがないとリークが発生
 }
 
 void Model::Load(const std::string filePath)
@@ -64,7 +72,6 @@ void Model::Play(int animName)
 {
 	this->animName = animName;
 	startTime = Engine::GetFps().GetTime();
-
 }
 
 void Model::Draw(bool wireframeEnable)
@@ -74,7 +81,7 @@ void Model::Draw(bool wireframeEnable)
 	//60フレーム基準で指定したアニメーションを再生する
 	frame %= animations[animName].frames.size();
 
-	for (UINT i = 0; i < animations[animName].frames[frame].bones.size(); i++)
+	for (UINT i = 0; i < animations[animName].frames[frame].bones.size(); ++i)
 	{
 		constant.bones[i] = XMMatrixTranspose(
 			animations[animName].frames[frame].bones[i]
@@ -83,7 +90,7 @@ void Model::Draw(bool wireframeEnable)
 
 	if (wireframeEnable)
 	{
-		for (UINT i = 0; i < meshes.size(); i++)
+		for (UINT i = 0; i < meshes.size(); ++i)
 		{
 			meshes[i]->pos = pos;
 			meshes[i]->angle = angles;
@@ -94,7 +101,7 @@ void Model::Draw(bool wireframeEnable)
 	}
 	else
 	{
-		for (UINT i = 0; i < meshes.size(); i++)
+		for (UINT i = 0; i < meshes.size(); ++i)
 		{
 			meshes[i]->pos = pos;
 			meshes[i]->angle = angles;
@@ -105,8 +112,6 @@ void Model::Draw(bool wireframeEnable)
 	}
 	
 }
-
-
 
 //----------//
 /*privates*/
@@ -195,7 +200,7 @@ void Model::LoadMeshWithControlPoint(FbxMesh* mesh, Mesh* item)
 	//モデルの頂点数を数えて格納する
 	item->vertices.resize(mesh->GetControlPointsCount());
 
-	for (int i = 0; i < mesh->GetControlPointsCount(); i++)
+	for (int i = 0; i < mesh->GetControlPointsCount(); ++i)
 	{
 		//座標
 		FbxVector4 position = mesh->GetControlPointAt(i);
@@ -218,7 +223,7 @@ void Model::LoadMeshWithControlPoint(FbxMesh* mesh, Mesh* item)
 
 	item->indices.resize(mesh->GetPolygonVertexCount());
 
-	for (int i = 0; i < mesh->GetPolygonVertexCount(); i++)
+	for (int i = 0; i < mesh->GetPolygonVertexCount(); ++i)
 	{
 		item->indices[i] = mesh->GetPolygonVertices()[i];
 	}
@@ -229,9 +234,9 @@ void Model::LoadMeshWithPolygonVertex(FbxMesh* mesh, Mesh* item)
 	FbxStringList uvSetNames;
 	mesh->GetUVSetNames(uvSetNames);
 
-	for (int i = 0; i < mesh->GetPolygonCount(); i++)
+	for (int i = 0; i < mesh->GetPolygonCount(); ++i)
 	{
-		for (int j = 0; j < mesh->GetPolygonSize(i); j++)
+		for (int j = 0; j < mesh->GetPolygonSize(i); ++j)
 		{
 			Vertex vertex;
 
@@ -261,13 +266,13 @@ void Model::LoadAnim(FbxScene* scene, FbxMesh* mesh, Mesh* item, bool isOptimize
 	if (!isOptimized)
 	{
 		controlPointIndices.resize(mesh->GetControlPointsCount());
-		for (int i = 0; i < mesh->GetPolygonVertexCount(); i++)
+		for (int i = 0; i < mesh->GetPolygonVertexCount(); ++i)
 		{
 			controlPointIndices[mesh->GetPolygonVertices()[i]].push_back(i);
 		}
 	}
+
 	//アニメーション情報取得
-	FbxArray<FbxString*> animStackList;		//アニメ情報リスト、連番で入る
 	scene->FillAnimStackNameArray(animStackList);
 	/*printf("anim %d\n", animStackList.Size());*/
 
@@ -277,7 +282,7 @@ void Model::LoadAnim(FbxScene* scene, FbxMesh* mesh, Mesh* item, bool isOptimize
 	{
 		FbxAnimStack* animStack = scene->FindMember<FbxAnimStack>(animStackList[i]->Buffer());
 		scene->SetCurrentAnimationStack(animStack);		//ここでアニメの切り替え
-
+		
 		LoadSkin(mesh, animStack, i, item, controlPointIndices, isOptimized);
 	}
 }
@@ -291,7 +296,7 @@ void Model::LoadSkin(FbxMesh* mesh, FbxAnimStack* animStack, int animNum, Mesh* 
 	animations[animNum].frames.resize(frameCount);
 
 	/*printf("deformer %d\n", mesh->GetDeformerCount(FbxDeformer::eSkin));*/
-	for (int i = 0; i < mesh->GetDeformerCount(FbxDeformer::eSkin); i++)
+	for (int i = 0; i < mesh->GetDeformerCount(FbxDeformer::eSkin); ++i)
 	{
 		LoadBones(mesh, animNum, i, frameCount, item, start, controlPointIndices, isOptimized);
 	}
@@ -301,7 +306,7 @@ void Model::LoadBones(FbxMesh* mesh, int animNum, int skinNum, int frameCount, M
 {
 	FbxSkin* skin = (FbxSkin*)mesh->GetDeformer(skinNum, FbxDeformer::eSkin);
 
-	for (int i = 0; i < frameCount; i++)
+	for (int i = 0; i < frameCount; ++i)
 	{
 		FbxTime time;
 		time.SetMilliSeconds(fbxsdk::FbxLongLong((i / 60.0f * 1000.0f)) + start.GetMilliSeconds());
@@ -314,7 +319,7 @@ void Model::LoadBones(FbxMesh* mesh, int animNum, int skinNum, int frameCount, M
 
 		animations[animNum].frames[i].bones.resize(skin->GetClusterCount());
 
-		for (int j = 0; j < skin->GetClusterCount(); j++)
+		for (int j = 0; j < skin->GetClusterCount(); ++j)
 		{
 			FbxCluster* cluster = skin->GetCluster(j);
 
@@ -344,7 +349,7 @@ void Model::LoadBones(FbxMesh* mesh, int animNum, int skinNum, int frameCount, M
 
 void Model::AddBlendInControlPoint(int blendIndex, FbxCluster* cluster, Mesh* item)
 {
-	for (int i = 0; i < cluster->GetControlPointIndicesCount(); i++)
+	for (int i = 0; i < cluster->GetControlPointIndicesCount(); ++i)
 	{
 		int index = cluster->GetControlPointIndices()[i];
 		float weight = (float)cluster->GetControlPointWeights()[i];
@@ -355,12 +360,12 @@ void Model::AddBlendInControlPoint(int blendIndex, FbxCluster* cluster, Mesh* it
 
 void Model::AddBlendInPolygonVertex(int blendIndex, FbxCluster* cluster, Mesh* item, std::vector<std::vector<int>>& controlPointIndices)
 {
-	for (int i = 0; i < cluster->GetControlPointIndicesCount(); i++)
+	for (int i = 0; i < cluster->GetControlPointIndicesCount(); ++i)
 	{
 		int index = cluster->GetControlPointIndices()[i];
 		float weight = (float)cluster->GetControlPointWeights()[i];
 
-		for (UINT v = 0; v < controlPointIndices[index].size(); v++)
+		for (UINT v = 0; v < controlPointIndices[index].size(); ++v)
 		{
 			SearchBlendIndex(controlPointIndices[index][v], blendIndex, weight, item);
 		}
@@ -369,7 +374,7 @@ void Model::AddBlendInPolygonVertex(int blendIndex, FbxCluster* cluster, Mesh* i
 
 void Model::SearchBlendIndex(int vertexIndex, int blendIndex, float blendWeight, Mesh* item)
 {
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < 8; ++i)
 	{
 		if (item->vertices[vertexIndex].blendIndices[i] == blendIndex)
 			return;
@@ -386,9 +391,9 @@ void Model::SearchBlendIndex(int vertexIndex, int blendIndex, float blendWeight,
 DirectX::XMMATRIX Model::FbxMatrixToXMMatrix(FbxMatrix source)
 {
 	DirectX::XMMATRIX destination;
-	for (int x = 0; x < 4; x++)
+	for (int x = 0; x < 4; ++x)
 	{
-		for (int y = 0; y < 4; y++)
+		for (int y = 0; y < 4; ++y)
 		{
 			destination.r[x].m128_f32[y] = static_cast<float>(source.mData[x][y]);
 		}

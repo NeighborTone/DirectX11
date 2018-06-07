@@ -128,7 +128,7 @@ DynamicBox::~DynamicBox()
 }
 
 
-void DynamicSphere::Create(const Vec3 & pos, const dReal & r, dReal totalMass)
+void DynamicSphere::Create(const Vec3 & pos, const dReal & r, const dReal totalMass)
 {
 	//ボディを作って質量を設定する
 	body = dBodyCreate(Engine::GetPhysics().GetWorld());
@@ -146,13 +146,13 @@ void DynamicSphere::Create(const Vec3 & pos, const dReal & r, dReal totalMass)
 
 void DynamicSphere::Draw(Texture & tex)
 {
-	//なし
+	//今のところなし
 }
 
-DynamicSphere::DynamicSphere(const Vec3& pos, const dReal& r,dReal totalMass)
+DynamicSphere::DynamicSphere(const Vec3& pos, const dReal& radius,dReal totalMass)
 {
 	this->pos = pos;
-	Create(this->pos, r, totalMass);
+	Create(this->pos, radius, totalMass);
 }
 
 DynamicSphere::DynamicSphere(const DynamicSphere& sphere)
@@ -168,5 +168,37 @@ DynamicSphere::DynamicSphere()
 
 DynamicSphere::~DynamicSphere()
 {
+
 }
 
+DynamicCylinder::DynamicCylinder(const Vec3& pos, const dReal totalMass, const int direction, const dReal radius, const dReal length)
+{
+	this->pos = pos;
+	Create(this->pos,  totalMass, direction, radius, length);
+}
+
+DynamicCylinder::~DynamicCylinder()
+{
+
+}
+
+void DynamicCylinder::Create(const Vec3& pos, const dReal totalMass, const int direction, const dReal radius, const dReal length)
+{
+	//ボディを作って質量を設定する
+	body = dBodyCreate(Engine::GetPhysics().GetWorld());
+	dMass mass;
+	dMassSetZero(&mass);
+	dMassSetCylinderTotal(&mass, totalMass, direction, radius, length);
+	dBodySetMass(body, &mass);
+	//ジオメトリを作成してボディをアタッチ
+	geom = dCreateCylinder(Engine::GetPhysics().GetCollsionSpace(), radius, length);
+	dGeomSetBody(geom, body);
+	this->pos = pos;
+	//ポジション
+	dBodySetPosition(body, this->pos.x, this->pos.y, this->pos.z);
+}
+
+void DynamicCylinder::Draw(Texture & tex)
+{
+	//まだなし
+}

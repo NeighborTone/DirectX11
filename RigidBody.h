@@ -2,6 +2,9 @@
 #include "Physics.h"
 #include "Utility.hpp"
 #include "Mesh.h"
+//とりあえずテンプレートメソッドパターンで実装
+
+
 class RigidBody
 {
 protected:
@@ -34,6 +37,8 @@ public:
 	~DynamicBox();
 	void Create(const Vec3& pos, const Vec3& scale, dReal totalMass);
 	void Draw(Texture& tex) override;
+
+	//アライメント対策
 	void* operator new(size_t i)
 	{
 		return _mm_malloc(i, 16);
@@ -48,10 +53,18 @@ public:
 class DynamicSphere : public RigidBody
 {
 public:
-	DynamicSphere(const Vec3& pos, const dReal& r,dReal totalMass);
+	DynamicSphere(const Vec3& pos, const dReal& radius,dReal totalMass);
 	DynamicSphere(const DynamicSphere& sphere);
 	DynamicSphere();
 	~DynamicSphere();
-	void Create(const Vec3& pos, const dReal& r, dReal totalMass);
+	void Create(const Vec3& pos, const dReal& r, const dReal totalMass);
+	void Draw(Texture& tex) override;
+};
+
+class DynamicCylinder : public RigidBody
+{
+	DynamicCylinder(const Vec3& pos, const dReal totalMass, const int direction, const dReal radius, const dReal length);
+	~DynamicCylinder();
+	void Create(const Vec3& pos , const dReal total_mass, const int direction, const dReal radius, const dReal length);
 	void Draw(Texture& tex) override;
 };

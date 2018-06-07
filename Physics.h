@@ -14,6 +14,7 @@
 
 class DynamicBox;
 class DynamicSphere;
+class DynamicCylinder;
 
 class Physics
 {

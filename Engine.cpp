@@ -1,5 +1,6 @@
 #include "Engine.h"
 #include <memory>
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ ) 
 
 std::string Engine::title = "";
 int Engine::width = 0;
@@ -32,6 +33,7 @@ void Engine::COMInitialize()
 		CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
 		// ÉÅÉÇÉäÉäÅ[ÉNåüèo
 		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+		//_CrtSetBreakAlloc(37335);
 		isInitialized = true;
 	}
 }
