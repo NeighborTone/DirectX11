@@ -36,7 +36,7 @@ void Physics::Create()
 	//表面層の厚さ(the depth of the surface layer)
 	//すべてのジオメトリの表面層の厚さを設定します。接触が発生したときには、最大でこの厚さまでめり込むことになります。
 	//これに小さな値を設定することで、接触がくり返し発生することによる振動(Jitter) を抑えることができます。
-	dWorldSetContactSurfaceLayer(world, 0.001);
+	dWorldSetContactSurfaceLayer(world, 0.0001);
 
 	//ジョイント誤差修正パラメータ:ERP(Error Reduction Parameter)
 	dWorldSetERP(world, 0.8);
@@ -79,7 +79,7 @@ void PhysicsWorld::NearCallback(void *data, dGeomID o1, dGeomID o2)
 {
 	/*衝突時しそうなときにしかこの関数は呼ばれない*/
 	//NearCallback(近似的に衝突判定された2つのジオメトリの詳細な当たり判定を行う)
-	static const int N = 20;		//接触点数の上限
+	static const int N = 40;		//接触点数の上限
 	dContact contact[N];
 	int n = dCollide(o1, o2, N, &contact[0].geom, sizeof(dContact));	//nには衝突点数が返る
 

@@ -21,7 +21,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	Texture texture1("Resource/box.jpg");
 	Texture texture2("Resource/brick.jpg");
 	Texture texture3("Resource/white.png");
-	Texture texture4("Resource/cursor.png");
+	Texture texture4("Resource/p.png");
 	Texture texture5("Resource/white.png");
 	Model rigidBall("Resource/ball.fbx");
 
@@ -49,6 +49,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	Mesh ground;
 	ground.CreateCube();
 	ground.GetMaterial().SetTexture(0, &texture4);
+	ground.SetDrawMode(D3D11_CULL_BACK, D3D11_FILL_SOLID);
 	ground.scale = 10;
 	ground.scale.y = 1;
 
