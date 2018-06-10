@@ -24,6 +24,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Direct3D.cpp" />
     <ClCompile Include="Direct_Input.cpp" />
+    <ClCompile Include="Effecter.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="FPS.cpp" />
     <ClCompile Include="Geometry.cpp" />
@@ -48,6 +49,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Direct3D.h" />
     <ClInclude Include="Direct_Input.h" />
+    <ClInclude Include="Effecter.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="FPS.h" />
     <ClInclude Include="Geometry.h" />
@@ -145,12 +147,12 @@
       <BrowseInformation>true</BrowseInformation>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
-      <AdditionalIncludeDirectories>C:\Users\game\Desktop\DirectX11\DirectXTK\Inc;C:\Users\game\Desktop\DirectX11\ODE\include;C:\Users\tonari\Desktop\DirectX11\DirectXTK\Inc;C:\Users\tonari\Desktop\DirectX11\ODE\include;C:\Users\tonari\Desktop\D3D11\DirectXTK\Inc;C:\Users\game\Desktop\aa\ODE\include;C:\Users\tonari\Desktop\D3D11\ODE\include;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include\fbxsdk;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;./ODE/include;./DirectXTK/Inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\game\Desktop\DirectX11\DirectXTK\Inc;C:\Users\game\Desktop\DirectX11\ODE\include;C:\Users\tonari\Desktop\DirectX11\DirectXTK\Inc;C:\Users\tonari\Desktop\DirectX11\ODE\include;C:\Users\tonari\Desktop\D3D11\DirectXTK\Inc;C:\Users\game\Desktop\aa\ODE\include;C:\Users\tonari\Desktop\D3D11\ODE\include;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include\fbxsdk;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;./ODE/include;./DirectXTK/Inc;./Effekseer/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>C:\Users\game\Desktop\DirectX11\DirectXTK\lib\Debug;C:\Users\game\Desktop\DirectX11\ODE\lib\Debug;C:\Users\tonari\Desktop\DirectX11\DirectXTK\lib\Debug;C:\Users\tonari\Desktop\DirectX11\ODE\lib\Debug;C:\Users\tonari\Desktop\D3D11\DirectXTK\lib\Debug;C:\Users\game\Desktop\aa\ODE\lib\Debug;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\debug;C:\Users\tonari\Desktop\D3D11\ODE\lib\Debug;./ODE/lib/debug;./DirectXTK/lib/Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\tonari\Desktop\DirectX11\Effekseer\lib;C:\Users\tonari\Desktop\DirectX11\Effekseer\lib\VS2015\Debug;C:\Users\game\Desktop\DirectX11\DirectXTK\lib\Debug;C:\Users\game\Desktop\DirectX11\ODE\lib\Debug;C:\Users\tonari\Desktop\DirectX11\DirectXTK\lib\Debug;C:\Users\tonari\Desktop\DirectX11\ODE\lib\Debug;C:\Users\tonari\Desktop\D3D11\DirectXTK\lib\Debug;C:\Users\game\Desktop\aa\ODE\lib\Debug;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\debug;C:\Users\tonari\Desktop\D3D11\ODE\lib\Debug;./ODE/lib/debug;./DirectXTK/lib/Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
     </Link>
     <Bscmake>

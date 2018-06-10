@@ -13,10 +13,6 @@ Camera::Camera():
 	isDepthTest(false)
 {
 	Engine::COMInitialize();
-	SetOrthographic(
-		static_cast<float>(Engine::GetWindowSize().y),
-		-D3D11_FLOAT32_MAX,
-		D3D11_FLOAT32_MAX);
 	Create();
 	System::AddProcedure(this);
 }
@@ -55,6 +51,10 @@ void Camera::SetDepthTest(bool isDepthTest)
 
 void Camera::Run()
 {
+	//Worldに逆行列をかけてビューを作成
+	//ビュー行列は平行移動行列の逆行列に回転行列の逆行列を掛け算すると求まる
+	//ビューマトリックスの初期化
+
 	constant.view = XMMatrixTranspose(
 		XMMatrixInverse(
 			nullptr,

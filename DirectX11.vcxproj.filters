@@ -63,6 +63,7 @@
     <ClCompile Include="Geometry.cpp">
       <Filter>Engine\Physics</Filter>
     </ClCompile>
+    <ClCompile Include="Effecter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -132,6 +133,7 @@
     <ClInclude Include="Geometry.h">
       <Filter>Engine\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="Effecter.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Engine">

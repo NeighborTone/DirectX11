@@ -69,7 +69,7 @@ void Physics::SetGravity(const Vec3_d& gravity)
 
 void Physics::WorldStep(const float stepTime)
 {
-	dWorldStep(world, stepTime);
+	dWorldQuickStep(world, stepTime);
 }
 
 
@@ -79,7 +79,7 @@ void PhysicsWorld::NearCallback(void *data, dGeomID o1, dGeomID o2)
 {
 	/*衝突時しそうなときにしかこの関数は呼ばれない*/
 	//NearCallback(近似的に衝突判定された2つのジオメトリの詳細な当たり判定を行う)
-	static const int N = 40;		//接触点数の上限
+	static constexpr int N = 10;		//接触点数の上限
 	dContact contact[N];
 	int n = dCollide(o1, o2, N, &contact[0].geom, sizeof(dContact));	//nには衝突点数が返る
 

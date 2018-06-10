@@ -3,6 +3,7 @@
 #include <XAudio2.h>
 #include "wav.h"
 
+
 #pragma comment(lib,"XAudio2.lib")
 
 class SoundSource
