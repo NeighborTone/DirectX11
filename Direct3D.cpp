@@ -144,21 +144,21 @@ bool Direct3D::IsCreateSwapChain(bool isFull)
 	};
 
 	//スワップチェイン(フロントバッファ)とコンテキストの作成
-	for (size_t i = 0; i < driverType.size(); i++)
+	for (size_t i = 0; i < driverType.size(); ++i)
 	{
 		hr = D3D11CreateDeviceAndSwapChain(
-			NULL,									//デバイスの作成時に使用するビデオアダプターへのポインター
-			driverType[i],						//作成するデバイスの種類
-			NULL,									//ソフトウェアラスタライザーを実装するDLLのハンドル
-			flags,								//有効にするランタイムレイヤー
-			feature,								//作成を試みる機能レベルの順序を指定するD3D_FEATURE_LEVELの配列へのポインター
-			6,										//pFeatureLevelsの要素数
-			D3D11_SDK_VERSION,				//SDKのバージョン。D3D11_SDK_VERSIONを指定
-			&swapDesc,							//スワップチェーンの初期化パラメーターを格納するスワップチェーンの記述へのポインター
-			&swapChain,							//レンダリングに使用するスワップ チェーンを表すIDXGISwapChainオブジェクトへのポインターのアドレスを返す
-			&device3D,							//作成されたデバイスを表すID3D11Deviceオブジェクトへのポインターのアドレスを返す。NULLを指定すると、pFeatureLevelでサポートされている最高の機能レベルが返される
-			NULL,									//このデバイスでサポートされている機能レベルの配列にある最初の要素を表すD3D_FEATURE_LEVELへのポインターを返す
-			&context3D);						//デバイス コンテキストを表すID3D11DeviceContextオブジェクトへのポインターのアドレスを返す
+			NULL,					//デバイスの作成時に使用するビデオアダプターへのポインター
+			driverType[i],			//作成するデバイスの種類
+			NULL,					//ソフトウェアラスタライザーを実装するDLLのハンドル
+			flags,					//有効にするランタイムレイヤー
+			feature,				//作成を試みる機能レベルの順序を指定するD3D_FEATURE_LEVELの配列へのポインター
+			6,						//pFeatureLevelsの要素数
+			D3D11_SDK_VERSION,		//SDKのバージョン。D3D11_SDK_VERSIONを指定
+			&swapDesc,				//スワップチェーンの初期化パラメーターを格納するスワップチェーンの記述へのポインター
+			&swapChain,				//レンダリングに使用するスワップ チェーンを表すIDXGISwapChainオブジェクトへのポインターのアドレスを返す
+			&device3D,				//作成されたデバイスを表すID3D11Deviceオブジェクトへのポインターのアドレスを返す。NULLを指定すると、pFeatureLevelでサポートされている最高の機能レベルが返される
+			NULL,					//このデバイスでサポートされている機能レベルの配列にある最初の要素を表すD3D_FEATURE_LEVELへのポインターを返す
+			&context3D);			//デバイス コンテキストを表すID3D11DeviceContextオブジェクトへのポインターのアドレスを返す
 		if (SUCCEEDED(hr))
 		{
 			break;
@@ -179,13 +179,13 @@ bool Direct3D::IsCreateBlendState()
 	SecureZeroMemory(&blendDesc, sizeof(D3D11_BLEND_DESC));
 
 	//アルファブレンディングの設定
-	blendDesc.RenderTarget[0].BlendEnable = true;																	//ブレンディングを有効(または無効) 
-	blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;										//最初のRGBデータソースを指定
-	blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;							//2番目のRGBデータソースを指定
-	blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;											//RGBデータソースの組合せ方法を定義
-	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;										//最初のアルファデータソースを指定
-	blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;										//2番目のアルファデータソースを指定
-	blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;									//アルファデータソースの組合せ方法を定義
+	blendDesc.RenderTarget[0].BlendEnable = true;									//ブレンディングを有効(または無効) 
+	blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;						//最初のRGBデータソースを指定
+	blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;				//2番目のRGBデータソースを指定
+	blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;							//RGBデータソースの組合せ方法を定義
+	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;						//最初のアルファデータソースを指定
+	blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;						//2番目のアルファデータソースを指定
+	blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;					//アルファデータソースの組合せ方法を定義
 	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;	//書き込みマスク
 
 	float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
@@ -213,8 +213,8 @@ bool Direct3D::IsCreateD2D()
 	//Direct2Dファクトリの作成
 	hr = D2D1CreateFactory(
 		D2D1_FACTORY_TYPE_SINGLE_THREADED,		//ファクトリとそのファクトリによって作成されるリソースのスレッドモデル
-		options,												//デバッグレイヤーに指定された詳細のレベル
-		&factory);											//このメソッドが返されるときに、新しいファクトリへのポインターのアドレスが格納される
+		options,								//デバッグレイヤーに指定された詳細のレベル
+		&factory);								//このメソッドが返されるときに、新しいファクトリへのポインターのアドレスが格納される
 	if (FAILED(hr))
 	{
 		return false;

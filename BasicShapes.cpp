@@ -45,6 +45,8 @@ void BallShape::Create(float r, size_t tessellation, Camera& camera)
 
 	// プロジェクションマトリックスの初期化
 	constant.projection = XMMatrixPerspectiveFovLH(XMConvertToRadians(45), Engine::GetWindowSize().x / (FLOAT)Engine::GetWindowSize().y, 1, 10000.0f);
+	constant.view = XMMatrixTranspose(constant.view);
+	constant.projection = XMMatrixTranspose(constant.projection);
 }
 
 void BallShape::Draw(Camera& camera)

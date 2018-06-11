@@ -55,11 +55,6 @@ class PhysicsWorld final
 private:
 	static void NearCallback(void* data, dGeomID o1, dGeomID o2);
 
-	//Memo::Õ“ËŒŸ’m—p‚Ì‰¼ƒƒ“ƒo--
-	static dGeomID isHitGround;
-	void GetHit();
-	static bool isHit;
-	//--------------------------------
 
 public:
 	
@@ -86,3 +81,4 @@ public:
 	void UpDate();
 	void SetGravity(const Vec3_d& gravity);
 };
+

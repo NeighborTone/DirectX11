@@ -1,13 +1,14 @@
 #include "Engine.h"
 #include "Model.h"
 #include "BasicShapes.h"
-#include "Effecter.h"
+#include "Particle.h"
+
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow)
 {
 	ci_ext::Console();
 	ShowConsole();
-	constexpr int MAX = 10;
+	constexpr int MAX = 100;
 	//ƒQ[ƒ€ƒGƒ“ƒWƒ“¶¬
 	Engine ge("DirectX11",640,480,true);
 
@@ -24,19 +25,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	Texture texture3("Resource/white.png");
 	Texture texture4("Resource/p.png");
 	Texture texture5("Resource/white.png");
-	//Model rigidBall("Resource/ball.fbx");
+	Model rigidBall("Resource/ball.fbx");
 
-	//rigidBall.pos.y = 8;
-	//rigidBall.angles.x = 0;
+	rigidBall.pos.y = 8;
+	rigidBall.angles.x = 0;
 
-	//Model geomBall("Resource/ball.fbx");
-	//geomBall.pos.y = 5;
-	//geomBall.pos.z = 1;
+	Model geomBall("Resource/ball.fbx");
+	geomBall.pos.y = 5;
+	geomBall.pos.z = 1;
 
-	//Model cylinder("Resource/cylinder.fbx");
-	//cylinder.pos.y = 12;
-	//cylinder.pos.z = -1;
-	//cylinder.angles.x = -90;
+	Model cylinder("Resource/cylinder.fbx");
+	cylinder.pos.y = 12;
+	cylinder.pos.z = -1;
+	cylinder.angles.x = -90;
 
 	Mesh me;
 	me.CreateCube();
@@ -47,7 +48,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	me.pos.y = 1;
 	me.pos.z = -10;
 
-
 	Mesh ground;
 	ground.CreateCube();
 	ground.GetMaterial().SetTexture(0, &texture4);
@@ -55,25 +55,25 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	ground.scale = 10;
 	ground.scale.y = 1;
 
-	Effecter ef;
-
+	Particle ef("Resource/fire.efk");
+	Particle ef2;
+	ef2.Load("Resource/testEf.efk");
 
 	PhysicsWorld physicsWorld;
-	//physicsWorld.AddDynamicSphere(rigidBall.pos,1,55);
-	//physicsWorld.pDynamicSphere[0]->SetQuaternion(rigidBall.angles);
+	physicsWorld.AddDynamicSphere(rigidBall.pos,1,55);
+	physicsWorld.pDynamicSphere[0]->SetQuaternion(rigidBall.angles);
 
-	//for (int i = 0; i < MAX; ++i)
-	//{
-	//	physicsWorld.AddDynamicBox(Vec3(0, 0, 0), Vec3(1, 1, 1), 5);
-	//	physicsWorld.pDynamicBox[i]->SetPosition(Vec3(-5.0f + (float)i * 0.09f, 10 + (float)i * 3.5f, 0));
-	//}
+	for (int i = 0; i < MAX; ++i)
+	{
+		physicsWorld.AddDynamicBox(Vec3(0, 0, 0), Vec3(1, 1, 1), 5);
+		physicsWorld.pDynamicBox[i]->SetPosition(Vec3(-5.0f + (float)i * 0.09f, 10 + (float)i * 3.5f, 0));
+	}
 
-	//physicsWorld.AddDynamicCylinder(cylinder.pos,55,CylinderDir::Y,1,2);
-
+	physicsWorld.AddDynamicCylinder(cylinder.pos,55,CylinderDir::Y,1,2);
 
 	physicsWorld.AddStaticBox(ground.pos, ground.scale);
 	physicsWorld.AddStaticBox(me.pos, me.scale);
-	//physicsWorld.AddStaticSphere(geomBall.pos,1);
+	physicsWorld.AddStaticSphere(geomBall.pos,1);
 	physicsWorld.pStaticBox[1]->SetPosition(me.pos);
 
 	while (ge.Run())
@@ -126,16 +126,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		}
 		if (KeyBoard::Down(KeyBoard::Key::KEY_Z))
 		{
-			ef.Play();
+			ef.Play(Vec3(0,2,3));
 		}
 		if (KeyBoard::On(KeyBoard::Key::KEY_X))
 		{
-
+			ef2.Play(Vec3(0, 2, 3));
 		}
 		me.pos = physicsWorld.pStaticBox[1]->GetPosition();
 		me.Draw();
 
-		//rigidBall.pos = physicsWorld.pDynamicSphere[0]->GetPosition();
+		rigidBall.pos = physicsWorld.pDynamicSphere[0]->GetPosition();
 		ground.pos = physicsWorld.pStaticBox[0]->GetPosition();
 		ground.Draw();
 		for (UINT i = 0; i < physicsWorld.pDynamicBox.size(); ++i)
@@ -144,19 +144,20 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		}
 
 		texture2.Attach(0);
-		//rigidBall.Draw();
-		//rigidBall.angles = physicsWorld.pDynamicSphere[0]->GetQuaternion();
+		rigidBall.Draw();
+		rigidBall.angles = physicsWorld.pDynamicSphere[0]->GetQuaternion();
 
-		//texture3.Attach(0);
-		//geomBall.pos = physicsWorld.pStaticSphere[0]->GetPosition();
-		//geomBall.Draw();
+		texture3.Attach(0);
+		geomBall.pos = physicsWorld.pStaticSphere[0]->GetPosition();
+		geomBall.Draw();
 
-		//texture5.Attach(0);
-		//cylinder.pos = physicsWorld.pDynamicCylinder[0]->GetPosition();
-		//cylinder.Draw();
+		texture5.Attach(0);
+		cylinder.pos = physicsWorld.pDynamicCylinder[0]->GetPosition();
+		cylinder.Draw();
 
-		ef.Run();
-		ef.Draw(camera,camera.constant.view, camera.constant.projection);
+		ef.Draw(camera);
+		ef2.Draw(camera);
+
 		std::cout << Engine::GetFps().GetFrameRate() << std::endl;
 	}
 

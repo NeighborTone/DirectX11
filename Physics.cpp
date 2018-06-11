@@ -73,21 +73,21 @@ void Physics::WorldStep(const float stepTime)
 }
 
 
-dGeomID PhysicsWorld::isHitGround = nullptr;
-bool  PhysicsWorld::isHit = false;
 void PhysicsWorld::NearCallback(void *data, dGeomID o1, dGeomID o2)
 {
+	/*void *dataに自分のポインタを持たせられる */
+	PhysicsWorld* pPhysics = static_cast<PhysicsWorld*>(data);
+
 	/*衝突時しそうなときにしかこの関数は呼ばれない*/
 	//NearCallback(近似的に衝突判定された2つのジオメトリの詳細な当たり判定を行う)
-	static constexpr int N = 10;		//接触点数の上限
+	static constexpr int N = 10;	//接触点数の上限
 	dContact contact[N];
 	int n = dCollide(o1, o2, N, &contact[0].geom, sizeof(dContact));	//nには衝突点数が返る
 
-	//Memo::仮処理 : 床とその他のジオメトリとの衝突検出をしている----------------
-	int ret = ((isHitGround == o1 || isHitGround == o2));
-	if (ret)
+	//こんな感じで取得できた
+	if (pPhysics->pStaticBox[0]->GetGeomID() == o1 || pPhysics->pStaticBox[0]->GetGeomID() == o2)
 	{
-		isHit = true;
+		std::cout << "Ground Hit!!!!!!" << std::endl;
 	}
 	//---------------------------------------------------------------------------
 
@@ -109,11 +109,6 @@ void PhysicsWorld::NearCallback(void *data, dGeomID o1, dGeomID o2)
 	}
 }
 
-void PhysicsWorld::GetHit()
-{
-	//Memo::仮処理 : とりあえず床のジオメトリを指定
-	isHitGround = pStaticBox[0]->GetGeomID();
-}
 
 void PhysicsWorld::AddDynamicSphere(const Vec3& pos, const dReal& r, dReal mass)
 {
@@ -139,8 +134,6 @@ void PhysicsWorld::AddStaticBox(const Vec3& pos, const Vec3& scale)
 {
 	pStaticBox.emplace_back(std::make_unique<StaticBox>(pos, scale));
 
-	//仮
-	GetHit();
 }
 
 void PhysicsWorld::AddStaticSphere(const Vec3& pos, const dReal& radius)
@@ -160,15 +153,14 @@ void PhysicsWorld::AddStaticCylinder(const Vec3& pos, const CylinderDir directio
 
 void PhysicsWorld::UpDate()
 {
-	isHit = false;
 	//必ず物理世界の更新処理の一番始めで呼び出す
 	//衝突しそうな２つのジオメトリが発生したら、それらをNearCallback関数に渡す
-	dSpaceCollide(Engine::GetPhysics().GetCollsionSpace(), nullptr, &PhysicsWorld::NearCallback);	
+	dSpaceCollide(Engine::GetPhysics().GetCollsionSpace(), this, &PhysicsWorld::NearCallback);
 	Engine::GetPhysics().WorldStep(0.01f);	
 	//これを忘れると1ステップ前の接触点がおかしくなる
 	dJointGroupEmpty(Engine::GetPhysics().GetContactGroup());	
 
-	//std::cout << std::boolalpha << isHit << std::endl;
+	
 }
 
 void PhysicsWorld::SetGravity(const Vec3_d& gravity)
