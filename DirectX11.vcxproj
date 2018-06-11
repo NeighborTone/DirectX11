@@ -152,7 +152,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>C:\Users\tonari\Desktop\DirectX11\Effekseer\lib;C:\Users\tonari\Desktop\DirectX11\Effekseer\lib\VS2015\Debug;C:\Users\game\Desktop\DirectX11\DirectXTK\lib\Debug;C:\Users\game\Desktop\DirectX11\ODE\lib\Debug;C:\Users\tonari\Desktop\DirectX11\DirectXTK\lib\Debug;C:\Users\tonari\Desktop\DirectX11\ODE\lib\Debug;C:\Users\tonari\Desktop\D3D11\DirectXTK\lib\Debug;C:\Users\game\Desktop\aa\ODE\lib\Debug;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\debug;C:\Users\tonari\Desktop\D3D11\ODE\lib\Debug;./ODE/lib/debug;./DirectXTK/lib/Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\game\Desktop\DirectX11\Effekseer\lib;C:\Users\tonari\Desktop\DirectX11\Effekseer\lib;C:\Users\tonari\Desktop\DirectX11\Effekseer\lib\VS2015\Debug;C:\Users\game\Desktop\DirectX11\DirectXTK\lib\Debug;C:\Users\game\Desktop\DirectX11\ODE\lib\Debug;C:\Users\tonari\Desktop\DirectX11\DirectXTK\lib\Debug;C:\Users\tonari\Desktop\DirectX11\ODE\lib\Debug;C:\Users\tonari\Desktop\D3D11\DirectXTK\lib\Debug;C:\Users\game\Desktop\aa\ODE\lib\Debug;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\debug;C:\Users\tonari\Desktop\D3D11\ODE\lib\Debug;./ODE/lib/debug;./DirectXTK/lib/Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
     </Link>
     <Bscmake>

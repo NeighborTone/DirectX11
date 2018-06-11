@@ -29,13 +29,13 @@ Effecter::Effecter()
 	effect = Effekseer::Effect::Create(manager, pass);
 
 
-	handle = manager->Play(effect, 0, 3, 0);
+	handle = manager->Play(effect, 0, 0, 0);
 	
 }
 
 void Effecter::Play()
 {
-	manager->Play(effect, 0, 0, 0);
+	manager->Play(effect, 0, 3, 10);
 }
 
 void Effecter::Run()
@@ -59,19 +59,10 @@ void Effecter::Draw(Camera& camera,DirectX::XMMATRIX v, DirectX::XMMATRIX p)
 			  projection.Values[y][x] = p.r[y].m128_f32[x];
 		}
 	}
-	view.LookAtLH(
-		Effekseer::Vector3D(
-			camera.pos.x, 
-			camera.pos.y,
-			camera.pos.z),
-		Effekseer::Vector3D(
-			0,
-			0,
-			0),
-		Effekseer::Vector3D(0,1,0));
-	projection.PerspectiveFovLH(
-		DirectX::XMConvertToRadians(45), Engine::GetWindowSize().x / (FLOAT)Engine::GetWindowSize().y, 1, 10000.0f
-	);
+	//=====重要=====
+	view.Transpose();
+	projection.Transpose();
+	//============
 
 	// 投影行列の更新
 	renderer->SetProjectionMatrix(projection);
