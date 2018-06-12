@@ -2,13 +2,13 @@
 #include "Model.h"
 #include "BasicShapes.h"
 #include "Particle.h"
-
+#include "Console.hpp"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow)
 {
 	ci_ext::Console();
 	ShowConsole();
-	constexpr int MAX = 100;
+	constexpr int BOX_MAX = 100;
 	//ƒQ[ƒ€ƒGƒ“ƒWƒ“¶¬
 	Engine ge("DirectX11",640,480,true);
 
@@ -60,22 +60,29 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	ef2.Load("Resource/testEf.efk");
 
 	PhysicsWorld physicsWorld;
-	physicsWorld.AddDynamicSphere(rigidBall.pos,1,55);
-	physicsWorld.pDynamicSphere[0]->SetQuaternion(rigidBall.angles);
 
-	for (int i = 0; i < MAX; ++i)
+	for (int i = 0; i < BOX_MAX; ++i)
 	{
-		physicsWorld.AddDynamicBox(Vec3(0, 0, 0), Vec3(1, 1, 1), 5);
-		physicsWorld.pDynamicBox[i]->SetPosition(Vec3(-5.0f + (float)i * 0.09f, 10 + (float)i * 3.5f, 0));
+		physicsWorld.AddRigidBody(new DynamicBox(Vec3(0, 0, 0), Vec3(1, 1, 1), 5));
+		physicsWorld.pRigidBody[i]->SetPosition(Vec3(-5.0f + (float)i * 0.09f, 10 + (float)i * 3.5f, 0));
+
+	
 	}
 
-	physicsWorld.AddDynamicCylinder(cylinder.pos,55,CylinderDir::Y,1,2);
+	physicsWorld.AddRigidBody(new DynamicSphere(rigidBall.pos, 1, 55));
+	physicsWorld.pRigidBody[100]->SetQuaternion(rigidBall.angles);
 
-	physicsWorld.AddStaticBox(ground.pos, ground.scale);
-	physicsWorld.AddStaticBox(me.pos, me.scale);
-	physicsWorld.AddStaticSphere(geomBall.pos,1);
-	physicsWorld.pStaticBox[1]->SetPosition(me.pos);
+	physicsWorld.AddRigidBody(new DynamicCylinder(cylinder.pos, 55, CylinderDir::Y, 1, 2));
+	physicsWorld.pRigidBody[101]->SetQuaternion(rigidBall.angles);
 
+
+	physicsWorld.AddGeometry(new StaticBox(ground.pos, ground.scale));
+	physicsWorld.AddGeometry(new StaticBox(me.pos, me.scale));
+	physicsWorld.AddGeometry(new StaticSphere(geomBall.pos, 1));
+
+	physicsWorld.pGeometry[1]->SetPosition(me.pos);
+
+	
 	while (ge.Run())
 	{
 		camera.Run();
@@ -121,38 +128,39 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 				dir = -1;
 			}
 			me.pos.z += speed * dir;
-			physicsWorld.pStaticBox[1]->SetPosition(me.pos);
+			physicsWorld.pGeometry[1]->SetPosition(me.pos);
 	
 		}
 		if (KeyBoard::Down(KeyBoard::Key::KEY_Z))
 		{
-			ef.Play(Vec3(0,2,3));
+			ef.Play(Vec3(0, 2, 3));
 		}
 		if (KeyBoard::On(KeyBoard::Key::KEY_X))
 		{
 			ef2.Play(Vec3(0, 2, 3));
 		}
-		me.pos = physicsWorld.pStaticBox[1]->GetPosition();
+		me.pos = physicsWorld.pGeometry[1]->GetPosition();
 		me.Draw();
 
-		rigidBall.pos = physicsWorld.pDynamicSphere[0]->GetPosition();
-		ground.pos = physicsWorld.pStaticBox[0]->GetPosition();
+		
+		ground.pos = physicsWorld.pGeometry[0]->GetPosition();
 		ground.Draw();
-		for (UINT i = 0; i < physicsWorld.pDynamicBox.size(); ++i)
+		for (UINT i = 0; i < physicsWorld.pRigidBody.size(); ++i)
 		{
-			physicsWorld.pDynamicBox[i]->Draw(texture2);
+			physicsWorld.pRigidBody[i]->Draw(texture2);
 		}
 
 		texture2.Attach(0);
 		rigidBall.Draw();
-		rigidBall.angles = physicsWorld.pDynamicSphere[0]->GetQuaternion();
+		rigidBall.pos = physicsWorld.pRigidBody[100]->GetPosition();
+		rigidBall.angles = physicsWorld.pRigidBody[100]->GetQuaternion();
 
 		texture3.Attach(0);
-		geomBall.pos = physicsWorld.pStaticSphere[0]->GetPosition();
+		geomBall.pos = physicsWorld.pGeometry[2]->GetPosition();
 		geomBall.Draw();
 
 		texture5.Attach(0);
-		cylinder.pos = physicsWorld.pDynamicCylinder[0]->GetPosition();
+		cylinder.pos = physicsWorld.pRigidBody[101]->GetPosition();
 		cylinder.Draw();
 
 		ef.Draw(camera);

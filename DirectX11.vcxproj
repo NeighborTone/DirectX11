@@ -47,6 +47,8 @@
     <ClInclude Include="audio.h" />
     <ClInclude Include="BasicShapes.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Console.hpp" />
+    <ClInclude Include="Counter.hpp" />
     <ClInclude Include="Direct3D.h" />
     <ClInclude Include="Direct_Input.h" />
     <ClInclude Include="Particle.h" />
@@ -176,7 +178,7 @@
       <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_CRTDBG_MAP_ALLOC;%(PreprocessorDefinitions)</PreprocessorDefinitions>

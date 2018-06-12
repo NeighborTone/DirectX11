@@ -74,10 +74,10 @@ void Particle::EffectDraw(Camera& camera)
 			  projection.Values[y][x] = camera.constant.projection.r[y].m128_f32[x];
 		}
 	}
-	//=====重要=====
+	//=====重要===============
 	view.Transpose();
 	projection.Transpose();
-	//============
+	//=======================
 
 	// 投影行列の更新
 	renderer->SetProjectionMatrix(projection);

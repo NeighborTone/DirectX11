@@ -8,7 +8,6 @@ Geometry::Geometry():
 
 }
 
-
 Geometry::~Geometry()
 {
 	if (geom != nullptr)

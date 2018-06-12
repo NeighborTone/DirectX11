@@ -1,5 +1,6 @@
 #include "Physics.h"
 #include "Engine.h"
+#include <iostream>
 
 Physics::Physics()
 {
@@ -25,6 +26,7 @@ void Physics::Create()
 	//重力の設定
 	dWorldSetGravity(world, 0, -9.81, 0);
 
+	
 	//拘束条件の設定:CFM(constraint force mixing)
 	//接続されているジョイントがユーザ操作やシミュレーションにより離れてしまった場合， 2接続点が近づくような力を負荷する．このときの力をコントロールするためのパラメータ
 	dWorldSetCFM(world, 1e-5);
@@ -75,7 +77,7 @@ void Physics::WorldStep(const float stepTime)
 
 void PhysicsWorld::NearCallback(void *data, dGeomID o1, dGeomID o2)
 {
-	/*void *dataに自分のポインタを持たせられる */
+	/*void *dataに任意のポインタを持たせられる */
 	PhysicsWorld* pPhysics = static_cast<PhysicsWorld*>(data);
 
 	/*衝突時しそうなときにしかこの関数は呼ばれない*/
@@ -84,12 +86,22 @@ void PhysicsWorld::NearCallback(void *data, dGeomID o1, dGeomID o2)
 	dContact contact[N];
 	int n = dCollide(o1, o2, N, &contact[0].geom, sizeof(dContact));	//nには衝突点数が返る
 
-	//こんな感じで取得できた
-	if (pPhysics->pStaticBox[0]->GetGeomID() == o1 || pPhysics->pStaticBox[0]->GetGeomID() == o2)
+	//---------------こんな感じで取得できた-------------------------------------------------------------
+	if (pPhysics->pRigidBody[0]->GetGeomID() == o1 || pPhysics->pRigidBody[0]->GetGeomID() == o2)
 	{
-		std::cout << "Ground Hit!!!!!!" << std::endl;
+		if(pPhysics->pRigidBody[1]->GetGeomID() == o1 || pPhysics->pRigidBody[1]->GetGeomID() == o2)
+		//箱が当たっていればHit!!!!!!!!!!!!
+		std::cout << "HogeBox Hit!!!!!!" << std::endl;
 	}
-	//---------------------------------------------------------------------------
+
+
+	if (pPhysics->pGeometry[0]->GetGeomID() == o1 || pPhysics->pGeometry[0]->GetGeomID() == o2)
+	{
+		if (pPhysics->pGeometry[1]->GetGeomID() == o1 || pPhysics->pGeometry[1]->GetGeomID() == o2)
+			//棒と床が当たっていればHit!!!!!!!!!!
+			std::cout << "Ground Hit!!!!!!" << std::endl;
+	}
+	//-----------------------------------------------------------------------------------------------
 
 	//接触点を算出したり、接触点の性質などを設定
 	for (int i = 0; i < n; i++)
@@ -110,45 +122,14 @@ void PhysicsWorld::NearCallback(void *data, dGeomID o1, dGeomID o2)
 }
 
 
-void PhysicsWorld::AddDynamicSphere(const Vec3& pos, const dReal& r, dReal mass)
+void PhysicsWorld::AddRigidBody(RigidBody* pBody)
 {
-	pDynamicSphere.emplace_back(std::make_unique<DynamicSphere>(pos, r, mass));
+	pRigidBody.emplace_back(pBody);
 }
 
-void PhysicsWorld::AddDynamicBox(const Vec3& pos,const Vec3& scale, const dReal mass)
+void PhysicsWorld::AddGeometry(Geometry* pGeom)
 {
-	pDynamicBox.emplace_back(std::make_unique<DynamicBox>(pos, scale, mass));
-}
-
-void PhysicsWorld::AddDynamicCapsule(const Vec3& pos, const dReal totalMass, const CylinderDir direction, const dReal radius, const dReal length)
-{
-	pDynamicCapsule.emplace_back(std::make_unique<DynamicCapsule>(pos, totalMass, direction, radius, length));
-}
-
-void PhysicsWorld::AddDynamicCylinder(const Vec3& pos, const dReal totalMass, const CylinderDir direction, const dReal radius, const dReal length)
-{
-	pDynamicCylinder.emplace_back(std::make_unique<DynamicCylinder>(pos, totalMass, direction, radius, length));
-}
-
-void PhysicsWorld::AddStaticBox(const Vec3& pos, const Vec3& scale)
-{
-	pStaticBox.emplace_back(std::make_unique<StaticBox>(pos, scale));
-
-}
-
-void PhysicsWorld::AddStaticSphere(const Vec3& pos, const dReal& radius)
-{
-	pStaticSphere.emplace_back(std::make_unique<StaticSphere>(pos, radius));
-}
-
-void PhysicsWorld::AddStaticCapsule(const Vec3& pos, const CylinderDir direction, const dReal radius, const dReal length)
-{
-	pStaticCapsule.emplace_back(std::make_unique<StaticCapsule>(pos, direction, radius, length));
-}
-
-void PhysicsWorld::AddStaticCylinder(const Vec3& pos, const CylinderDir direction, const dReal radius, const dReal length)
-{
-	pStaticCylinder.emplace_back(std::make_unique<StaticCylinder>(pos, direction, radius, length));
+	pGeometry.emplace_back(pGeom);
 }
 
 void PhysicsWorld::UpDate()
@@ -160,7 +141,6 @@ void PhysicsWorld::UpDate()
 	//これを忘れると1ステップ前の接触点がおかしくなる
 	dJointGroupEmpty(Engine::GetPhysics().GetContactGroup());	
 
-	
 }
 
 void PhysicsWorld::SetGravity(const Vec3_d& gravity)

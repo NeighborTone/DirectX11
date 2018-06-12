@@ -4,8 +4,7 @@
 
 RigidBody::RigidBody() :
 	body(nullptr),
-	geom(nullptr),
-	pos(0, 0, 0)
+	geom(nullptr)
 {
 }
 RigidBody::~RigidBody()
@@ -21,6 +20,14 @@ RigidBody::~RigidBody()
 		body = nullptr;
 	}
 }
+dGeomID RigidBody::GetGeomID()
+{
+	return geom;
+}
+dBodyID RigidBody::GetBodyID()
+{
+	return body;
+}
 Vec3 RigidBody::GetPosition() const
 {
 	auto values = dBodyGetPosition(body);
@@ -29,8 +36,7 @@ Vec3 RigidBody::GetPosition() const
 
 void RigidBody::SetPosition(const Vec3& pos)
 {
-	this->pos = pos;
-	dBodySetPosition(body, this->pos.x, this->pos.y, this->pos.z);
+	dBodySetPosition(body, pos.x, pos.y, pos.z);
 }
 
 void RigidBody::AddForce(const Vec3& force)
@@ -117,7 +123,7 @@ void DynamicBox::Create(const Vec3& pos, const Vec3& scale, dReal totalMass)
 	dGeomSetBody(geom, body);
 	mesh.pos = pos;
 	//ポジション
-	dBodySetPosition(body, mesh.pos.x, mesh.pos.y, mesh.pos.z);
+	dBodySetPosition(body, pos.x, pos.y, pos.z);
 }
 
 void DynamicBox::Draw(Texture& tex)
@@ -136,8 +142,7 @@ void DynamicBox::Draw(Texture& tex)
 
 DynamicBox::DynamicBox(const Vec3& pos, const Vec3& scale, dReal totalMass)
 {
-	this->pos = pos;
-	Create(this->pos, scale, totalMass);
+	Create(pos, scale, totalMass);
 }
 
 DynamicBox::DynamicBox(const DynamicBox& box)
@@ -168,9 +173,8 @@ void DynamicSphere::Create(const Vec3& pos, const dReal& radius, const dReal tot
 	//ジオメトリを作成してボディをアタッチ
 	geom = dCreateSphere(Engine::GetPhysics().GetCollsionSpace(), radius);
 	dGeomSetBody(geom, body);
-	this->pos = pos;
 	//ポジション
-	dBodySetPosition(body, this->pos.x, this->pos.y, this->pos.z);
+	dBodySetPosition(body, pos.x, pos.y, pos.z);
 }
 
 void DynamicSphere::Draw(Texture& tex)
@@ -180,8 +184,7 @@ void DynamicSphere::Draw(Texture& tex)
 
 DynamicSphere::DynamicSphere(const Vec3& pos, const dReal& radius,dReal totalMass)
 {
-	this->pos = pos;
-	Create(this->pos, radius, totalMass);
+	Create(pos, radius, totalMass);
 }
 
 DynamicSphere::DynamicSphere(const DynamicSphere& sphere)
@@ -202,8 +205,7 @@ DynamicSphere::~DynamicSphere()
 
 DynamicCylinder::DynamicCylinder(const Vec3& pos, const dReal totalMass, const int direction, const dReal radius, const dReal length)
 {
-	this->pos = pos;
-	Create(this->pos,  totalMass, direction, radius, length);
+	Create(pos,  totalMass, direction, radius, length);
 }
 
 DynamicCylinder::DynamicCylinder(const DynamicCylinder& cylinder)
@@ -233,9 +235,9 @@ void DynamicCylinder::Create(const Vec3& pos, const dReal totalMass, const int d
 	//ジオメトリを作成してボディをアタッチ
 	geom = dCreateCylinder(Engine::GetPhysics().GetCollsionSpace(), radius, length);
 	dGeomSetBody(geom, body);
-	this->pos = pos;
+
 	//ポジション
-	dBodySetPosition(body, this->pos.x, this->pos.y, this->pos.z);
+	dBodySetPosition(body, pos.x, pos.y, pos.z);
 }
 
 void DynamicCylinder::Draw(Texture& tex)
@@ -245,8 +247,7 @@ void DynamicCylinder::Draw(Texture& tex)
 
 DynamicCapsule::DynamicCapsule(const Vec3& pos, const dReal totalMass, const int direction, const dReal radius, const dReal length)
 {
-	this->pos = pos;
-	Create(this->pos, totalMass, direction, radius, length);
+	Create(pos, totalMass, direction, radius, length);
 }
 
 DynamicCapsule::DynamicCapsule(const DynamicCapsule& capsule)
@@ -276,9 +277,8 @@ void DynamicCapsule::Create(const Vec3& pos, const dReal totalMass, const int di
 	//ジオメトリを作成してボディをアタッチ
 	geom = dCreateCapsule(Engine::GetPhysics().GetCollsionSpace(), radius, length);
 	dGeomSetBody(geom, body);
-	this->pos = pos;
 	//ポジション
-	dBodySetPosition(body, this->pos.x, this->pos.y, this->pos.z);
+	dBodySetPosition(body, pos.x, pos.y, pos.z);
 }
 
 void DynamicCapsule::Draw(Texture& tex)

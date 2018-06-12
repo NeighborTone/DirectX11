@@ -7,9 +7,10 @@ class Geometry
 {
 protected:
 	dGeomID geom;
+	
+public:
 	Geometry();
 	virtual ~Geometry();
-public:
 	Vec3 GetPosition() const;
 	void SetPosition(const Vec3& pos);
 	dGeomID GetGeomID();

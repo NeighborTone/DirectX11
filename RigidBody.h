@@ -6,13 +6,17 @@
 
 class RigidBody
 {
+private:
+
 protected:
 	dBodyID body;		//çÑëÃ
 	dGeomID geom;		//è’ìÀåüím
-	Vec3 pos;
+	
+public:
 	RigidBody();
 	virtual ~RigidBody();
-public:
+	dGeomID GetGeomID();
+	dBodyID GetBodyID();
 	Vec3 GetPosition() const;
 	void SetPosition(const Vec3& pos);
 	void AddForce(const Vec3& force);

@@ -134,6 +134,12 @@
       <Filter>Engine\Physics</Filter>
     </ClInclude>
     <ClInclude Include="Particle.h" />
+    <ClInclude Include="Counter.hpp">
+      <Filter>Engine\Utilitys</Filter>
+    </ClInclude>
+    <ClInclude Include="Console.hpp">
+      <Filter>Engine\Utilitys</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Engine">
