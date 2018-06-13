@@ -20,11 +20,11 @@ RigidBody::~RigidBody()
 		body = nullptr;
 	}
 }
-dGeomID RigidBody::GetGeomID()
+dGeomID RigidBody::GetGeomID() const
 {
 	return geom;
 }
-dBodyID RigidBody::GetBodyID()
+dBodyID RigidBody::GetBodyID() const
 {
 	return body;
 }
@@ -50,7 +50,7 @@ void RigidBody::AddVelocity(const Vec3 & velocity)
 	dBodySetLinearVel(body, velocity.x, velocity.y, velocity.z);
 }
 
-Vec3 RigidBody::GetVelocity()
+Vec3 RigidBody::GetVelocity() const
 {
 	auto vel = dBodyGetLinearVel(body);
 	return Vec3((float)vel[0], (float)vel[1], (float)vel[2]);
@@ -103,7 +103,7 @@ void RigidBody::SetAxisAndAngle(Axis axis, float degree)
 	dBodySetRotation(body, R);
 }
 
-void RigidBody::SetRotation(Vec3& angle)
+void RigidBody::SetRotation(const Vec3& angle)
 {
 	//çsóÒÇ…ïœä∑ÇµÇƒépê®ÇåàÇﬂÇÈ
 	dMatrix3 odeR;
@@ -134,7 +134,7 @@ void RigidBody::SetRotation(Vec3& angle)
 	dBodySetRotation(body, odeR);
 }
 
-DirectX::XMMATRIX RigidBody::GetRotation()
+DirectX::XMMATRIX RigidBody::GetRotation() const
 {
 	//DirextXMatrixÇ∆ODEÇÕRowMajor
 	//ODEÇÕ1éüå≥[4*3]Ç≈äiî[Ç≥ÇÍÇƒÇ¢ÇÈÇ™ÅADirectXMathÇÕ2éüå≥[4][4]
@@ -205,12 +205,13 @@ void DynamicBox::Create(const Vec3& pos, const Vec3& scale, dReal totalMass)
 
 void DynamicBox::Draw(Texture& tex)
 {
-	static bool isInit = false;
+	bool isInit = false;
 	if (!isInit)
 	{
 		mesh.CreateCube();
 		mesh.GetMaterial().SetTexture(0, &tex);
 		mesh.SetDrawMode(D3D11_CULL_BACK, D3D11_FILL_SOLID);
+		isInit = true;
 	}
 	mesh.pos = GetPosition();
 	mesh.Draw(GetRotation());

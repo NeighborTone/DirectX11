@@ -7,7 +7,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 {
 	ci_ext::Console();
 	ShowConsole();
-	constexpr int BOX_MAX = 100;
+	constexpr int BOX_MAX = 30;
 	//ƒQ[ƒ€ƒGƒ“ƒWƒ“¶¬
 	Engine ge("DirectX11",640,480,true);
 
@@ -43,6 +43,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	me.GetMaterial().SetTexture(0, &texture1);
 	me.scale = 1;
 	me.scale.x = 10;
+	me.angle = 0;
 	me.pos.x = camera.pos.x;
 	me.pos.y = 1;
 	me.pos.z = -10;
@@ -68,10 +69,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	}
 
 	physicsWorld.AddRigidBody(new DynamicSphere(rigidBall.pos, 1, 55));
-	physicsWorld.pRigidBody[100]->SetRotation(Vec3(rigidBall.angle));
+	physicsWorld.pRigidBody[BOX_MAX]->SetRotation(Vec3(rigidBall.angle));
 
 	physicsWorld.AddRigidBody(new DynamicCylinder(cylinder.pos, 55, CylinderDir::Y, 1, 2));
-	physicsWorld.pRigidBody[101]->SetRotation(Vec3(cylinder.angle));
+	physicsWorld.pRigidBody[BOX_MAX+1]->SetRotation(Vec3(cylinder.angle));
 
 
 	physicsWorld.AddGeometry(new StaticBox(ground.pos, ground.scale));
@@ -79,6 +80,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	physicsWorld.AddGeometry(new StaticSphere(geomBall.pos, 1));
 
 	physicsWorld.pGeometry[1]->SetPosition(me.pos);
+	physicsWorld.pGeometry[1]->SetRotation(me.angle);
 
 	Text text("Hoge",25);
 	text.scale /= (float)text.GetSize().y;
@@ -139,8 +141,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		{
 			ef2.Play(Vec3(0, 2, 3));
 		}
+		static int a = 1;
+		if (KeyBoard::Down(KeyBoard::Key::KEY_V))
+		{
+			physicsWorld.AddRigidBody(new DynamicBox(Vec3(0, 2, camera.pos.z +10), Vec3(1, 1, 1), 5));
+			++a;
+			
+		}
+		physicsWorld.pRigidBody[BOX_MAX + a]->AddVelocity(Vec3(0, 0, 10));
 		me.pos = physicsWorld.pGeometry[1]->GetPosition();
-		me.Draw();
+		me.Draw(physicsWorld.pGeometry[1]->GetRotation());
 
 		
 		ground.pos = physicsWorld.pGeometry[0]->GetPosition();
@@ -151,16 +161,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		}
 
 		texture2.Attach(0);
-		rigidBall.Draw(physicsWorld.pRigidBody[100]->GetRotation());
-		rigidBall.pos = physicsWorld.pRigidBody[100]->GetPosition();
+		rigidBall.Draw(physicsWorld.pRigidBody[BOX_MAX]->GetRotation(),true);
+		rigidBall.pos = physicsWorld.pRigidBody[BOX_MAX]->GetPosition();
 
 		texture3.Attach(0);
 		geomBall.pos = physicsWorld.pGeometry[2]->GetPosition();
-		geomBall.Draw();
+		geomBall.Draw(true);
 
 		texture5.Attach(0);
-		cylinder.pos = physicsWorld.pRigidBody[101]->GetPosition();
-		cylinder.Draw(physicsWorld.pRigidBody[101]->GetRotation());
+		cylinder.pos = physicsWorld.pRigidBody[BOX_MAX+1]->GetPosition();
+		cylinder.Draw(physicsWorld.pRigidBody[BOX_MAX+1]->GetRotation(),true);
 
 		ef.Draw(camera);
 		ef2.Draw(camera);

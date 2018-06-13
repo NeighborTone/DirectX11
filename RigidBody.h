@@ -20,7 +20,7 @@ enum class Axis
 /*! 
 *	@class RigidBody
 *   @brief  OpenDynamicsEngineで物理演算を行いたい剛体を生成するクラスのインターフェースです
-*   @detail このクラスはPhysicsWorldのAddAddRigidBodyメソッドの引数で生成します
+*   @detail このクラスはPhysicsWorldのAddRigidBodyメソッドの引数で生成します
 *	このクラス単体では使用できません
 *	このクラスが持つメソッドの処理内容は描画以外継承先でも変わりません
 */
@@ -39,12 +39,12 @@ public:
 	* @brief dGeomIDを取得します
 	* @return dGeomID
 	*/
-	dGeomID GetGeomID();
+	dGeomID GetGeomID() const;
 	/*!
 	* @brief dBodyIDを取得します
 	* @return dBodyID
 	*/
-	dBodyID GetBodyID();
+	dBodyID GetBodyID() const;
 	/*!
 	* @brief 座標を取得します
 	* @return Vec3
@@ -70,7 +70,7 @@ public:
 	* @brief 剛体の速度を得ます
 	* @return Vec3
 	*/
-	Vec3 GetVelocity();
+	Vec3 GetVelocity() const;
 	/*!
 	* @brief 未実装
 	*/
@@ -89,12 +89,12 @@ public:
 	* @brief 剛体に対しての姿勢を設定します
 	* @param (angle) 度数(degree)での回転値
 	*/
-	void SetRotation(Vec3& angle);
+	void SetRotation(const Vec3& angle);
 	/*!
 	* @brief 剛体の姿勢を回転行列で得ます
 	* @return DirectX::XMMATRIX
 	*/
-	DirectX::XMMATRIX GetRotation();
+	DirectX::XMMATRIX GetRotation() const;
 	/*!
 	* @brief 剛体の物理演算を有効にします
 	*/

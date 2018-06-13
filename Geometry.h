@@ -3,6 +3,13 @@
 #include "Utility.hpp"
 #include "Mesh.h"
 
+/*!
+*	@class Geometry
+*   @brief  OpenDynamicsEngineで衝突判定を行いたい形状を生成するクラスのインターフェースです
+*   @detail このクラスはPhysicsWorldのAddGeometryメソッドの引数で生成します
+*	このクラス単体では使用できません
+*	このクラスが持つメソッドの処理内容は継承先でも変わりません
+*/
 class Geometry
 {
 protected:
@@ -11,9 +18,32 @@ protected:
 public:
 	Geometry();
 	virtual ~Geometry();
+	/*!
+	* @brief dGeomIDを取得します
+	* @return dGeomID
+	*/
+	dGeomID GetGeomID() const;
+	/*!
+	* @brief 座標を取得します
+	* @return Vec3
+	*/
 	Vec3 GetPosition() const;
+	/*!
+	* @brief 座標を設定します
+	* @param (pos) 座標
+	*/
 	void SetPosition(const Vec3& pos);
-	dGeomID GetGeomID();
+	/*!
+	* @brief 形状の姿勢を設定します
+	* @param (angle) 度数(degree)での回転値
+	*/
+	void SetRotation(const Vec3& angle);
+	/*!
+	* @brief 形状の姿勢を回転行列で得ます
+	* @return DirectX::XMMATRIX
+	*/
+	DirectX::XMMATRIX GetRotation() const;
+	
 };
 
 

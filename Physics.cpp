@@ -94,7 +94,6 @@ void PhysicsWorld::NearCallback(void *data, dGeomID o1, dGeomID o2)
 		std::cout << "HogeBox Hit!!!!!!" << std::endl;
 	}
 
-
 	if (pPhysics->pGeometry[0]->GetGeomID() == o1 || pPhysics->pGeometry[0]->GetGeomID() == o2)
 	{
 		if (pPhysics->pGeometry[1]->GetGeomID() == o1 || pPhysics->pGeometry[1]->GetGeomID() == o2)
@@ -104,16 +103,16 @@ void PhysicsWorld::NearCallback(void *data, dGeomID o1, dGeomID o2)
 	//-----------------------------------------------------------------------------------------------
 
 	//ÚG“_‚ğZo‚µ‚½‚èAÚG“_‚Ì«¿‚È‚Ç‚ğİ’è
-	for (int i = 0; i < n; i++)
+	for (int i = 0; i < n; ++i)
 	{
-		contact[i].surface.mode = dContactBounce;		//ÚG“_‚É‚Ç‚Ì‚æ‚¤‚Èì—p‚ğ—^‚¦‚é‚©w’è
-		contact[i].surface.mu = dInfinity;		//–€CŒW”
+		contact[i].surface.mode = dContactBounce;	//ÚG“_‚É‚Ç‚Ì‚æ‚¤‚Èì—p‚ğ—^‚¦‚é‚©w’è
+		contact[i].surface.mu = dInfinity;			//–€CŒW”
 		contact[i].surface.mu2 = 0.0;
 		contact[i].surface.rho = 0.0;
 		contact[i].surface.rho2 = 0.0;
 		contact[i].surface.rhoN = 0.0;
-		contact[i].surface.bounce = 0.25;		//”½”­ŒW”0~1
-		contact[i].surface.bounce_vel = 0.0;	//Å’á”½Ë‘¬“x
+		contact[i].surface.bounce = 0.25;			//”½”­ŒW”0~1
+		contact[i].surface.bounce_vel = 0.0;		//Å’á”½Ë‘¬“x
 		contact[i].surface.slip1 = 0.0;
 		contact[i].surface.slip2 = 0.0;
 		auto joint = dJointCreateContact(Engine::GetPhysics().GetWorld(), Engine::GetPhysics().GetContactGroup(), &contact[i]);

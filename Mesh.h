@@ -84,12 +84,19 @@ public:
 	* @brief Meshを描画します
 	*/
 	void Draw();
+	/*!
+	* @brief Meshに回転行列を指定して描画します
+	* @detail これは主に物理エンジンの演算結果を得るために用います
+	* @param (rota) 回転行列 
+	*/
 	void Draw(DirectX::XMMATRIX rota);
 	/*!
 	* @brief 点を描画します
 	*/
 	void DrawPoint();
 
+
+	//アラインメント対策
 	void* operator new(size_t i)
 	{
 		return _mm_malloc(i, 16);
