@@ -8,7 +8,7 @@ Camera::Camera():
 	depthTexture(nullptr),
 	constantBuffer(nullptr),
 	pos(0,0,0),
-	angles(0, 0, 0),
+	angle(0, 0, 0),
 	color(0.4f, 0.5f, 0.8f, 1),
 	isDepthTest(false)
 {
@@ -58,9 +58,9 @@ void Camera::Run()
 	constant.view = XMMatrixTranspose(
 		XMMatrixInverse(
 			nullptr,
-			XMMatrixRotationX(XMConvertToRadians(angles.x)) *
-			XMMatrixRotationY(XMConvertToRadians(angles.y)) *
-			XMMatrixRotationZ(XMConvertToRadians(angles.z)) *
+			XMMatrixRotationX(XMConvertToRadians(angle.x)) *
+			XMMatrixRotationY(XMConvertToRadians(angle.y)) *
+			XMMatrixRotationZ(XMConvertToRadians(angle.z)) *
 			XMMatrixTranslation(pos.x, pos.y, pos.z)
 		)
 	);

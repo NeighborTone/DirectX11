@@ -4,6 +4,26 @@
 #include "Mesh.h"
 //とりあえずテンプレートメソッドパターンで実装
 
+
+/*!
+* @enum Axis
+* SetAxisAndAngleメソッドの第一引数で使います
+* これはどの軸に対して回転したいかを指定するために用います
+*/
+enum class Axis
+{
+	X,
+	Y,
+	Z
+};
+
+/*! 
+*	@class RigidBody
+*   @brief  OpenDynamicsEngineで物理演算を行いたい剛体を生成するクラスのインターフェースです
+*   @detail このクラスはPhysicsWorldのAddAddRigidBodyメソッドの引数で生成します
+*	このクラス単体では使用できません
+*	このクラスが持つメソッドの処理内容は描画以外継承先でも変わりません
+*/
 class RigidBody
 {
 private:
@@ -15,22 +35,86 @@ protected:
 public:
 	RigidBody();
 	virtual ~RigidBody();
+	/*!
+	* @brief dGeomIDを取得します
+	* @return dGeomID
+	*/
 	dGeomID GetGeomID();
+	/*!
+	* @brief dBodyIDを取得します
+	* @return dBodyID
+	*/
 	dBodyID GetBodyID();
+	/*!
+	* @brief 座標を取得します
+	* @return Vec3
+	*/
 	Vec3 GetPosition() const;
+	/*!
+	* @brief 座標を設定します
+	* @param (pos) 座標
+	*/
 	void SetPosition(const Vec3& pos);
+	/*!
+	* @brief ボディの重心に作用する力を設定します。これは主にボディを有効化するときに使用します。
+	* @detail このメソッドを用いることで、剛体ごとに重力をかけるようなことができます
+	* @param (force) 向きに対して与えたい力
+	*/
 	void AddForce(const Vec3& force);
+	/*!
+	* @brief 剛体に速度を与えます
+	* @param (velocity) 向きに対して与えたい速度
+	*/
 	void AddVelocity(const Vec3& velocity);
+	/*!
+	* @brief 剛体の速度を得ます
+	* @return Vec3
+	*/
 	Vec3 GetVelocity();
+	/*!
+	* @brief 未実装
+	*/
 	void SetQuaternion(Vec3& angle);
+	/*!
+	* @brief 未実装
+	*/
 	Vec3 GetQuaternion();
+	/*!
+	* @brief 任意の軸1つに対しての姿勢を設定します
+	* @param (axis) 軸
+	* @param (degree) 回転値
+	*/
+	void SetAxisAndAngle(Axis axis,float degree);
+	/*!
+	* @brief 剛体に対しての姿勢を設定します
+	* @param (angle) 度数(degree)での回転値
+	*/
 	void SetRotation(Vec3& angle);
-	Vec3 GetRotation();
+	/*!
+	* @brief 剛体の姿勢を回転行列で得ます
+	* @return DirectX::XMMATRIX
+	*/
+	DirectX::XMMATRIX GetRotation();
+	/*!
+	* @brief 剛体の物理演算を有効にします
+	*/
 	void BodyEnable();
+	/*!
+	* @brief 剛体の物理演算を無効にします
+	*/
 	void BodyDisable();
+	/*!
+	* @brief 剛体の形状を描画します(現在Boxのみ)
+	* @param (tex) 描画に使いたいテクスチャー
+	*/
 	virtual void Draw(Texture& tex) = 0;
 };
 
+
+/*! 
+*	@class DynamicBox
+*   @brief 直方体を生成します
+*/
 class DynamicBox : public RigidBody
 {
 private:
@@ -40,7 +124,14 @@ public:
 	DynamicBox(const DynamicBox& box);
 	DynamicBox();
 	~DynamicBox();
+	/*!
+	* @brief 直方体を生成します
+	* @param (pos)       剛体の中心座標
+	* @param (scale)	 剛体のそれぞれの軸の1辺の大きさ
+	* @param (totalMass) 質量
+	*/
 	void Create(const Vec3& pos, const Vec3& scale, dReal totalMass);
+
 	void Draw(Texture& tex) override;
 
 	//アライメント対策
@@ -55,6 +146,10 @@ public:
 	}
 };
 
+/*! 
+*	@class DynamicSphere
+*   @brief 球を生成します
+*/
 class DynamicSphere : public RigidBody
 {
 public:
@@ -62,10 +157,20 @@ public:
 	DynamicSphere(const DynamicSphere& sphere);
 	DynamicSphere();
 	~DynamicSphere();
-	void Create(const Vec3& pos, const dReal& r, const dReal totalMass);
+	/*!
+	* @brief 球を生成します
+	* @param (pos)       剛体の中心座標
+	* @param (radius)    半径
+	* @param (totalMass) 質量
+	*/
+	void Create(const Vec3& pos, const dReal& radius, const dReal totalMass);
 	void Draw(Texture& tex) override;
 };
 
+/*! 
+*	@class DynamicCylinder
+*   @brief 円筒を生成します
+*/
 class DynamicCylinder : public RigidBody
 {
 public:
@@ -73,10 +178,22 @@ public:
 	DynamicCylinder(const DynamicCylinder& cylinder);
 	DynamicCylinder();
 	~DynamicCylinder();
-	void Create(const Vec3& pos , const dReal total_mass, const int direction, const dReal radius, const dReal length);
+	/*!
+	* @brief 円筒を生成します
+	* @param (pos)       剛体の中心座標
+	* @param (totalMass) 質量
+	* @param (direction) 円筒の向き
+	* @param (radius)    半径
+	* @param (length)    長さ
+	*/
+	void Create(const Vec3& pos , const dReal totalmass, const int direction, const dReal radius, const dReal length);
 	void Draw(Texture& tex) override;
 };
  
+/*!
+*	@class DynamicCapsule
+*   @brief カプセルを生成します
+*/
 class DynamicCapsule : public RigidBody
 {
 public:
@@ -84,6 +201,14 @@ public:
 	DynamicCapsule(const DynamicCapsule& capsule);
 	DynamicCapsule();
 	~DynamicCapsule();
+	/*!
+	* @brief カプセルを生成します
+	* @param (pos)       剛体の中心座標
+	* @param (totalMass) 質量
+	* @param (direction) カプセルの向き
+	* @param (radius)    半径
+	* @param (length)    長さ
+	*/
 	void Create(const Vec3& pos, const dReal totalMass, const int direction, const dReal radius, const dReal length);
 	void Draw(Texture& tex) override;
 };

@@ -56,7 +56,6 @@
     <ClCompile Include="Physics.cpp">
       <Filter>Engine\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="BasicShapes.cpp" />
     <ClCompile Include="RigidBody.cpp">
       <Filter>Engine\Physics</Filter>
     </ClCompile>
@@ -126,7 +125,6 @@
     <ClInclude Include="Physics.h">
       <Filter>Engine\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="BasicShapes.h" />
     <ClInclude Include="RigidBody.h">
       <Filter>Engine\Physics</Filter>
     </ClInclude>

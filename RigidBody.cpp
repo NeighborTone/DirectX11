@@ -82,40 +82,98 @@ Vec3 RigidBody::GetQuaternion()
 	);
 }
 
-void RigidBody::SetRotation(Vec3& angle)
+void RigidBody::SetAxisAndAngle(Axis axis, float degree)
 {
-	//Ç‹Çæ
-
+	//àÍÇ¬ÇÃäpìxÇµÇ©åàÇﬂÇÁÇÍÇ»Ç¢ÇÃÇ≈ópìrïsñæÇæÇ™àÍâûópà”ÇµÇƒÇ®Ç¢ÇΩ
 	dMatrix3 R;
-	dRFromAxisAndAngle(R, 1.0, 0.0, 0.0, DirectX::XMConvertToRadians(angle.x));	//xé≤é¸ÇËÇ…[rad]âÒì]
-	dRFromAxisAndAngle(R, 0.0, 1.0, 0.0, DirectX::XMConvertToRadians(angle.y));	//yé≤é¸ÇËÇ…[rad]âÒì]
-	dRFromAxisAndAngle(R, 0.0, 0.0, 1.0, DirectX::XMConvertToRadians(angle.z));	//zé≤é¸ÇËÇ…[rad]âÒì]
-
+	if (axis == Axis::X)
+	{
+		dRFromAxisAndAngle(R, 1.0, 0.0, 0.0, DirectX::XMConvertToRadians(degree));	//xé≤é¸ÇËÇ…[rad]âÒì]
+	}
+	if (axis == Axis::Y)
+	{
+		dRFromAxisAndAngle(R, 0.0, 1.0, 0.0, DirectX::XMConvertToRadians(degree));	//yé≤é¸ÇËÇ…[rad]âÒì]
+	}
+	if (axis == Axis::Z)
+	{
+		dRFromAxisAndAngle(R, 0.0, 0.0, 1.0, DirectX::XMConvertToRadians(degree));	//zé≤é¸ÇËÇ…[rad]âÒì]
+	}
+	
+	
 	dBodySetRotation(body, R);
 }
 
-Vec3 RigidBody::GetRotation()
+void RigidBody::SetRotation(Vec3& angle)
+{
+	//çsóÒÇ…ïœä∑ÇµÇƒépê®ÇåàÇﬂÇÈ
+	dMatrix3 odeR;
+	dRSetIdentity(odeR);
+	
+	DirectX::XMMATRIX directR = DirectX::XMMatrixIdentity();
+
+	directR = DirectX::XMMatrixTranspose
+	(
+		DirectX::XMMatrixRotationX(DirectX::XMConvertToRadians(angle.x)) *
+		DirectX::XMMatrixRotationY(DirectX::XMConvertToRadians(angle.y)) *
+		DirectX::XMMatrixRotationZ(DirectX::XMConvertToRadians(angle.z))	
+	);
+
+	odeR[0]	= directR.r[0].m128_f32[0];
+	odeR[1] = directR.r[0].m128_f32[1];
+	odeR[2] = directR.r[0].m128_f32[2];
+	odeR[3] = directR.r[0].m128_f32[3];
+	odeR[4] = directR.r[1].m128_f32[0];
+	odeR[5] = directR.r[1].m128_f32[1];
+	odeR[6] = directR.r[1].m128_f32[2];
+	odeR[7] = directR.r[1].m128_f32[3];
+	odeR[8] = directR.r[2].m128_f32[0];
+	odeR[9] = directR.r[2].m128_f32[1];
+	odeR[10] = directR.r[2].m128_f32[2];
+	odeR[11] = directR.r[2].m128_f32[3];
+
+	dBodySetRotation(body, odeR);
+}
+
+DirectX::XMMATRIX RigidBody::GetRotation()
 {
 	//DirextXMatrixÇ∆ODEÇÕRowMajor
 	//ODEÇÕ1éüå≥[4*3]Ç≈äiî[Ç≥ÇÍÇƒÇ¢ÇÈÇ™ÅADirectXMathÇÕ2éüå≥[4][4]
+
 				/*ODE*/
-	// | m[0] m[1] m[2]   m[3]    |
-	// | m[4] m[5] m[6]   m[7]    |
+	// | m[0] m[1] m[2]   m[3]  |
+	// | m[4] m[5] m[6]   m[7]  |
 	// | m[8] m[9] m[10] m[11]  |
+
 			/*DirectXMath*/
 	// float _11, _12, _13, _14;
 	// float _21, _22, _23, _24;
 	// float _31, _32, _33, _34;
 	// float _41, _42, _43, _44;
 
-	//Ç‹ÇæÇ»ÇÃÇ≈ìKìñ
-	const dReal* R;
-	R = dBodyGetRotation(body);
+	const dReal* odeR;
+	odeR = dBodyGetRotation(body);
+	
+	DirectX::XMMATRIX directR;
 
-	return Vec3(
-		DirectX::XMConvertToDegrees((float)R[0]),
-		DirectX::XMConvertToDegrees((float)R[5]), 
-		DirectX::XMConvertToDegrees((float)R[10]));
+	/*4*4Ç…ïœä∑Ç∑ÇÈ*/
+	directR.r[0].m128_f32[0] = (float)odeR[0];
+	directR.r[0].m128_f32[1] = (float)odeR[1];
+	directR.r[0].m128_f32[2] = (float)odeR[2];
+	directR.r[0].m128_f32[3] = (float)odeR[3];
+	directR.r[1].m128_f32[0] = (float)odeR[4];
+	directR.r[1].m128_f32[1] = (float)odeR[5];
+	directR.r[1].m128_f32[2] = (float)odeR[6];
+	directR.r[1].m128_f32[3] = (float)odeR[7];
+	directR.r[2].m128_f32[0] = (float)odeR[8];
+	directR.r[2].m128_f32[1] = (float)odeR[9];
+	directR.r[2].m128_f32[2] = (float)odeR[10];
+	directR.r[2].m128_f32[3] = (float)odeR[11];
+	directR.r[3].m128_f32[0] = 0;
+	directR.r[3].m128_f32[1] = 0;
+	directR.r[3].m128_f32[2] = 0;
+	directR.r[3].m128_f32[3] = 1;
+
+	return directR;
 }
 
 void RigidBody::BodyEnable()
@@ -155,8 +213,7 @@ void DynamicBox::Draw(Texture& tex)
 		mesh.SetDrawMode(D3D11_CULL_BACK, D3D11_FILL_SOLID);
 	}
 	mesh.pos = GetPosition();
-	mesh.angle = GetRotation();
-	mesh.Draw();
+	mesh.Draw(GetRotation());
 }
 
 DynamicBox::DynamicBox(const Vec3& pos, const Vec3& scale, dReal totalMass)

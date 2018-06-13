@@ -13,7 +13,7 @@
 //----------//
 Model::Model():
 	pos(0,0,0),
-	angles(0,0,0),
+	angle(0,0,0),
 	scale(1,1,1),
 	startTime(0),
 	animName(0)
@@ -23,7 +23,7 @@ Model::Model():
 
 Model::Model(const std::string filePath) :
 	pos(0, 0, 0),
-	angles(0, 0, 0),
+	angle(0, 0, 0),
 	scale(1, 1, 1),
 	startTime(0),
 	animName(0)
@@ -93,7 +93,7 @@ void Model::Draw(bool wireframeEnable)
 		for (UINT i = 0; i < meshes.size(); ++i)
 		{
 			meshes[i]->pos = pos;
-			meshes[i]->angle = angles;
+			meshes[i]->angle = angle;
 			meshes[i]->scale = scale;
 			meshes[i]->SetDrawMode(D3D11_CULL_BACK, D3D11_FILL_WIREFRAME);
 			meshes[i]->Draw();
@@ -104,13 +104,52 @@ void Model::Draw(bool wireframeEnable)
 		for (UINT i = 0; i < meshes.size(); ++i)
 		{
 			meshes[i]->pos = pos;
-			meshes[i]->angle = angles;
+			meshes[i]->angle = angle;
 			meshes[i]->scale = scale;
 			meshes[i]->SetDrawMode(D3D11_CULL_BACK, D3D11_FILL_SOLID);
 			meshes[i]->Draw();
 		}
 	}
 	
+}
+
+void Model::Draw(DirectX::XMMATRIX rota, bool wireframeEnable)
+{
+	float time = Engine::GetFps().GetTime() - startTime;
+	int frame = (int)(time * 60.0f);
+	//60フレーム基準で指定したアニメーションを再生する
+	frame %= animations[animName].frames.size();
+
+	for (UINT i = 0; i < animations[animName].frames[frame].bones.size(); ++i)
+	{
+		constant.bones[i] = XMMatrixTranspose(
+			animations[animName].frames[frame].bones[i]
+		);
+	}
+
+	if (wireframeEnable)
+	{
+		for (UINT i = 0; i < meshes.size(); ++i)
+		{
+			meshes[i]->pos = pos;
+			meshes[i]->angle = angle;
+			meshes[i]->scale = scale;
+			meshes[i]->SetDrawMode(D3D11_CULL_BACK, D3D11_FILL_WIREFRAME);
+			meshes[i]->Draw(rota);
+		}
+	}
+	else
+	{
+		for (UINT i = 0; i < meshes.size(); ++i)
+		{
+			meshes[i]->pos = pos;
+			meshes[i]->angle = angle;
+			meshes[i]->scale = scale;
+			meshes[i]->SetDrawMode(D3D11_CULL_BACK, D3D11_FILL_SOLID);
+			meshes[i]->Draw(rota);
+		}
+	}
+
 }
 
 //----------//

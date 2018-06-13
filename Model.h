@@ -71,7 +71,7 @@ private:
 
 public:
 	Vec3 pos;
-	Vec3 angles;
+	Vec3 angle;
 	Vec3 scale;
 	Model();
 	Model(const std::string filePath);
@@ -79,5 +79,5 @@ public:
 	void Load(const std::string filePath);
 	void Play(int animName);
 	void Draw(bool wireframeEnable = false);
-
+	void Draw(DirectX::XMMATRIX rota,bool wireframeEnable = false);
 };

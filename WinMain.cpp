@@ -1,6 +1,5 @@
 #include "Engine.h"
 #include "Model.h"
-#include "BasicShapes.h"
 #include "Particle.h"
 #include "Console.hpp"
 
@@ -15,7 +14,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	//ƒJƒƒ‰¶¬
 	Camera camera;
 	camera.pos = Vec3(0.0f, 12.0f, -20.0f);
-	camera.angles.x = 20;
+	camera.angle.x = 20;
 	camera.SetPerspective(45.0f, 1, 10000.0f);
 	//camera.SetOrthographic(0,0.1f,100.0f);
 	camera.SetDepthTest(true);
@@ -28,7 +27,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	Model rigidBall("Resource/ball.fbx");
 
 	rigidBall.pos.y = 8;
-	rigidBall.angles.x = 0;
+	rigidBall.angle.x = -90;
 
 	Model geomBall("Resource/ball.fbx");
 	geomBall.pos.y = 5;
@@ -37,7 +36,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	Model cylinder("Resource/cylinder.fbx");
 	cylinder.pos.y = 12;
 	cylinder.pos.z = -1;
-	cylinder.angles.x = -90;
+	cylinder.angle.x = -90;
 
 	Mesh me;
 	me.CreateCube();
@@ -65,15 +64,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	{
 		physicsWorld.AddRigidBody(new DynamicBox(Vec3(0, 0, 0), Vec3(1, 1, 1), 5));
 		physicsWorld.pRigidBody[i]->SetPosition(Vec3(-5.0f + (float)i * 0.09f, 10 + (float)i * 3.5f, 0));
-		physicsWorld.pRigidBody[i]->SetRotation(Vec3(5,5,5));
-	
+		physicsWorld.pRigidBody[i]->SetRotation(Vec3(45, 0, 40));
 	}
 
 	physicsWorld.AddRigidBody(new DynamicSphere(rigidBall.pos, 1, 55));
-	physicsWorld.pRigidBody[100]->SetRotation(rigidBall.angles);
+	physicsWorld.pRigidBody[100]->SetRotation(Vec3(rigidBall.angle));
 
 	physicsWorld.AddRigidBody(new DynamicCylinder(cylinder.pos, 55, CylinderDir::Y, 1, 2));
-	physicsWorld.pRigidBody[101]->SetRotation(rigidBall.angles);
+	physicsWorld.pRigidBody[101]->SetRotation(Vec3(cylinder.angle));
 
 
 	physicsWorld.AddGeometry(new StaticBox(ground.pos, ground.scale));
@@ -153,9 +151,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		}
 
 		texture2.Attach(0);
-		rigidBall.Draw();
+		rigidBall.Draw(physicsWorld.pRigidBody[100]->GetRotation());
 		rigidBall.pos = physicsWorld.pRigidBody[100]->GetPosition();
-		rigidBall.angles = physicsWorld.pRigidBody[100]->GetRotation();
 
 		texture3.Attach(0);
 		geomBall.pos = physicsWorld.pGeometry[2]->GetPosition();
@@ -163,7 +160,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 
 		texture5.Attach(0);
 		cylinder.pos = physicsWorld.pRigidBody[101]->GetPosition();
-		cylinder.Draw();
+		cylinder.Draw(physicsWorld.pRigidBody[101]->GetRotation());
 
 		ef.Draw(camera);
 		ef2.Draw(camera);

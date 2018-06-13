@@ -10,7 +10,7 @@ class Camera : public System::Proceedable
 {
 public:
 	Vec3 pos;
-	Vec3 angles;
+	Vec3 angle;
 	Float4 color;
 
 	Camera();
