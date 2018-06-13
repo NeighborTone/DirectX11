@@ -84,6 +84,7 @@ public:
 	* @brief Mesh‚ð•`‰æ‚µ‚Ü‚·
 	*/
 	void Draw();
+	void Draw(DirectX::XMMATRIX rota);
 	/*!
 	* @brief “_‚ð•`‰æ‚µ‚Ü‚·
 	*/

@@ -227,7 +227,37 @@ void Mesh::Draw()
 		Engine::GetDXContext3D().DrawIndexed(indices.size(), 0, 0);
 	}
 }
+void Mesh::Draw(DirectX::XMMATRIX rota)
+{
+	if (vertexBuffer == nullptr)
+	{
+		return;
+	}
 
+	constant.world = XMMatrixTranspose(
+		XMMatrixScaling(scale.x, scale.y, scale.z) *
+		rota *
+		XMMatrixTranslation(pos.x, pos.y, pos.z)
+	);
+
+	material.Attach();
+
+	Engine::GetDXContext3D().RSSetState(rasterizerState);
+
+	UINT stride = sizeof(Vertex);
+	UINT offset = 0;
+	Engine::GetDXContext3D().IASetVertexBuffers(0, 1, &vertexBuffer.p, &stride, &offset);
+	Engine::GetDXContext3D().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	if (indexBuffer == nullptr)
+	{
+		Engine::GetDXContext3D().Draw(vertices.size(), 0);
+	}
+	else
+	{
+		Engine::GetDXContext3D().IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+		Engine::GetDXContext3D().DrawIndexed(indices.size(), 0, 0);
+	}
+}
 void Mesh::DrawPoint()
 {
 	if (vertexBuffer == nullptr)

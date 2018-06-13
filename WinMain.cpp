@@ -65,15 +65,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	{
 		physicsWorld.AddRigidBody(new DynamicBox(Vec3(0, 0, 0), Vec3(1, 1, 1), 5));
 		physicsWorld.pRigidBody[i]->SetPosition(Vec3(-5.0f + (float)i * 0.09f, 10 + (float)i * 3.5f, 0));
-
+		physicsWorld.pRigidBody[i]->SetRotation(Vec3(5,5,5));
 	
 	}
 
 	physicsWorld.AddRigidBody(new DynamicSphere(rigidBall.pos, 1, 55));
-	physicsWorld.pRigidBody[100]->SetQuaternion(rigidBall.angles);
+	physicsWorld.pRigidBody[100]->SetRotation(rigidBall.angles);
 
 	physicsWorld.AddRigidBody(new DynamicCylinder(cylinder.pos, 55, CylinderDir::Y, 1, 2));
-	physicsWorld.pRigidBody[101]->SetQuaternion(rigidBall.angles);
+	physicsWorld.pRigidBody[101]->SetRotation(rigidBall.angles);
 
 
 	physicsWorld.AddGeometry(new StaticBox(ground.pos, ground.scale));
@@ -82,7 +82,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 
 	physicsWorld.pGeometry[1]->SetPosition(me.pos);
 
-	
+	Text text("Hoge",25);
+	text.scale /= (float)text.GetSize().y;
+	text.pos.y = 10;
 	while (ge.Run())
 	{
 		camera.Run();
@@ -153,7 +155,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		texture2.Attach(0);
 		rigidBall.Draw();
 		rigidBall.pos = physicsWorld.pRigidBody[100]->GetPosition();
-		rigidBall.angles = physicsWorld.pRigidBody[100]->GetQuaternion();
+		rigidBall.angles = physicsWorld.pRigidBody[100]->GetRotation();
 
 		texture3.Attach(0);
 		geomBall.pos = physicsWorld.pGeometry[2]->GetPosition();
@@ -166,6 +168,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		ef.Draw(camera);
 		ef2.Draw(camera);
 
+		text.Draw();
 		std::cout << Engine::GetFps().GetFrameRate() << std::endl;
 	}
 

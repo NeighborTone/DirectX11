@@ -33,7 +33,6 @@ void Text::Create(const std::string& text, float fontSize, const std::string&  f
 		return;
 	}
 		
-
 	this->text = text;
 
 	length = DirectX::XMINT2(0, 1);

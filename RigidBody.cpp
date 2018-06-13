@@ -85,14 +85,33 @@ Vec3 RigidBody::GetQuaternion()
 void RigidBody::SetRotation(Vec3& angle)
 {
 	//Ç‹Çæ
+
+	dMatrix3 R;
+	dRFromAxisAndAngle(R, 1.0, 0.0, 0.0, DirectX::XMConvertToRadians(angle.x));	//xé≤é¸ÇËÇ…[rad]âÒì]
+	dRFromAxisAndAngle(R, 0.0, 1.0, 0.0, DirectX::XMConvertToRadians(angle.y));	//yé≤é¸ÇËÇ…[rad]âÒì]
+	dRFromAxisAndAngle(R, 0.0, 0.0, 1.0, DirectX::XMConvertToRadians(angle.z));	//zé≤é¸ÇËÇ…[rad]âÒì]
+
+	dBodySetRotation(body, R);
 }
 
 Vec3 RigidBody::GetRotation()
 {
+	//DirextXMatrixÇ∆ODEÇÕRowMajor
+	//ODEÇÕ1éüå≥[4*3]Ç≈äiî[Ç≥ÇÍÇƒÇ¢ÇÈÇ™ÅADirectXMathÇÕ2éüå≥[4][4]
+				/*ODE*/
+	// | m[0] m[1] m[2]   m[3]    |
+	// | m[4] m[5] m[6]   m[7]    |
+	// | m[8] m[9] m[10] m[11]  |
+			/*DirectXMath*/
+	// float _11, _12, _13, _14;
+	// float _21, _22, _23, _24;
+	// float _31, _32, _33, _34;
+	// float _41, _42, _43, _44;
+
 	//Ç‹ÇæÇ»ÇÃÇ≈ìKìñ
 	const dReal* R;
 	R = dBodyGetRotation(body);
-	
+
 	return Vec3(
 		DirectX::XMConvertToDegrees((float)R[0]),
 		DirectX::XMConvertToDegrees((float)R[5]), 
@@ -136,7 +155,7 @@ void DynamicBox::Draw(Texture& tex)
 		mesh.SetDrawMode(D3D11_CULL_BACK, D3D11_FILL_SOLID);
 	}
 	mesh.pos = GetPosition();
-	mesh.angle = GetQuaternion();
+	mesh.angle = GetRotation();
 	mesh.Draw();
 }
 
