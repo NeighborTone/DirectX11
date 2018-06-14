@@ -10,7 +10,7 @@
 
 namespace EffectParameters
 {
-	struct EQ_DESC
+	struct Equalizer_DESC
 	{
 		float Bandwidth0;				//0.1f~2.0f
 		float Bandwidth1;				//
@@ -25,7 +25,7 @@ namespace EffectParameters
 		float Gain2;						//
 		float Gain3;						//
 
-		EQ_DESC() :
+		Equalizer_DESC() :
 			Bandwidth0(FXEQ_DEFAULT_BANDWIDTH),
 			Bandwidth1(FXEQ_DEFAULT_BANDWIDTH),
 			Bandwidth2(FXEQ_DEFAULT_BANDWIDTH),
@@ -41,27 +41,38 @@ namespace EffectParameters
 		{}
 	};
 
-	struct REVERB_DESC
+	struct SimpleReverb_DESC
 	{
-		float Diffusion;		// 音の広がり(拡散量） 0.0f~1.0f 
-		float	RoomSize;		// 音が鳴っている施設の大きさを示す 0.0001f~1.0f
+		float Diffusion;		//音の広がり(拡散量） 0.0f~1.0f 
+		float	RoomSize;		//音が鳴っている施設の大きさ 0.0001f~1.0f
 
-		REVERB_DESC() :
+		SimpleReverb_DESC() :
 			Diffusion(FXREVERB_DEFAULT_DIFFUSION),
 			RoomSize(FXREVERB_DEFAULT_ROOMSIZE)
-		{};
+		{}
 	};	
 
-	struct DELAY_DESC
+	struct Delay_DESC
 	{
-		float WetDryMix;		//原音にどれくらい混ぜるか
-		float Feedback;			//跳ね返りの強さ
-		float Delay;				//ディレイタイム(ミリ秒)
+		float WetDryMix;		//原音にどれくらいエフェクトの音を混ぜるか 0.0f~1.0f
+		float Feedback;			//跳ね返りの強さ 0.0f~1.0f
+		float DelayTime;			//ディレイタイム(ミリ秒)1.0f~2000.0f
 
-		DELAY_DESC():
+		Delay_DESC():
 			WetDryMix(FXECHO_DEFAULT_WETDRYMIX),
 			Feedback(FXECHO_DEFAULT_FEEDBACK),
-			Delay(FXECHO_DEFAULT_DELAY)
+			DelayTime(FXECHO_DEFAULT_DELAY)
+		{}
+	};
+
+	struct Limiter_DESC
+	{
+		UINT32 Release;		//1~20
+		UINT32 Loudness;		//1~1800
+
+		Limiter_DESC():
+			Release(FXMASTERINGLIMITER_DEFAULT_RELEASE),
+			Loudness(FXMASTERINGLIMITER_DEFAULT_LOUDNESS)
 		{}
 	};
 };
@@ -108,12 +119,14 @@ public:
 	//ソース破棄
 	void Destroy();
 
-	void SetEQ(EffectParameters::EQ_DESC& eq_desc);
-	void SetReverb(EffectParameters::REVERB_DESC& reverb_desc);
-	void SetDelay(EffectParameters::DELAY_DESC& delay_desc);
+	/*ループ中にセットするとノイズが乗るので注意*/
+	void SetEQ(EffectParameters::Equalizer_DESC& eq_desc);
+	void SetSimpleReverb(EffectParameters::SimpleReverb_DESC& reverb_desc);
+	void SetReverb();
+	void SetDelay(EffectParameters::Delay_DESC& delay_desc);
+	void SetLimiter(EffectParameters::Limiter_DESC& limiter_desc);
 	//サンプル数で再生時間を返す
-	//未実装
-	unsigned __int64 GetCurrentSampleTime();
+	int GetCurrentSampleTime();
 	IXAudio2SourceVoice** GetSource();
 	WAV GetWav();
 

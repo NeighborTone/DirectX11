@@ -91,10 +91,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	sound2.Load("Resource/se.wav");
 	Engine::GetSoundSystem().AddSource(sound);
 	Engine::GetSoundSystem().AddSource(sound2);
-	EffectParameters::REVERB_DESC rev;
-	rev.Diffusion = 0.5f;
-	rev.RoomSize = 0.3f;
-	sound2.SetReverb(rev);
+	sound2.SetReverb();
 	sound.PlayBGM();
 	Easing ease;
 
@@ -150,15 +147,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		{
 			ef.Play(Vec3(0, 2, 3));
 		}
-		if (KeyBoard::On(KeyBoard::Key::KEY_X))
+		if (KeyBoard::Down(KeyBoard::Key::KEY_X))
 		{
+			sound2.PlaySE();
 			ef2.Play(Vec3(0, 2, 3));
 		}
 		static int a = 1;
 		if (KeyBoard::Down(KeyBoard::Key::KEY_V))
 		{
 			physicsWorld.AddRigidBody(new DynamicBox(Vec3(camera.pos.x, 2, camera.pos.z +10), Vec3(1, 1, 1), 5));
-			sound2.PlaySE();
+			
+			
 			++a;
 		}
 		physicsWorld.pRigidBody[BOX_MAX + a]->AddVelocity(Vec3(0, 0, 10));

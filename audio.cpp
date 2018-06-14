@@ -113,7 +113,7 @@ void SoundSource::Destroy()
 	}
 }
 
-void SoundSource::SetEQ(EQ_DESC& eq_desc)
+void SoundSource::SetEQ(Equalizer_DESC& eq_desc)
 {
 	//作成したいエフェクトの種類を設定(FXEQ,FXReverb,FXMasteringLimiter,FXEcho)
 	IUnknown* effect;
@@ -150,11 +150,12 @@ void SoundSource::SetEQ(EQ_DESC& eq_desc)
 
 }
 
-void SoundSource::SetReverb(REVERB_DESC& reverb_desc)
+void SoundSource::SetSimpleReverb(SimpleReverb_DESC& reverb_desc)
 {
 	//作成したいエフェクトの種類を設定(FXEQ, FXReverb, FXMasteringLimiter, FXEcho)
 	IUnknown* effect;
-	CreateFX(__uuidof(FXEQ), &effect);
+
+	CreateFX(__uuidof(FXReverb), &effect);
 	XAUDIO2_EFFECT_DESCRIPTOR desc;
 	desc.InitialState = TRUE;
 	desc.OutputChannels = 2;      // 出力チャンネル数
@@ -176,7 +177,51 @@ void SoundSource::SetReverb(REVERB_DESC& reverb_desc)
 	pSource->SetEffectParameters(0, &reverb, sizeof(FXREVERB_PARAMETERS));
 }
 
-void SoundSource::SetDelay(EffectParameters::DELAY_DESC & delay_desc)
+void SoundSource::SetReverb()
+{
+	IUnknown* effect;
+	XAudio2CreateReverb(&effect);
+	XAUDIO2_EFFECT_DESCRIPTOR desc;
+	desc.InitialState = TRUE;
+	desc.OutputChannels = 2;      // 出力チャンネル数
+	desc.pEffect = effect; // エフェクトへのポインタ
+
+	XAUDIO2_EFFECT_CHAIN chain;
+	chain.pEffectDescriptors = &desc; // Descriptorへのポインタ、複数個接続する場合は配列の先頭
+	chain.EffectCount = 1;     // Descriptorがいくつあるのか
+
+	pSource->SetEffectChain(&chain);
+	effect->Release();
+
+	XAUDIO2FX_REVERB_PARAMETERS rev;
+	rev.ReflectionsDelay = XAUDIO2FX_REVERB_DEFAULT_REFLECTIONS_DELAY;
+	rev.ReverbDelay = XAUDIO2FX_REVERB_DEFAULT_REVERB_DELAY;
+	rev.RearDelay = XAUDIO2FX_REVERB_DEFAULT_REAR_DELAY;
+	rev.PositionLeft = XAUDIO2FX_REVERB_DEFAULT_POSITION;
+	rev.PositionRight = XAUDIO2FX_REVERB_DEFAULT_POSITION;
+	rev.PositionMatrixLeft = XAUDIO2FX_REVERB_DEFAULT_POSITION_MATRIX;
+	rev.PositionMatrixRight = XAUDIO2FX_REVERB_DEFAULT_POSITION_MATRIX;
+	rev.EarlyDiffusion = XAUDIO2FX_REVERB_DEFAULT_EARLY_DIFFUSION;
+	rev.LateDiffusion = XAUDIO2FX_REVERB_DEFAULT_LATE_DIFFUSION;
+	rev.LowEQGain = XAUDIO2FX_REVERB_DEFAULT_LOW_EQ_GAIN;
+	rev.LowEQCutoff = XAUDIO2FX_REVERB_DEFAULT_LOW_EQ_CUTOFF;
+	rev.HighEQGain = XAUDIO2FX_REVERB_DEFAULT_HIGH_EQ_GAIN;
+	rev.HighEQCutoff = XAUDIO2FX_REVERB_DEFAULT_HIGH_EQ_CUTOFF;
+	rev.RoomFilterFreq = XAUDIO2FX_REVERB_DEFAULT_ROOM_FILTER_FREQ;
+	rev.RoomFilterMain = XAUDIO2FX_REVERB_DEFAULT_ROOM_FILTER_MAIN;
+	rev.RoomFilterHF = XAUDIO2FX_REVERB_DEFAULT_ROOM_FILTER_HF;
+	rev.ReflectionsGain = XAUDIO2FX_REVERB_DEFAULT_REFLECTIONS_GAIN;
+	rev.ReverbGain = XAUDIO2FX_REVERB_DEFAULT_REVERB_GAIN;
+	rev.DecayTime = XAUDIO2FX_REVERB_DEFAULT_DECAY_TIME;
+	rev.Density = XAUDIO2FX_REVERB_DEFAULT_DENSITY;
+	rev.RoomSize = XAUDIO2FX_REVERB_DEFAULT_ROOM_SIZE;
+	rev.WetDryMix = XAUDIO2FX_REVERB_DEFAULT_WET_DRY_MIX;
+
+	//セットする
+	pSource->SetEffectParameters(0, &rev, sizeof(XAUDIO2FX_REVERB_PARAMETERS));
+}
+
+void SoundSource::SetDelay(EffectParameters::Delay_DESC & delay_desc)
 {
 	//作成したいエフェクトの種類を設定(FXEQ, FXReverb, FXMasteringLimiter, FXEcho)
 	IUnknown* effect;
@@ -196,14 +241,38 @@ void SoundSource::SetDelay(EffectParameters::DELAY_DESC & delay_desc)
 	FXECHO_PARAMETERS delay;
 	delay.WetDryMix = delay_desc.WetDryMix;
 	delay.Feedback = delay_desc.Feedback;
-	delay.WetDryMix = delay_desc.Delay;
+	delay.Delay = delay_desc.DelayTime;
 
 	//セットする
 	pSource->SetEffectParameters(0, &delay, sizeof(FXECHO_PARAMETERS));
 }
 
+void SoundSource::SetLimiter(Limiter_DESC& limiter_desc)
+{
+	//作成したいエフェクトの種類を設定(FXEQ, FXReverb, FXMasteringLimiter, FXEcho)
+	IUnknown* effect;
+	CreateFX(__uuidof(FXMasteringLimiter), &effect);
+	XAUDIO2_EFFECT_DESCRIPTOR desc;
+	desc.InitialState = TRUE;
+	desc.OutputChannels = 2;      // 出力チャンネル数
+	desc.pEffect = effect; // エフェクトへのポインタ
 
-unsigned __int64 SoundSource::GetCurrentSampleTime()
+	XAUDIO2_EFFECT_CHAIN chain;
+	chain.pEffectDescriptors = &desc; // Descriptorへのポインタ、複数個接続する場合は配列の先頭
+	chain.EffectCount = 1;     // Descriptorがいくつあるのか
+
+	pSource->SetEffectChain(&chain);
+	effect->Release();
+
+	FXMASTERINGLIMITER_PARAMETERS limiter;
+	limiter.Release = limiter_desc.Release;
+	limiter.Loudness = limiter_desc.Loudness;
+
+	//セットする
+	pSource->SetEffectParameters(0, &limiter, sizeof(FXMASTERINGLIMITER_PARAMETERS));
+}
+
+int SoundSource::GetCurrentSampleTime()
 {
 	GetState();
 	int currentTime = -1;
@@ -223,7 +292,6 @@ WAV SoundSource::GetWav()
 {
 	return wav;
 }
-
 
 SoundSystem::SoundSystem():
 	pXAudio2(nullptr),
@@ -282,10 +350,6 @@ bool SoundSystem::Create()
 	}
 	return true;
 }
-
-
-
-
 
 void SoundSystem::SetMasterGain(float gain)
 {
