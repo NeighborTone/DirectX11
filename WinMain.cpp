@@ -2,6 +2,7 @@
 #include "Model.h"
 #include "Particle.h"
 #include "Console.hpp"
+#include "Easing.hpp"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow)
 {
@@ -82,17 +83,25 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	physicsWorld.pGeometry[1]->SetPosition(me.pos);
 	physicsWorld.pGeometry[1]->SetRotation(me.angle);
 
-	Text text("Hoge",25);
+	Text text("Hoge");
 	text.scale /= (float)text.GetSize().y;
-	text.pos.y = 10;
-	SoundSource sound;
+	text.scale *= 2;
+	SoundSource sound,sound2;
 	sound.Load("Resource/Grass.wav");
-	Engine::GetSoundSystem().AddSourceUseCallBack(sound);
+	sound2.Load("Resource/se.wav");
+	Engine::GetSoundSystem().AddSource(sound);
+	Engine::GetSoundSystem().AddSource(sound2);
+	EffectParameters::REVERB_DESC rev;
+	rev.Diffusion = 0.5f;
+	rev.RoomSize = 0.3f;
+	sound2.SetReverb(rev);
 	sound.PlayBGM();
+	Easing ease;
+
 	while (ge.Run())
 	{
 		camera.Run();
-	
+		
 		if (KeyBoard::Down(KeyBoard::Key::KEY_ESCAPE) ||
 			Pad::Down(Pad::Button::PAD_START))
 		{
@@ -120,7 +129,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		if (KeyBoard::On(KeyBoard::Key::KEY_S))
 		{
 			go = true;
-
+			//text.pos.y = ease.bounce.InOut(ease.Time(14), 20, 10);
 		}
 		if (go)
 		{
@@ -135,7 +144,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 			}
 			me.pos.z += speed * dir;
 			physicsWorld.pGeometry[1]->SetPosition(me.pos);
-	
+			text.pos.y = ease.quad.In(ease.Time(10), 0, 10);
 		}
 		if (KeyBoard::Down(KeyBoard::Key::KEY_Z))
 		{
@@ -148,9 +157,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		static int a = 1;
 		if (KeyBoard::Down(KeyBoard::Key::KEY_V))
 		{
-			physicsWorld.AddRigidBody(new DynamicBox(Vec3(0, 2, camera.pos.z +10), Vec3(1, 1, 1), 5));
+			physicsWorld.AddRigidBody(new DynamicBox(Vec3(camera.pos.x, 2, camera.pos.z +10), Vec3(1, 1, 1), 5));
+			sound2.PlaySE();
 			++a;
-			sound.Stop();
 		}
 		physicsWorld.pRigidBody[BOX_MAX + a]->AddVelocity(Vec3(0, 0, 10));
 		me.pos = physicsWorld.pGeometry[1]->GetPosition();
@@ -182,7 +191,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		text.Draw();
 		//std::cout << Engine::GetFps().GetFrameRate() << std::endl;
 		
-		std::cout << sound.GetCurrentBufferTime() << std::endl;
+		std::cout << sound.GetCurrentSampleTime() << std::endl;
 	}
 
 	//I—¹

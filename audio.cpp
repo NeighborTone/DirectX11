@@ -1,5 +1,6 @@
 #include "audio.h"
 #include "Engine.h"
+using namespace EffectParameters;
 
 void SoundSource::GetState()
 {
@@ -112,12 +113,104 @@ void SoundSource::Destroy()
 	}
 }
 
-unsigned __int64 SoundSource::GetCurrentBufferTime()
+void SoundSource::SetEQ(EQ_DESC& eq_desc)
+{
+	//作成したいエフェクトの種類を設定(FXEQ,FXReverb,FXMasteringLimiter,FXEcho)
+	IUnknown* effect;
+	CreateFX(__uuidof(FXEQ), &effect);
+	XAUDIO2_EFFECT_DESCRIPTOR desc;
+	desc.InitialState = TRUE;
+	desc.OutputChannels = 2;      // 出力チャンネル数
+	desc.pEffect = effect; // エフェクトへのポインタ
+
+	XAUDIO2_EFFECT_CHAIN chain;
+	chain.pEffectDescriptors = &desc; // Descriptorへのポインタ、複数個接続する場合は配列の先頭
+	chain.EffectCount = 1;     // Descriptorがいくつあるのか
+
+	pSource->SetEffectChain(&chain);
+	effect->Release();
+
+	//イコライザー
+	FXEQ_PARAMETERS eq;
+	eq.Bandwidth0 = eq_desc.Bandwidth0;
+	eq.Bandwidth1 = eq_desc.Bandwidth1;
+	eq.Bandwidth2 = eq_desc.Bandwidth2;
+	eq.Bandwidth3 = eq_desc.Bandwidth3;
+	eq.Gain0 = eq_desc.Gain0;
+	eq.Gain1 = eq_desc.Gain1;
+	eq.Gain2 = eq_desc.Gain2;
+	eq.Gain3 = eq_desc.Gain3;
+	eq.FrequencyCenter0 = eq_desc.FrequencyCenter0;
+	eq.FrequencyCenter1 = eq_desc.FrequencyCenter1;
+	eq.FrequencyCenter2 = eq_desc.FrequencyCenter2;
+	eq.FrequencyCenter3 = eq_desc.FrequencyCenter3;
+	//セットする
+	pSource->SetEffectParameters(0, &eq, sizeof(FXEQ_PARAMETERS));
+
+
+}
+
+void SoundSource::SetReverb(REVERB_DESC& reverb_desc)
+{
+	//作成したいエフェクトの種類を設定(FXEQ, FXReverb, FXMasteringLimiter, FXEcho)
+	IUnknown* effect;
+	CreateFX(__uuidof(FXEQ), &effect);
+	XAUDIO2_EFFECT_DESCRIPTOR desc;
+	desc.InitialState = TRUE;
+	desc.OutputChannels = 2;      // 出力チャンネル数
+	desc.pEffect = effect; // エフェクトへのポインタ
+
+	XAUDIO2_EFFECT_CHAIN chain;
+	chain.pEffectDescriptors = &desc; // Descriptorへのポインタ、複数個接続する場合は配列の先頭
+	chain.EffectCount = 1;     // Descriptorがいくつあるのか
+
+	pSource->SetEffectChain(&chain);
+	effect->Release();
+
+	//リバーブ
+	FXREVERB_PARAMETERS reverb;
+	reverb.Diffusion = reverb_desc.Diffusion;
+	reverb.RoomSize = reverb_desc.RoomSize;
+
+	//セットする
+	pSource->SetEffectParameters(0, &reverb, sizeof(FXREVERB_PARAMETERS));
+}
+
+void SoundSource::SetDelay(EffectParameters::DELAY_DESC & delay_desc)
+{
+	//作成したいエフェクトの種類を設定(FXEQ, FXReverb, FXMasteringLimiter, FXEcho)
+	IUnknown* effect;
+	CreateFX(__uuidof(FXEcho), &effect);
+	XAUDIO2_EFFECT_DESCRIPTOR desc;
+	desc.InitialState = TRUE;
+	desc.OutputChannels = 2;      // 出力チャンネル数
+	desc.pEffect = effect; // エフェクトへのポインタ
+
+	XAUDIO2_EFFECT_CHAIN chain;
+	chain.pEffectDescriptors = &desc; // Descriptorへのポインタ、複数個接続する場合は配列の先頭
+	chain.EffectCount = 1;     // Descriptorがいくつあるのか
+
+	pSource->SetEffectChain(&chain);
+	effect->Release();
+
+	FXECHO_PARAMETERS delay;
+	delay.WetDryMix = delay_desc.WetDryMix;
+	delay.Feedback = delay_desc.Feedback;
+	delay.WetDryMix = delay_desc.Delay;
+
+	//セットする
+	pSource->SetEffectParameters(0, &delay, sizeof(FXECHO_PARAMETERS));
+}
+
+
+unsigned __int64 SoundSource::GetCurrentSampleTime()
 {
 	GetState();
-
-	unsigned __int64 currentTime;
-	currentTime = xstate.SamplesPlayed;
+	int currentTime = -1;
+	if (xstate.BuffersQueued > 0)
+	{
+		currentTime = (int)xstate.SamplesPlayed;
+	}
 	return currentTime;
 }
 
@@ -189,6 +282,8 @@ bool SoundSystem::Create()
 	}
 	return true;
 }
+
+
 
 
 

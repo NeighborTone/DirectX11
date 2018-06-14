@@ -408,7 +408,7 @@ void Model::SearchBlendIndex(int vertexIndex, int blendIndex, float blendWeight,
 {
 	for (int i = 0; i < 8; ++i)
 	{
-		if (item->vertices[vertexIndex].blendIndices[i] == blendIndex)
+		if (item->vertices[vertexIndex].blendIndices[i] == (unsigned)blendIndex)
 			return;
 
 		if (item->vertices[vertexIndex].blendIndices[i] < 999)
