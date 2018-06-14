@@ -62,7 +62,9 @@
     <ClCompile Include="Geometry.cpp">
       <Filter>Engine\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="Particle.cpp" />
+    <ClCompile Include="Particle.cpp">
+      <Filter>Engine\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -131,12 +133,14 @@
     <ClInclude Include="Geometry.h">
       <Filter>Engine\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="Particle.h" />
     <ClInclude Include="Counter.hpp">
       <Filter>Engine\Utilitys</Filter>
     </ClInclude>
     <ClInclude Include="Console.hpp">
       <Filter>Engine\Utilitys</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>Engine\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

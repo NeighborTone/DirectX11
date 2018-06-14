@@ -1,67 +1,65 @@
 #pragma once
 #include <cstdio>
 #include <iostream>
-namespace ci_ext
+
+//Win32アプリでcin、coutを許可するクラス
+class Console
 {
-
-	//Win32アプリでcin、coutを許可するクラス
-	class Console
+	std::FILE* in_;
+	std::FILE* out_;
+public:
+	Console()
 	{
-		std::FILE* in_;
-		std::FILE* out_;
+		AllocConsole();
+		freopen_s(&out_, "CONOUT$", "w", stdout); //標準出力をコンソールにする
+		freopen_s(&in_, "CONIN$", "r", stdin);  //標準入力をコンソールにする
+	}
+	~Console()
+	{
+		std::fclose(in_);
+		std::fclose(out_);
+		FreeConsole();
+	}
+};
+
+//coutでデバッグウインドウに出力できるようになるクラス
+class coutDbgString
+{
+	class DbgStreambuf : public std::streambuf
+	{
 	public:
-		Console()
+		std::streamsize xsputn(const char* s, std::streamsize n)
 		{
-			AllocConsole();
-			freopen_s(&out_, "CONOUT$", "w", stdout); //標準出力をコンソールにする
-			freopen_s(&in_, "CONIN$", "r", stdin);  //標準入力をコンソールにする
+			OutputDebugString(s);
+			return n;
 		}
-		~Console()
+		int_type overflow(int_type c = EOF)
 		{
-			std::fclose(in_);
-			std::fclose(out_);
-			FreeConsole();
+			if (c != EOF)
+			{
+				char buf[2] = { (char)c, '\0' };
+				OutputDebugString(buf);
+			}
+			return c;
 		}
 	};
-
-	//coutでデバッグウインドウに出力できるようになるクラス
-	class coutDbgString
+	std::streambuf* default_stream;
+	DbgStreambuf debug_stream;
+public:
+	coutDbgString()
 	{
-		class DbgStreambuf : public std::streambuf
-		{
-		public:
-			std::streamsize xsputn(const char* s, std::streamsize n)
-			{
-				OutputDebugString(s);
-				return n;
-			}
-			int_type overflow(int_type c = EOF)
-			{
-				if (c != EOF)
-				{
-					char buf[2] = { (char)c, '\0' };
-					OutputDebugString(buf);
-				}
-				return c;
-			}
-		};
-		std::streambuf* default_stream;
-		DbgStreambuf debug_stream;
-	public:
-		coutDbgString()
-		{
-			default_stream = std::cout.rdbuf(&debug_stream);
-		}
-		~coutDbgString()
-		{
-			std::cout.rdbuf(default_stream);
-		}
-	};
+		default_stream = std::cout.rdbuf(&debug_stream);
+	}
+	~coutDbgString()
+	{
+		std::cout.rdbuf(default_stream);
+	}
+
 
 #ifdef _DEBUG
 	//複数はサポートしない
-# define ShowConsole() ci_ext::Console c
-# define StartOutputDbgString() ci_ext::coutDbgString c
+# define ShowConsole() Console c
+# define StartOutputDbgString() coutDbgString c
 #else
 # define ShowConsole() __noop
 # define StartOutputDbgString() __noop
@@ -69,4 +67,4 @@ namespace ci_ext
 
 #define dout std::cout << __FUNCTION__ << ":"
 #define FILENAME_AND_LINE __FILE__ << ":" << __LINE__
-}
+};

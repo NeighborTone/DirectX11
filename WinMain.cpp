@@ -5,9 +5,9 @@
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow)
 {
-	ci_ext::Console();
+	Console();
 	ShowConsole();
-	constexpr int BOX_MAX = 30;
+	constexpr int BOX_MAX = 3;
 	//ゲームエンジン生成
 	Engine ge("DirectX11",640,480,true);
 
@@ -85,6 +85,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	Text text("Hoge",25);
 	text.scale /= (float)text.GetSize().y;
 	text.pos.y = 10;
+	SoundSource sound;
+	sound.Load("Resource/Grass.wav");
+	Engine::GetSoundSystem().AddSourceUseCallBack(sound);
+	sound.PlayBGM();
 	while (ge.Run())
 	{
 		camera.Run();
@@ -146,7 +150,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		{
 			physicsWorld.AddRigidBody(new DynamicBox(Vec3(0, 2, camera.pos.z +10), Vec3(1, 1, 1), 5));
 			++a;
-			
+			sound.Stop();
 		}
 		physicsWorld.pRigidBody[BOX_MAX + a]->AddVelocity(Vec3(0, 0, 10));
 		me.pos = physicsWorld.pGeometry[1]->GetPosition();
@@ -176,7 +180,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		ef2.Draw(camera);
 
 		text.Draw();
-		std::cout << Engine::GetFps().GetFrameRate() << std::endl;
+		//std::cout << Engine::GetFps().GetFrameRate() << std::endl;
+		
+		std::cout << sound.GetCurrentBufferTime() << std::endl;
 	}
 
 	//終了

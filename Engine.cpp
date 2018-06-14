@@ -30,7 +30,13 @@ void Engine::COMInitialize()
 	if (!isInitialized)
 	{
 		//COMの初期化
-		CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
+		/*CoinitializeExの第一引数は使われていないので0（ないしNULL）を指定する。
+		第二引数は、初期化フラグを指定し、COINIT列挙値の値を使用する。ほとんどの場合、ここにはCOINIT_MULTITHREADEDかCOINIT_APARTMENTTHREADEDのどちらかを指定する。
+		COINIT_MULTITHREADEDにした場合、現在のスレッドのアパートメント属性として、MTA（マルチスレッドアパートメント）に属するように設定する。
+		COINIT_APARTMENTTHREADEDにした場合、STA（シングルスレッドアパートメント）に属するように設定する（そして、CoInitializeを使用すると、STA固定となる）
+		マルチスレッドアパートメントに設定すると、そのスレッドは、COMコンポーネントとのやり取りで発生するすべてのスレッド同期作業を、自分で行うと宣言したことになる。
+		シングルスレッドアパートメントに設定すると、そのスレッドは、COMコンポーネントとのやり取りで発生するすべてのスレッド同期作業を、COMが背後で面倒見てほしいと宣言したことになる。*/
+		CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 		// メモリリーク検出
 		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 		//_CrtSetBreakAlloc(37335);

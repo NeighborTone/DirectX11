@@ -1,6 +1,15 @@
 #include "audio.h"
 #include "Engine.h"
 
+void SoundSource::GetState()
+{
+#if (_WIN32_WINNT >= _WIN32_WINNT_WIN8)
+	pSource->GetState(&xstate, 0);
+#else
+	pSource->GetState(&xstate);
+#endif
+}
+
 SoundSource::SoundSource()
 {
 	pSource = nullptr;
@@ -103,6 +112,25 @@ void SoundSource::Destroy()
 	}
 }
 
+unsigned __int64 SoundSource::GetCurrentBufferTime()
+{
+	GetState();
+
+	unsigned __int64 currentTime;
+	currentTime = xstate.SamplesPlayed;
+	return currentTime;
+}
+
+IXAudio2SourceVoice** SoundSource::GetSource()
+{
+	return &pSource;
+}
+
+WAV SoundSource::GetWav()
+{
+	return wav;
+}
+
 
 SoundSystem::SoundSystem():
 	pXAudio2(nullptr),
@@ -116,19 +144,13 @@ void SoundSystem::DestroySystem(SoundSource& source)
 {
 	//解放順は
 	//Source→Master→XAudio2
-	if (source.pSource != nullptr)
-	{
-		source.pSource->Stop(0);
-		source.pSource->DestroyVoice();
-		source.pSource = nullptr;
-	}
+	source.Destroy();
 	//マスターボイス破棄
 	if (pMaster != nullptr)
 	{
 		pMaster->DestroyVoice();
 		pMaster = nullptr;
 	}
-	
 }
 
 SoundSystem::~SoundSystem()
@@ -139,14 +161,12 @@ SoundSystem::~SoundSystem()
 		pMaster->DestroyVoice();
 		pMaster = nullptr;
 	}
-
 }
 
 
 bool SoundSystem::Create()
 {
 	HRESULT hr;
-	
 	//XAudio2の初期化
 	hr = XAudio2Create(&pXAudio2, 0);
 	if (FAILED(hr))
@@ -167,9 +187,10 @@ bool SoundSystem::Create()
 		MessageBox(NULL, "マスターボイスの初期化に失敗しました", "Error", MB_OK);
 		return false;
 	}
-
 	return true;
 }
+
+
 
 void SoundSystem::SetMasterGain(float gain)
 {
@@ -180,8 +201,28 @@ bool SoundSystem::AddSource(SoundSource& source)
 {
 	HRESULT hr;
 	hr = pXAudio2->CreateSourceVoice(
-		&source.pSource,
-		&source.wav.GetWaveFmtEx());
+		source.GetSource(),
+		&source.GetWav().GetWaveFmtEx());
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, "ソースボイスの追加に失敗しました", "Error", MB_OK);
+		return false;
+	}
+	return true;
+}
+
+bool SoundSystem::AddSourceUseCallBack(SoundSource & source)
+{
+	HRESULT hr;
+	hr = pXAudio2->CreateSourceVoice(
+		source.GetSource(),
+		&source.GetWav().GetWaveFmtEx(),
+		0, 
+		XAUDIO2_DEFAULT_FREQ_RATIO, 
+		&voiceCallback, 
+		NULL, 
+		NULL);
+
 	if (FAILED(hr))
 	{
 		MessageBox(NULL, "ソースボイスの追加に失敗しました", "Error", MB_OK);
