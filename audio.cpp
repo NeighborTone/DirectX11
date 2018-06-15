@@ -45,7 +45,7 @@ void SoundSource::PlayBGM(int loopNum,float gain, float pitch)
 	buf.AudioBytes = wav.GetWaveSize();
 	buf.pAudioData = wav.GetWaveData();
 	buf.Flags = XAUDIO2_END_OF_STREAM;	//このバッファの後にデータがないことをソースボイスに伝える
-	buf.LoopCount = loopNum;	//ループ回数を指定。デフォルトで無限ループ
+	buf.LoopCount = loopNum;	//ループ回数を指定。デフォルトで無限ループにしておく
 	buf.LoopBegin = 0;
 	pSource->SetFrequencyRatio(pitch);	//ピッチ
 	pSource->SetVolume(gain);					//ゲイン
@@ -102,6 +102,10 @@ void SoundSource::Stop()
 		pSource->SubmitSourceBuffer(&buf, nullptr);	//Sourceに音源の情報を送る
 	}
 	
+}
+void SoundSource::ExitLoop()
+{
+	pSource->ExitLoop();
 }
 void SoundSource::Destroy()
 {
@@ -177,7 +181,7 @@ void SoundSource::SetSimpleReverb(SimpleReverb_DESC& reverb_desc)
 	pSource->SetEffectParameters(0, &reverb, sizeof(FXREVERB_PARAMETERS));
 }
 
-void SoundSource::SetReverb()
+void SoundSource::SetReverb(Reverb_DESC& reverb_desc)
 {
 	IUnknown* effect;
 	XAudio2CreateReverb(&effect);
@@ -194,34 +198,35 @@ void SoundSource::SetReverb()
 	effect->Release();
 
 	XAUDIO2FX_REVERB_PARAMETERS rev;
-	rev.ReflectionsDelay = XAUDIO2FX_REVERB_DEFAULT_REFLECTIONS_DELAY;
-	rev.ReverbDelay = XAUDIO2FX_REVERB_DEFAULT_REVERB_DELAY;
-	rev.RearDelay = XAUDIO2FX_REVERB_DEFAULT_REAR_DELAY;
-	rev.PositionLeft = XAUDIO2FX_REVERB_DEFAULT_POSITION;
-	rev.PositionRight = XAUDIO2FX_REVERB_DEFAULT_POSITION;
-	rev.PositionMatrixLeft = XAUDIO2FX_REVERB_DEFAULT_POSITION_MATRIX;
-	rev.PositionMatrixRight = XAUDIO2FX_REVERB_DEFAULT_POSITION_MATRIX;
-	rev.EarlyDiffusion = XAUDIO2FX_REVERB_DEFAULT_EARLY_DIFFUSION;
-	rev.LateDiffusion = XAUDIO2FX_REVERB_DEFAULT_LATE_DIFFUSION;
-	rev.LowEQGain = XAUDIO2FX_REVERB_DEFAULT_LOW_EQ_GAIN;
-	rev.LowEQCutoff = XAUDIO2FX_REVERB_DEFAULT_LOW_EQ_CUTOFF;
-	rev.HighEQGain = XAUDIO2FX_REVERB_DEFAULT_HIGH_EQ_GAIN;
-	rev.HighEQCutoff = XAUDIO2FX_REVERB_DEFAULT_HIGH_EQ_CUTOFF;
-	rev.RoomFilterFreq = XAUDIO2FX_REVERB_DEFAULT_ROOM_FILTER_FREQ;
-	rev.RoomFilterMain = XAUDIO2FX_REVERB_DEFAULT_ROOM_FILTER_MAIN;
-	rev.RoomFilterHF = XAUDIO2FX_REVERB_DEFAULT_ROOM_FILTER_HF;
-	rev.ReflectionsGain = XAUDIO2FX_REVERB_DEFAULT_REFLECTIONS_GAIN;
-	rev.ReverbGain = XAUDIO2FX_REVERB_DEFAULT_REVERB_GAIN;
-	rev.DecayTime = XAUDIO2FX_REVERB_DEFAULT_DECAY_TIME;
-	rev.Density = XAUDIO2FX_REVERB_DEFAULT_DENSITY;
-	rev.RoomSize = XAUDIO2FX_REVERB_DEFAULT_ROOM_SIZE;
-	rev.WetDryMix = XAUDIO2FX_REVERB_DEFAULT_WET_DRY_MIX;
+	rev.WetDryMix = reverb_desc.WetDryMix;
+	rev.ReflectionsDelay = reverb_desc.ReflectionsDelay;
+	rev.ReverbDelay = reverb_desc.ReverbDelay;
+	rev.RearDelay = reverb_desc.RearDelay;
+	rev.PositionLeft = reverb_desc.PositionLeft;
+	rev.PositionRight = reverb_desc.PositionRight;
+	rev.PositionMatrixLeft = reverb_desc.PositionMatrixLeft;
+	rev.PositionMatrixRight = reverb_desc.PositionMatrixRight;
+	rev.EarlyDiffusion = reverb_desc.EarlyDiffusion;
+	rev.LateDiffusion = reverb_desc.LateDiffusion;
+	rev.LowEQGain = reverb_desc.LowEQGain;
+	rev.LowEQCutoff = reverb_desc.LowEQCutoff;
+	rev.HighEQGain = reverb_desc.HighEQGain;
+	rev.HighEQCutoff = reverb_desc.HighEQCutoff;
+	rev.RoomFilterFreq = reverb_desc.RoomFilterFreq;
+	rev.RoomFilterMain = reverb_desc.RoomFilterMain;
+	rev.RoomFilterHF = reverb_desc.RoomFilterHF;
+	rev.ReflectionsGain = reverb_desc.ReflectionsGain;
+	rev.ReverbGain = reverb_desc.ReverbGain;
+	rev.DecayTime = reverb_desc.DecayTime;
+	rev.Density = reverb_desc.Density;
+	rev.RoomSize = reverb_desc.RoomSize;
+	
 
 	//セットする
 	pSource->SetEffectParameters(0, &rev, sizeof(XAUDIO2FX_REVERB_PARAMETERS));
 }
 
-void SoundSource::SetDelay(EffectParameters::Delay_DESC & delay_desc)
+void SoundSource::SetDelay(Delay_DESC & delay_desc)
 {
 	//作成したいエフェクトの種類を設定(FXEQ, FXReverb, FXMasteringLimiter, FXEcho)
 	IUnknown* effect;
@@ -270,6 +275,87 @@ void SoundSource::SetLimiter(Limiter_DESC& limiter_desc)
 
 	//セットする
 	pSource->SetEffectParameters(0, &limiter, sizeof(FXMASTERINGLIMITER_PARAMETERS));
+}
+
+void SoundSource::SetMultiEffecter(Equalizer_DESC& eq_desc, Reverb_DESC& reverb_desc, Delay_DESC& delay_desc, Limiter_DESC& limiter_desc)
+{
+	//作成したいエフェクトの種類を設定(FXEQ, FXReverb, FXMasteringLimiter, FXEcho)
+	IUnknown* effect[4];
+	CreateFX(__uuidof(FXEQ), &effect[0]);
+	XAudio2CreateReverb(&effect[1]);
+	CreateFX(__uuidof(FXEcho), &effect[2]);
+	CreateFX(__uuidof(FXMasteringLimiter), &effect[3]);
+
+	XAUDIO2_EFFECT_DESCRIPTOR desc[4];
+	int i = 0;
+	for (auto &it : desc)
+	{
+		it.InitialState = true;
+		it.OutputChannels = 2;
+		it.pEffect = effect[i];
+		++i;
+	}
+
+
+	XAUDIO2_EFFECT_CHAIN chain;
+	chain.pEffectDescriptors = &desc[0]; // Descriptorへのポインタ、複数個接続する場合は配列の先頭
+	chain.EffectCount = 4;     // Descriptorがいくつあるのか
+
+	pSource->SetEffectChain(&chain);
+	for (auto &it : effect)
+	{
+		it->Release();
+	}
+
+	FXEQ_PARAMETERS eq;
+	eq.Bandwidth0 = eq_desc.Bandwidth0;
+	eq.Bandwidth1 = eq_desc.Bandwidth1;
+	eq.Bandwidth2 = eq_desc.Bandwidth2;
+	eq.Bandwidth3 = eq_desc.Bandwidth3;
+	eq.Gain0 = eq_desc.Gain0;
+	eq.Gain1 = eq_desc.Gain1;
+	eq.Gain2 = eq_desc.Gain2;
+	eq.Gain3 = eq_desc.Gain3;
+	eq.FrequencyCenter0 = eq_desc.FrequencyCenter0;
+	eq.FrequencyCenter1 = eq_desc.FrequencyCenter1;
+	eq.FrequencyCenter2 = eq_desc.FrequencyCenter2;
+	eq.FrequencyCenter3 = eq_desc.FrequencyCenter3;
+	XAUDIO2FX_REVERB_PARAMETERS rev;
+	rev.WetDryMix = reverb_desc.WetDryMix;
+	rev.ReflectionsDelay = reverb_desc.ReflectionsDelay;
+	rev.ReverbDelay = reverb_desc.ReverbDelay;
+	rev.RearDelay = reverb_desc.RearDelay;
+	rev.PositionLeft = reverb_desc.PositionLeft;
+	rev.PositionRight = reverb_desc.PositionRight;
+	rev.PositionMatrixLeft = reverb_desc.PositionMatrixLeft;
+	rev.PositionMatrixRight = reverb_desc.PositionMatrixRight;
+	rev.EarlyDiffusion = reverb_desc.EarlyDiffusion;
+	rev.LateDiffusion = reverb_desc.LateDiffusion;
+	rev.LowEQGain = reverb_desc.LowEQGain;
+	rev.LowEQCutoff = reverb_desc.LowEQCutoff;
+	rev.HighEQGain = reverb_desc.HighEQGain;
+	rev.HighEQCutoff = reverb_desc.HighEQCutoff;
+	rev.RoomFilterFreq = reverb_desc.RoomFilterFreq;
+	rev.RoomFilterMain = reverb_desc.RoomFilterMain;
+	rev.RoomFilterHF = reverb_desc.RoomFilterHF;
+	rev.ReflectionsGain = reverb_desc.ReflectionsGain;
+	rev.ReverbGain = reverb_desc.ReverbGain;
+	rev.DecayTime = reverb_desc.DecayTime;
+	rev.Density = reverb_desc.Density;
+	rev.RoomSize = reverb_desc.RoomSize;
+	FXECHO_PARAMETERS delay;
+	delay.WetDryMix = delay_desc.WetDryMix;
+	delay.Feedback = delay_desc.Feedback;
+	delay.Delay = delay_desc.DelayTime;
+	FXMASTERINGLIMITER_PARAMETERS limiter;
+	limiter.Release = limiter_desc.Release;
+	limiter.Loudness = limiter_desc.Loudness;
+
+	//セットする
+	pSource->SetEffectParameters(0, &eq, sizeof(FXEQ_PARAMETERS));
+	pSource->SetEffectParameters(1, &rev, sizeof(XAUDIO2FX_REVERB_PARAMETERS));
+	pSource->SetEffectParameters(2, &delay, sizeof(FXECHO_PARAMETERS));
+	pSource->SetEffectParameters(3, &limiter, sizeof(FXMASTERINGLIMITER_PARAMETERS));
 }
 
 int SoundSource::GetCurrentSampleTime()
@@ -370,7 +456,7 @@ bool SoundSystem::AddSource(SoundSource& source)
 	return true;
 }
 
-bool SoundSystem::AddSourceUseCallBack(SoundSource & source)
+bool SoundSystem::AddSourceUseCallBack(SoundSource& source)
 {
 	HRESULT hr;
 	hr = pXAudio2->CreateSourceVoice(

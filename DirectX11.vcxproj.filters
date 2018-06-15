@@ -145,6 +145,9 @@
     <ClInclude Include="Easing.hpp">
       <Filter>Engine\Utilitys</Filter>
     </ClInclude>
+    <ClInclude Include="EffectParameter.hpp">
+      <Filter>Engine\Sounds</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Engine">

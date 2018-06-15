@@ -91,7 +91,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	sound2.Load("Resource/se.wav");
 	Engine::GetSoundSystem().AddSource(sound);
 	Engine::GetSoundSystem().AddSource(sound2);
-	sound2.SetReverb();
+	EffectParameters::Equalizer_DESC eq;
+	eq.FrequencyCenter3 = 200.0f;
+	eq.Gain3 = 0.126f;
+	EffectParameters::Reverb_DESC rev;
+	rev.RoomSize = 50.0f;
+	EffectParameters::Delay_DESC delay;
+	delay.DelayTime = 300;
+	EffectParameters::Limiter_DESC limiter;
+	limiter.Loudness = 1100;
+	sound2.SetMultiEffecter(eq,rev,delay,limiter);
 	sound.PlayBGM();
 	Easing ease;
 
