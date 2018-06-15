@@ -1,4 +1,5 @@
 #pragma once
+#pragma warning (disable : 4458)	//this‚ðŽg‚¤
 #include "Engine.h"
 #include "Utility.hpp"
 

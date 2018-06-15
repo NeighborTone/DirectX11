@@ -1,3 +1,6 @@
+//---------------------//
+//FBXSDK‚ª•K—v‚Å‚·//
+//---------------------//
 #pragma once
 #include <vector>
 #include <memory>

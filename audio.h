@@ -1,28 +1,19 @@
 #pragma once
+#pragma warning (disable : 4100)	//コールバック関数
 #include <atlbase.h>
 #include <XAudio2.h>
 #include "EffectParameter.hpp"
 #include "wav.h"
+#include "ogg.h"
 
 #define _USE_VOICECALLBACK_
 #pragma comment(lib,"XAudio2.lib")
 
-
-class XAudio2Callback : public IXAudio2VoiceCallback {
-private:
-	HANDLE handle;
-public:
-	XAudio2Callback() { }
-	~XAudio2Callback() { }
-	void STDMETHODCALLTYPE OnVoiceProcessingPassStart(UINT32 BytesRequired) { }
-	void STDMETHODCALLTYPE OnVoiceProcessingPassEnd(void) { }
-	void STDMETHODCALLTYPE OnStreamEnd(void) { SetEvent(handle); }
-	void STDMETHODCALLTYPE OnBufferStart(void *pBufferContext) { SetEvent(handle); }
-	void STDMETHODCALLTYPE OnBufferEnd(void *pBufferContext) { }
-	void STDMETHODCALLTYPE OnLoopEnd(void *pBufferContext) { }
-	void STDMETHODCALLTYPE OnVoiceError(void *pBufferContext, HRESULT Error) { }
+enum FileType
+{
+	WAVE,
+	OGG
 };
-
 class SoundSource
 {
 private:
@@ -31,15 +22,17 @@ private:
 	//ソースヴォイス(ここに音源が格納される
 	IXAudio2SourceVoice* pSource;
 	//wavデータ格納用
-	WAV					  wav;
+	Wav wav;
+	Ogg ogg;
 	XAUDIO2_VOICE_STATE xstate;
 	void GetState();
-
+	
+	FileType fileType;
 public:
 	SoundSource();
 	SoundSource(SoundSource& sound);
 	~SoundSource();
-	bool Load(const char* path);
+	bool Load(const std::string path);
 	void PlayBGM(int loopNum = XAUDIO2_LOOP_INFINITE, float gain = 1.0f, float pitch = 1.0f);
 	void PlaySE(float gain = 1.0f, float pitch = 1.0f);
 	//一時停止
@@ -67,14 +60,42 @@ public:
 	//サンプル数で再生時間を返す
 	int GetCurrentSampleTime();
 	IXAudio2SourceVoice** GetSource();
-	WAV GetWav();
-
+	Wav GetWav();
+	Ogg GetOgg();
+	FileType GetFileType();
 };
 
 //サウンド管理部
 class SoundSystem 
 {
 private:
+	class XAudio2Callback : public IXAudio2VoiceCallback 
+	{
+	private:
+		HANDLE handle;
+	public:
+		XAudio2Callback() { }
+		~XAudio2Callback() { }
+		void STDMETHODCALLTYPE OnVoiceProcessingPassStart(UINT32 BytesRequired) override
+		{ }
+		void STDMETHODCALLTYPE OnVoiceProcessingPassEnd() override
+		{ }
+		void STDMETHODCALLTYPE OnStreamEnd() override
+		{
+			SetEvent(handle);
+		}
+		void STDMETHODCALLTYPE OnBufferStart(void* pBufferContext) override
+		{
+			SetEvent(handle);
+		}
+		void STDMETHODCALLTYPE OnBufferEnd(void* pBufferContext) override
+		{ }
+		void STDMETHODCALLTYPE OnLoopEnd(void* pBufferContext) override
+		{ }
+		void STDMETHODCALLTYPE OnVoiceError(void* pBufferContext, HRESULT Error) override
+		{ }
+	};
+
 	XAudio2Callback voiceCallback;
 	//インターフェース
 	ATL::CComPtr<IXAudio2> pXAudio2;

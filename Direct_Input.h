@@ -78,7 +78,7 @@ public:
 	//はなされた
 	bool Pull(const int key, const int no);
 
-	BYTE GetPovPosition(const int no);          // 十字キーの位置を取得 
+	int GetPovPosition(const int no);          // 十字キーの位置を取得 
 };
 
 class DxMouse

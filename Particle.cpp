@@ -43,7 +43,7 @@ void Particle::Create()
 	manager->SetTextureLoader(renderer->CreateTextureLoader());
 }
 
-void Particle::Play(Vec3& pos)
+void Particle::Play(Vec3&& pos)
 {
 	manager->Play(effect, pos.x, pos.y, pos.z);
 }

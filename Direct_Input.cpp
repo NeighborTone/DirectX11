@@ -211,6 +211,7 @@ LPDIRECTINPUTDEVICE8 PadInput::pPad[PadInput::padNum] =
 
 BOOL CALLBACK PadInput::EnumPadCallback(const DIDEVICEINSTANCE* inst, void* pContext)
 {
+
 	//保存
 	static GUID padGuid[padNum];
 	//すでに取得済みのデバイスだった場合にはもう一度実行する
@@ -393,11 +394,11 @@ bool PadInput::Pull(const int key, const int no)
 	return input == 0 && prevInput != 0;
 }
 
-BYTE PadInput::GetPovPosition(const int no)
+int PadInput::GetPovPosition(const int no)
 {
 	if (!pPad[0])
 	{
-		return (BYTE)0xffffffff;	//パッドが接続されていなければ未押下状態を返す
+		return 0xffffffff;	//パッドが接続されていなければ未押下状態を返す
 	}
 	switch (buf[no].rgdwPOV[no])
 	{
@@ -420,7 +421,7 @@ BYTE PadInput::GetPovPosition(const int no)
 		return PAD_LEFT | PAD_UP;
 	}
 
-	return (BYTE)0xffffffff;	//未押下時
+	return 0xffffffff;	//未押下時
 
 }
 

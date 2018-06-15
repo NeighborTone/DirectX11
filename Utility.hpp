@@ -1,4 +1,5 @@
 #pragma once
+#pragma warning (disable : 4458)	 //this‚ðŽg‚¤
 #include <Windows.h>
 #include <DirectXMath.h>
 #include <math.h>
@@ -17,7 +18,7 @@ public:
 	x(0),
 	y(0)
 	{};
-	TemplateVec2(T x, T y)
+	TemplateVec2(const T x, const T y)
 	{
 		this->x = x;
 		this->y = y;
@@ -242,7 +243,7 @@ public:
 		y(0),
 		z(0)
 	{}
-	TemplateVec3(T x, T y, T z)
+	TemplateVec3(const T x, const T y, const T z)
 	{
 		this->x = x;
 		this->y = y;

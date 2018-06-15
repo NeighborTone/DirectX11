@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 
-class WAV
+class Wav
 {
 private:
 	HMMIO						mmio;			// MMIO ハンドル
@@ -25,11 +25,11 @@ private:
 	bool IsDATAChunk();						// DAtA チャンクがあるかチェック
 
 public:
-	WAV();
-	~WAV();
+	Wav();
+	~Wav();
 
 	bool Load(const std::string &path);
-
+	void SetWAVEFORMATEX(WAVEFORMATEX&& wav);
 	const WAVEFORMATEX&		GetWaveFmtEx()const;	// WAVE フォーマットを取得
 	const std::string&		GetFileName()const;		// ファイル名の取得
 	const BYTE*				GetWaveData()const;			// Wave データを取得

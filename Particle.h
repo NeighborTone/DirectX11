@@ -1,4 +1,5 @@
 #pragma once
+#pragma warning (disable : 4100)	
 #include "DirectXMath.h"
 #include "Effekseer.h"
 #include "EffekseerRendererDX11.h"
@@ -30,7 +31,7 @@ public:
 	Particle();
 	~Particle();
 	void Load(const char* path);
-	void Play(Vec3& pos);
+	void Play(Vec3&& pos);
 	void Draw(Camera &camera);
 
 	

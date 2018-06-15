@@ -27,14 +27,32 @@ SoundSource::~SoundSource()
 	Destroy();
 }
 
-bool SoundSource::Load(const char* path)
+bool SoundSource::Load(const std::string path)
 {
-	if (!wav.Load(path))
-	{
-		MessageBox(NULL, "ソースボイスの作成に失敗しました", "Error", MB_OK);
-		return false;
-	}
+	std::string str_ogg = ".ogg";
+	std::string str_wav = ".wav";
+	
 
+	if(std::equal(path.begin() + path.find("."), path.end(), str_ogg.begin()))
+	{
+		fileType = OGG;
+		if (!ogg.Load(path))
+		{
+			MessageBox(NULL, "ソースボイスの作成に失敗しました", "Error", MB_OK);
+			return false;
+		}
+	}
+	if(std::equal(path.begin() + path.find("."), path.end(), str_wav.begin()))
+	{
+		fileType = WAVE;
+		if (!wav.Load(path.c_str()))
+		{
+			MessageBox(NULL, "ソースボイスの作成に失敗しました", "Error", MB_OK);
+			return false;
+		}
+	}
+	
+	
 	return true;
 }
 
@@ -42,8 +60,16 @@ void SoundSource::PlayBGM(int loopNum,float gain, float pitch)
 {	
 	HRESULT hr;
 	buf = { 0 };
-	buf.AudioBytes = wav.GetWaveSize();
-	buf.pAudioData = wav.GetWaveData();
+	if (fileType == WAVE)
+	{
+		buf.AudioBytes = wav.GetWaveSize();
+		buf.pAudioData = wav.GetWaveData();
+	}
+	else
+	{
+		buf.AudioBytes = ogg.GetSize();
+		buf.pAudioData = ogg.GetData();
+	}
 	buf.Flags = XAUDIO2_END_OF_STREAM;	//このバッファの後にデータがないことをソースボイスに伝える
 	buf.LoopCount = loopNum;	//ループ回数を指定。デフォルトで無限ループにしておく
 	buf.LoopBegin = 0;
@@ -64,8 +90,16 @@ void SoundSource::PlayBGM(int loopNum,float gain, float pitch)
 void SoundSource::PlaySE(float gain, float pitch)
 {
 	buf = { 0 };
-	buf.AudioBytes = wav.GetWaveSize();
-	buf.pAudioData = wav.GetWaveData();
+	if (fileType == WAVE)
+	{
+		buf.AudioBytes = wav.GetWaveSize();
+		buf.pAudioData = wav.GetWaveData();
+	}
+	else
+	{
+		buf.AudioBytes = ogg.GetSize();
+		buf.pAudioData = ogg.GetData();
+	}
 	buf.Flags = XAUDIO2_END_OF_STREAM;
 	buf.LoopCount = 0;	//ループ回数を指定。
 	buf.LoopBegin = 0;
@@ -374,9 +408,19 @@ IXAudio2SourceVoice** SoundSource::GetSource()
 	return &pSource;
 }
 
-WAV SoundSource::GetWav()
+Wav SoundSource::GetWav()
 {
 	return wav;
+}
+
+Ogg SoundSource::GetOgg()
+{
+	return ogg;
+}
+
+FileType SoundSource::GetFileType()
+{
+	return fileType;
 }
 
 SoundSystem::SoundSystem():
@@ -445,9 +489,18 @@ void SoundSystem::SetMasterGain(float gain)
 bool SoundSystem::AddSource(SoundSource& source)
 {
 	HRESULT hr;
-	hr = pXAudio2->CreateSourceVoice(
-		source.GetSource(),
-		&source.GetWav().GetWaveFmtEx());
+	if (source.GetFileType() == WAVE)
+	{
+		hr = pXAudio2->CreateSourceVoice(
+			source.GetSource(),
+			&source.GetWav().GetWaveFmtEx());
+	}
+	else
+	{
+		hr = pXAudio2->CreateSourceVoice(
+			source.GetSource(),
+			&source.GetOgg().GetWav());
+	}
 	if (FAILED(hr))
 	{
 		MessageBox(NULL, "ソースボイスの追加に失敗しました", "Error", MB_OK);
@@ -459,15 +512,28 @@ bool SoundSystem::AddSource(SoundSource& source)
 bool SoundSystem::AddSourceUseCallBack(SoundSource& source)
 {
 	HRESULT hr;
-	hr = pXAudio2->CreateSourceVoice(
-		source.GetSource(),
-		&source.GetWav().GetWaveFmtEx(),
-		0, 
-		XAUDIO2_DEFAULT_FREQ_RATIO, 
-		&voiceCallback, 
-		NULL, 
-		NULL);
-
+	if (source.GetFileType() == WAVE)
+	{
+		hr = pXAudio2->CreateSourceVoice(
+			source.GetSource(),
+			&source.GetWav().GetWaveFmtEx(),
+			0,
+			XAUDIO2_DEFAULT_FREQ_RATIO,
+			&voiceCallback,
+			NULL,
+			NULL);
+	}
+	else
+	{
+		hr = pXAudio2->CreateSourceVoice(
+			source.GetSource(),
+			&source.GetOgg().GetWav(),
+			0,
+			XAUDIO2_DEFAULT_FREQ_RATIO,
+			&voiceCallback,
+			NULL,
+			NULL);
+	}
 	if (FAILED(hr))
 	{
 		MessageBox(NULL, "ソースボイスの追加に失敗しました", "Error", MB_OK);

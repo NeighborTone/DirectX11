@@ -1,19 +1,19 @@
 #include "wav.h"
 using namespace std;
 
-WAV::WAV()
+Wav::Wav()
 {
 	mmio = NULL;
 	SecureZeroMemory(&fmt, sizeof(fmt));
 	wavData.clear();
 }
 
-WAV::~WAV()
+Wav::~Wav()
 {
 	Close();
 }
 
-bool WAV::Open(const std::string &path)
+bool Wav::Open(const std::string& path)
 {
 	name = path;
 
@@ -29,7 +29,7 @@ bool WAV::Open(const std::string &path)
 	return true;
 }
 
-bool WAV::Close()
+bool Wav::Close()
 {
 	if (mmioClose(mmio, MMIO_FHOPEN) == MMIOERR_CANNOTWRITE)
 	{
@@ -38,7 +38,7 @@ bool WAV::Close()
 	return true;
 }
 
-bool WAV::IsFMTChunk()
+bool Wav::IsFMTChunk()
 {
 	fmt.ckid = mmioFOURCC('f', 'm', 't', ' ');
 
@@ -50,7 +50,7 @@ bool WAV::IsFMTChunk()
 	return true;
 }
 
-bool WAV::IsDATAChunk()
+bool Wav::IsDATAChunk()
 {
 	data.ckid = mmioFOURCC('d', 'a', 't', 'a');
 
@@ -62,11 +62,11 @@ bool WAV::IsDATAChunk()
 	return true;
 }
 
-bool WAV::ReadToWaveFmtEx()
+bool Wav::ReadToWaveFmtEx()
 {
 	//mmioReadは成功すると読み込んだサイズを返す
+	//waveに情報を格納
 	LONG readSize = mmioRead(mmio, reinterpret_cast<HPSTR>(&wave), fmt.cksize);
-
 	switch (readSize)
 	{
 		//それ以上読み込めない
@@ -78,7 +78,7 @@ bool WAV::ReadToWaveFmtEx()
 		MessageBox(NULL, "wavは読み取れませんでした", "Error", MB_OK);
 		break;
 	default:
-		if (readSize != fmt.cksize)
+		if ((unsigned)readSize != fmt.cksize)
 		{
 			MessageBox(NULL, "読み込んだwavのデータサイズが異なります", "Error", MB_OK);
 			return false;
@@ -89,14 +89,14 @@ bool WAV::ReadToWaveFmtEx()
 	return true;
 }
 
-bool WAV::ReadToWaveData()
+bool Wav::ReadToWaveData()
 {
 	//WAVEデータ用にリサイズ
 	wavData.resize(data.cksize);
 
 	if (mmioRead(
 		mmio,
-		reinterpret_cast<HPSTR>(&wavData[0]), data.cksize) != data.cksize)
+		reinterpret_cast<HPSTR>(&wavData[0]), data.cksize) != (signed)data.cksize)
 	{
 		MessageBox(NULL, "読み込んだwavのデータサイズが異なります", "Error", MB_OK);
 		return false;
@@ -104,7 +104,7 @@ bool WAV::ReadToWaveData()
 	return true;
 }
 
-bool WAV::IsWAVEHeader()
+bool Wav::IsWAVEHeader()
 {
 	riff.fccType = mmioFOURCC('W', 'A', 'V', 'E');
 	if (mmioDescend(mmio, &riff, NULL, MMIO_FINDRIFF) != MMSYSERR_NOERROR)
@@ -114,7 +114,7 @@ bool WAV::IsWAVEHeader()
 	}
 	return true;
 }
-bool WAV::Load(const std::string &path)
+bool Wav::Load(const std::string &path)
 {
 	if (!Open(path.c_str()))
 	{
@@ -155,22 +155,27 @@ bool WAV::Load(const std::string &path)
 	return true;
 }
 
-const std::string& WAV::GetFileName()const
+void Wav::SetWAVEFORMATEX(WAVEFORMATEX&& wav)
+{
+	this->wave = wav;
+}
+
+const std::string& Wav::GetFileName()const
 {
 	return name;
 }
 
-const WAVEFORMATEX& WAV::GetWaveFmtEx()const
+const WAVEFORMATEX& Wav::GetWaveFmtEx()const
 {
 	return wave;
 }
 
-const BYTE* WAV::GetWaveData()const
+const BYTE* Wav::GetWaveData()const
 {
 	return &wavData[0];
 }
 
-const size_t WAV::GetWaveSize()const
+const size_t Wav::GetWaveSize()const
 {
 	return wavData.size();
 }
