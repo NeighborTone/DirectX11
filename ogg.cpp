@@ -1,101 +1,59 @@
 #include "ogg.h"
 
 Ogg::Ogg():
-	pOggFile(nullptr)
+	pOggFile(nullptr),
+	wavData(nullptr),
+	readSize(0),
+	wave(WAVEFORMATEX() = {0})
 {
 
 }
 
 Ogg::~Ogg()
 {
-	// バッファ開放
-	if (playBuf != nullptr)
-	{
-		delete[] playBuf;
-		playBuf = nullptr;
-	}
+	ov_clear(&ovf);
+	delete[] wavData;
 }
 
 bool Ogg::Load(const std::string path)
 {
-	
-	try {
-	int err = ov_fopen(path.c_str(), &ovf);
-	if (err != 0)
+	//Fileオープン
+	pOggFile = fopen(path.c_str(), "rb");
+	if (!pOggFile)
 	{
-		throw std::runtime_error("oggのファイルオープンに失敗しました。");
+		throw std::runtime_error("OggFileが開けません");
+		return false;
 	}
-	// Oggファイルの情報を取得
-	vorbis_info* vi = ov_info(&ovf, -1);
-	if (vi == nullptr)
+
+	//Oggオープン
+	if (ov_open(pOggFile, &ovf, NULL, 0) != 0)
 	{
-		throw std::runtime_error("oggファイルの情報取得に失敗しました。");
+		throw std::runtime_error("OggFileの情報取得に失敗しました");
 	}
+	// Oggファイルの音声フォーマット情報
+	vorbis_info* oggInfo = ov_info(&ovf, -1);
+
+	//構造体への書き込み
 	wave.wFormatTag = WAVE_FORMAT_PCM;
-	wave.nChannels = vi->channels;
-	wave.nSamplesPerSec = vi->rate;
-	wave.nAvgBytesPerSec = vi->rate * vi->channels * 2;
-	wave.nBlockAlign = vi->channels * 2;
+	wave.nChannels = oggInfo->channels;
+	wave.nSamplesPerSec = oggInfo->rate;
 	wave.wBitsPerSample = 16;
-	wave.cbSize = sizeof(WAVEFORMATEX);
-
-	// デコード後のデータサイズの取得
-	DWORD decodeSize = static_cast<DWORD>(ov_pcm_total(&ovf, -1)) * vi->channels * 2;
-
-	// 再生用バッファの作成
-	playBuf = new BYTE[decodeSize];
-	
-	DWORD totalReadSize = 0;
-	INT bitstream;
-	bool result = true;
-
-	while (totalReadSize < decodeSize) {
-		// データのデコード
-		LONG readSize = ov_read(
-			&ovf,
-			(char*)playBuf + totalReadSize,
-			decodeSize - totalReadSize,
-			0,
-			2,
-			1,
-			&bitstream
+	wave.nBlockAlign = oggInfo->channels * 16 / 8;
+	wave.nAvgBytesPerSec = wave.nSamplesPerSec * wave.nBlockAlign;
+	wave.cbSize = 0;
+	wavData = new char[4096];
+	int current;
+	readSize = ov_read(
+		&ovf,
+		wavData,
+		4096,
+		0,
+		2,
+		1,
+		&current
 		);
 
-		if (readSize == 0) {      // ファイルの終端まで読み込んだ
-			result = true;
-			break;
-		}
-		else if (readSize < 0) {  // エラー発生
-			result = false;
-			break;
-		}
-
-		totalReadSize += readSize;
-	}
-
-
-	// ファイル読み込みの成否チェック
-	if (!result)
-		throw std::runtime_error("OggVorbisファイルの読み込みに失敗しました。");
-
-	// OggVorbisファイルを閉じる
-	ov_clear(&ovf);
-
 	
-
-}
-catch (std::exception& e) {
-	if (isOpened)
-		ov_clear(&ovf);
-
-	delete[] playBuf;
-
-	MessageBoxA(NULL, e.what(), NULL, MB_OK | MB_ICONERROR);
-	return false;
-}
-
-
-
 	return true;
 }
 
@@ -104,13 +62,13 @@ const WAVEFORMATEX Ogg::GetWav() const
 	return wave;
 }
 
-BYTE* Ogg::GetData()
+const BYTE* Ogg::GetData() const
 {
-	return playBuf;
+	return (BYTE*)wavData;
 }
 
-size_t Ogg::GetSize()
+const size_t Ogg::GetSize() const
 {
-	return sizeof(playBuf);
+	return readSize;
 }
 
