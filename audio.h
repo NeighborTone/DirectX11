@@ -26,16 +26,15 @@ public:
 class SoundSource
 {
 private:
-
 	//音源格納用のバッファー
 	XAUDIO2_BUFFER buf;
 	//ソースヴォイス(ここに音源が格納される
 	IXAudio2SourceVoice* pSource;
 	//wavデータ格納用
 	WAV					  wav;
-
 	XAUDIO2_VOICE_STATE xstate;
 	void GetState();
+
 public:
 	SoundSource();
 	SoundSource(SoundSource& sound);

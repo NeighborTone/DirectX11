@@ -59,7 +59,7 @@ void Texture::Load(const std::string filePath)
 
 	if (pixelFormat != GUID_WICPixelFormat32bppBGRA)
 	{
-		//Direct2Dはビットマップしか描画できないのでpngから変換を行う
+		//Direct2Dはビットマップしか描画できないので変換を行う
 		ATL::CComPtr<IWICFormatConverter> formatConverter = nullptr;
 		hr = Engine::GetTextureFactory().CreateFormatConverter(&formatConverter);
 		ErrorMessage(hr,"コンバーターの作成に失敗","Error");
@@ -150,12 +150,12 @@ void Texture::Attach(int slot)
 	{
 		return;
 	}
-	//テクスチャーデータを格納,slotの値を変えて複数持たせる
+	//テクスチャーデータをシェーダーに送る
 	Engine::GetDXContext3D().PSSetShaderResources(slot, 1, &shaderResourceView.p);
 	Engine::GetDXContext3D().PSSetSamplers(slot, 1, &samplerState.p);
 }
 
-ID3D11Texture2D & Texture::GetInterface()
+ID3D11Texture2D& Texture::GetInterface()
 {
 	return *texture;
 }

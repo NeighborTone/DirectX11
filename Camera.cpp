@@ -41,7 +41,7 @@ void Camera::SetOrthographic(float size, float nearClip, float farClip)
 	this->nearClip = nearClip;
 	this->farClip = farClip;
 	constant.projection = XMMatrixTranspose(
-		XMMatrixOrthographicLH((float)Engine::GetWindowSize().x, (float)Engine::GetWindowSize().y, nearClip, farClip));
+		XMMatrixOrthographicLH((float)Engine::GetWindowSize().x * size, (float)Engine::GetWindowSize().y * size, nearClip, farClip));
 }
 
 void Camera::SetDepthTest(bool isDepthTest)
@@ -49,7 +49,7 @@ void Camera::SetDepthTest(bool isDepthTest)
 	this->isDepthTest = isDepthTest;
 }
 
-void Camera::Run()
+void Camera::Run(bool clearBack)
 {
 	//World‚É‹ts—ñ‚ğ‚©‚¯‚Äƒrƒ…[‚ğì¬
 	//ƒrƒ…[s—ñ‚Í•½sˆÚ“®s—ñ‚Ì‹ts—ñ‚É‰ñ“]s—ñ‚Ì‹ts—ñ‚ğŠ|‚¯Z‚·‚é‚Æ‹‚Ü‚é
@@ -72,9 +72,12 @@ void Camera::Run()
 	Engine::GetDXContext3D().GSSetConstantBuffers(0, 1, &constantBuffer.p);
 	Engine::GetDXContext3D().PSSetConstantBuffers(0, 1, &constantBuffer.p);
 
-	float clearColor[4] = { color.r, color.g, color.b, color.a };
-	//”wŒiF
-	Engine::GetDXContext3D().ClearRenderTargetView(renderTargetView, clearColor);
+	if (clearBack)
+	{
+		float clearColor[4] = { color.r, color.g, color.b, color.a };
+		//”wŒiF
+		Engine::GetDXContext3D().ClearRenderTargetView(renderTargetView, clearColor);
+	}
 
 	if (isDepthTest)
 	{
@@ -192,28 +195,7 @@ void Camera::OnProceed(HWND, UINT message, WPARAM, LPARAM)
 
 	if (Engine::GetWindowSize().x <= 0.0f || Engine::GetWindowSize().y <= 0.0f)
 		return;
-	DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
-	Engine::GetDXSwapChain().GetDesc(&swapChainDesc);
-
-	ATL::CComPtr<ID3D11RenderTargetView> nullRenderTarget = nullptr;
-	ATL::CComPtr<ID3D11DepthStencilView> nullDepthStencil = nullptr;
-	Engine::GetDXContext3D().OMSetRenderTargets(
-		1, 
-		&nullRenderTarget, 
-		nullDepthStencil
-	);
-	renderTargetView.Release();
-	depthStencilView.Release();
-	renderTexture.Release();
-	depthTexture.Release();
-	Engine::GetDXContext3D().Flush();
-	Engine::GetDXSwapChain().ResizeBuffers(
-		swapChainDesc.BufferCount, 
-		static_cast<UINT>(Engine::GetWindowSize().x), 
-		static_cast<UINT>(Engine::GetWindowSize().y),
-		swapChainDesc.BufferDesc.Format, 
-		swapChainDesc.Flags);
-
+	
 	if (isPerspective)
 		SetPerspective(fieldOfView, nearClip, farClip);
 	else

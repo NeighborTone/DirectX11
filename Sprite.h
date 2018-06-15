@@ -52,6 +52,7 @@ public:
 
 	/*!
 	* @brief 2次元限定のスプライトの矩形当たり判定
+	*	画像サイズと同じでないと機能しない、また、スケールにも対応していない
 	* @param (Sprite) 判定をしたい相手
 	*/
 	bool HitSprite(Sprite& s2);

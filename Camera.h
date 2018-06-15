@@ -26,7 +26,7 @@ public:
 	
 	/*!
 	*   @brief 正射影変換を行います
-	*   @param (size) クライアント領域のサイズ
+	*   @param (size) クライアント領域のサイズ基本的には1を指定します
 	*   @param (nearClip) 絵が見え始める距離
 	*   @param (farClip)  絵が見えなくなる距離
 	*   @detail 画面の奥行きの概念をなくした射影変換です
@@ -39,8 +39,9 @@ public:
 	void SetDepthTest(bool enable);
 	/*!
 	*   @brief カメラを更新します
+	*   @param (clearBack) 背景を塗りつぶすか
 	*/
-	void Run();
+	void Run(bool clearBack);
 
 private:
 	struct Constant

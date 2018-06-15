@@ -13,12 +13,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	Engine ge("DirectX11",640,480,true);
 
 	//カメラ生成
-	Camera camera;
-	camera.pos = Vec3(0.0f, 12.0f, -20.0f);
-	camera.angle.x = 20;
-	camera.SetPerspective(45.0f, 1, 10000.0f);
-	//camera.SetOrthographic(0,0.1f,100.0f);
-	camera.SetDepthTest(true);
+	Camera camera3D;
+	camera3D.pos = Vec3(0.0f, 12.0f, -20.0f);
+	camera3D.angle.x = 20;
+	camera3D.SetPerspective(45.0f, 1, 10000.0f);
+	camera3D.SetDepthTest(true);
+	
+	Camera camera2D;
+	camera2D.SetDepthTest(false);
+	camera2D.SetOrthographic(1,0.1f,1000.0f);
 
 	Texture texture1("Resource/box.jpg");
 	Texture texture2("Resource/brick.jpg");
@@ -45,7 +48,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	me.scale = 1;
 	me.scale.x = 10;
 	me.angle = 0;
-	me.pos.x = camera.pos.x;
+	me.pos.x = camera3D.pos.x;
 	me.pos.y = 1;
 	me.pos.z = -10;
 
@@ -61,7 +64,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	ef2.Load("Resource/testEf.efk");
 
 	PhysicsWorld physicsWorld;
-
 	for (int i = 0; i < BOX_MAX; ++i)
 	{
 		physicsWorld.AddRigidBody(new DynamicBox(Vec3(0, 0, 0), Vec3(1, 1, 1), 5));
@@ -104,9 +106,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	sound.PlayBGM();
 	Easing ease;
 
+	Sprite sp("Resource/カーソル.png");
+
 	while (ge.Run())
 	{
-		camera.Run();
+		//================================//
+		//==========3DRendering==============//
+		//================================//
+		camera3D.Run(true);
 		
 		if (KeyBoard::Down(KeyBoard::Key::KEY_ESCAPE) ||
 			Pad::Down(Pad::Button::PAD_START))
@@ -115,19 +122,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		}
 		if (KeyBoard::On(KeyBoard::Key::KEY_UP))
 		{
-			camera.pos.z += 0.6f;
+			camera3D.pos.z += 0.6f;
 		}
 		if (KeyBoard::On(KeyBoard::Key::KEY_DOWN))
 		{
-			camera.pos.z -= 0.6f;
+			camera3D.pos.z -= 0.6f;
 		}
 		if (KeyBoard::On(KeyBoard::Key::KEY_RIGHT))
 		{
-			camera.pos.x += 0.6f;
+			camera3D.pos.x += 0.6f;
 		}
 		if (KeyBoard::On(KeyBoard::Key::KEY_LEFT))
 		{
-			camera.pos.x -= 0.6f;
+			camera3D.pos.x -= 0.6f;
 		}
 		static bool go = false;
 		static float speed = 0.06f;
@@ -164,7 +171,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		static int a = 1;
 		if (KeyBoard::Down(KeyBoard::Key::KEY_V))
 		{
-			physicsWorld.AddRigidBody(new DynamicBox(Vec3(camera.pos.x, 2, camera.pos.z +10), Vec3(1, 1, 1), 5));
+			physicsWorld.AddRigidBody(new DynamicBox(Vec3(camera3D.pos.x, 2, camera3D.pos.z +10), Vec3(1, 1, 1), 5));
 			
 			
 			++a;
@@ -193,13 +200,31 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		cylinder.pos = physicsWorld.pRigidBody[BOX_MAX+1]->GetPosition();
 		cylinder.Draw(physicsWorld.pRigidBody[BOX_MAX+1]->GetRotation(),true);
 
-		ef.Draw(camera);
-		ef2.Draw(camera);
+		ef.Draw(camera3D);
+		ef2.Draw(camera3D);
 
 		text.Draw();
-		//std::cout << Engine::GetFps().GetFrameRate() << std::endl;
-		
-		std::cout << sound.GetCurrentSampleTime() << std::endl;
+
+		//================================//
+		//==========2DRendering==============//
+		//================================//
+		camera2D.Run(false);
+		++sp.angle.z;
+	
+		sp.Draw();
+
+
+
+
+
+
+
+
+
+
+
+
+		std::cout << Engine::GetFps().GetFrameRate() << std::endl;
 	}
 
 	//終了
