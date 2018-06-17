@@ -1,7 +1,5 @@
 #include "audio.h"
 #include "Engine.h"
-#include "Utility.hpp"
-
 using namespace EffectParameters;
 
 void SoundSource::GetState()
@@ -13,9 +11,42 @@ void SoundSource::GetState()
 #endif
 }
 
+void SoundSource::Init()
+{
+	float emitterAzimuths[INPUTCHANNELS] = { 0.0f };
+	pSource = nullptr;
+	//MEMO:3Dサウンドはモノラル
+	dsp = { 0 };
+	emitter = {0};
+	emitter.pCone = NULL;
+	emitter.Position = { 0, 0, 0 };
+	emitter.OrientFront = { 0, 0, 1 };
+	emitter.OrientTop = { 0 , 1, 0 };
+	emitter.ChannelCount = INPUTCHANNELS;		//ソースのチャンネル数
+	emitter.ChannelRadius = 1.0f;							//エミッタでの行列の計算のみに使用。この値は0.0f以上であることが必要
+	emitter.pChannelAzimuths = emitterAzimuths;	//方位角。チャンネル半径と共に使用される。行列の計算のみに使用
+	emitter.InnerRadius = 0.0f;					 //内部半径の計算に使用される値。0.0f ～ MAX_FLTの値を指定
+	emitter.InnerRadiusAngle = 0.0f;			//内部角度の計算に使用される値。0.0f ～ X3DAUDIO_PI/4.0 の値を指定
+	emitter.pVolumeCurve = NULL;				//ボリュームレベル距離カーブ。行列の計算にのみ使用
+	emitter.pLFECurve = NULL;					//LFE ロールオフ距離カーブ
+	emitter.pLPFDirectCurve = NULL;			//ローパスフィルター(LPF)ダイレクト パス係数距離カーブNULLで規定値
+	emitter.pLPFReverbCurve = NULL;			//LPFリバーブパス係数距離カーブ
+	emitter.pReverbCurve = NULL;				//リバーブセンドレベル距離カーブ。
+	emitter.CurveDistanceScaler = FLT_MIN;	//正規化された距離カーブをユーザー定義のワールド単位にスケーリングするために、またはその効果を強調するために使用するカーブ距離スケーラ。
+																//ほかの計算に影響しない。この値はFLT_MIN～FLT_MAXの範囲にする必要がある
+	emitter.DopplerScaler = 1.0f;					//ドップラー偏移効果を強調するために使用するドップラー偏移スケーラー。0.0f ～ FLT_MAX の範囲内にする必要がある
+
+}
+
 SoundSource::SoundSource()
 {
-	pSource = nullptr;
+	Init();
+}
+
+SoundSource::SoundSource(const std::string path)
+{
+	Init();
+	Load(path);
 }
 
 SoundSource::SoundSource(SoundSource& sound)
@@ -115,15 +146,14 @@ void SoundSource::PlaySE(float gain, float pitch)
 
 void SoundSource::Pause()
 {
-	XAUDIO2_VOICE_STATE xa2state;
-	pSource->GetState(&xa2state);
-	auto isPlay = xa2state.BuffersQueued;	//再生中なら0以外が返る
+	GetState();
+	UINT isPlay = xstate.BuffersQueued;	//再生中なら0以外が返る
 	if (pSource && isPlay != 0)
 	{
 		pSource->Stop(0);
 	}
 }
-void SoundSource::Stop()
+void SoundSource::Stop() const
 {
 	if (pSource)
 	{
@@ -133,10 +163,29 @@ void SoundSource::Stop()
 	}
 
 }
-void SoundSource::ExitLoop()
+
+void SoundSource::UpData()
+{
+	//MEMO : まだよくわからん
+	dsp.SrcChannelCount = INPUTCHANNELS;		//ソース チャンネルの数。X3DAudioCalculateを呼び出す前にエミッタチャンネルの数に初期化する必要がある。
+	dsp.DstChannelCount = Engine::GetSoundSystem().GetNumChannels();		//デスティネーション チャンネルの数。X3DAudioCalculateを呼び出す前に最終ミックスチャンネルの数に初期化する必要がある。
+	dsp.pMatrixCoefficients = new float[dsp.DstChannelCount];
+	X3DAudioCalculate(Engine::GetSoundSystem().Get3DInstance(), &Engine::GetSoundSystem().GetListener(), &emitter, X3DAUDIO_CALCULATE_MATRIX | X3DAUDIO_CALCULATE_DOPPLER, &dsp);
+	pSource->SetOutputMatrix(Engine::GetSoundSystem().GetMaster(),1, dsp.DstChannelCount, dsp.pMatrixCoefficients);
+	pSource->SetFrequencyRatio(dsp.DopplerFactor);
+	Memory::SafeDelete(dsp.pMatrixCoefficients);
+	
+}
+void SoundSource::UpDataPosition(Vec3&& pos)
+{
+	emitter.Position = { pos .x,pos .y,pos.z};
+	UpData();
+}
+void SoundSource::ExitLoop() const
 {
 	pSource->ExitLoop();
 }
+
 void SoundSource::Destroy()
 {
 	if (pSource != nullptr)
@@ -154,7 +203,7 @@ void SoundSource::SetEQ(Equalizer_DESC& eq_desc)
 	CreateFX(__uuidof(FXEQ), &effect);
 	XAUDIO2_EFFECT_DESCRIPTOR desc;
 	desc.InitialState = TRUE;
-	desc.OutputChannels = 2;      // 出力チャンネル数
+	desc.OutputChannels = wav.GetWaveFmtEx().nChannels;      // 出力チャンネル数
 	desc.pEffect = effect; // エフェクトへのポインタ
 
 	XAUDIO2_EFFECT_CHAIN chain;
@@ -192,7 +241,7 @@ void SoundSource::SetSimpleReverb(SimpleReverb_DESC& reverb_desc)
 	CreateFX(__uuidof(FXReverb), &effect);
 	XAUDIO2_EFFECT_DESCRIPTOR desc;
 	desc.InitialState = TRUE;
-	desc.OutputChannels = 2;      // 出力チャンネル数
+	desc.OutputChannels = wav.GetWaveFmtEx().nChannels;      // 出力チャンネル数
 	desc.pEffect = effect; // エフェクトへのポインタ
 
 	XAUDIO2_EFFECT_CHAIN chain;
@@ -217,7 +266,7 @@ void SoundSource::SetReverb(Reverb_DESC& reverb_desc)
 	XAudio2CreateReverb(&effect);
 	XAUDIO2_EFFECT_DESCRIPTOR desc;
 	desc.InitialState = TRUE;
-	desc.OutputChannels = 2;      // 出力チャンネル数
+	desc.OutputChannels = wav.GetWaveFmtEx().nChannels;      // 出力チャンネル数
 	desc.pEffect = effect; // エフェクトへのポインタ
 
 	XAUDIO2_EFFECT_CHAIN chain;
@@ -263,7 +312,7 @@ void SoundSource::SetDelay(Delay_DESC & delay_desc)
 	CreateFX(__uuidof(FXEcho), &effect);
 	XAUDIO2_EFFECT_DESCRIPTOR desc;
 	desc.InitialState = TRUE;
-	desc.OutputChannels = 2;      // 出力チャンネル数
+	desc.OutputChannels = wav.GetWaveFmtEx().nChannels;      // 出力チャンネル数
 	desc.pEffect = effect; // エフェクトへのポインタ
 
 	XAUDIO2_EFFECT_CHAIN chain;
@@ -289,7 +338,7 @@ void SoundSource::SetLimiter(Limiter_DESC& limiter_desc)
 	CreateFX(__uuidof(FXMasteringLimiter), &effect);
 	XAUDIO2_EFFECT_DESCRIPTOR desc;
 	desc.InitialState = TRUE;
-	desc.OutputChannels = 2;      // 出力チャンネル数
+	desc.OutputChannels = wav.GetWaveFmtEx().nChannels;      // 出力チャンネル数
 	desc.pEffect = effect; // エフェクトへのポインタ
 
 	XAUDIO2_EFFECT_CHAIN chain;
@@ -321,7 +370,7 @@ void SoundSource::SetMultiEffecter(Equalizer_DESC& eq_desc, Reverb_DESC& reverb_
 	for (auto &it : desc)
 	{
 		it.InitialState = true;
-		it.OutputChannels = 2;
+		it.OutputChannels = wav.GetWaveFmtEx().nChannels;
 		it.pEffect = effect[i];
 		++i;
 	}
@@ -455,6 +504,21 @@ SoundSystem::~SoundSystem()
 	}
 }
 
+IXAudio2MasteringVoice * SoundSystem::GetMaster() const
+{
+	return pMaster;
+}
+
+X3DAUDIO_LISTENER SoundSystem::GetListener() const
+{
+	return listener;
+}
+
+X3DAUDIO_HANDLE& SoundSystem::Get3DInstance()
+{
+	return x3DInstance;
+}
+
 
 bool SoundSystem::Create()
 {
@@ -467,6 +531,14 @@ bool SoundSystem::Create()
 		MessageBox(NULL, "XAudio2の初期化に失敗しました", "Error", MB_OK);
 		return false;
 	}
+	
+	listener.Position = { 0,0,0 };	//XMFLOTA3
+	//以下二つは直交にしなければならない
+	listener.OrientFront = { 0,0,1 };	//前方方向の定義
+	listener.OrientTop = { 0,1,0 };	//上方向の定義
+	listener.pCone = nullptr;				//NULLは全方向性と同じ
+	listener.Velocity = { 0,0,0 };	//ドップラー効果に用いるPositionには影響しない
+
 	//マスターボイスの生成
 	hr = pXAudio2->CreateMasteringVoice(
 		&pMaster,
@@ -480,12 +552,35 @@ bool SoundSystem::Create()
 		MessageBox(NULL, "マスターボイスの初期化に失敗しました", "Error", MB_OK);
 		return false;
 	}
+
+	//3Dインターフェースの初期化
+	X3DAudioInitialize(GetChannelMask(), X3DAUDIO_SPEED_OF_SOUND, x3DInstance);
+
 	return true;
+}
+
+UINT SoundSystem::GetNumChannels()
+{
+		XAUDIO2_VOICE_DETAILS d;
+		pMaster->GetVoiceDetails(&d);
+		return d.InputChannels;
+}
+
+UINT SoundSystem::GetChannelMask() const
+{
+	UINT mask;
+	pMaster->GetChannelMask((DWORD*)&mask);
+	return mask;
 }
 
 void SoundSystem::SetMasterGain(float gain)
 {
 	pMaster->SetVolume(gain);
+}
+
+void SoundSystem::SetListenerPosition(float x, float y, float z)
+{
+	listener.Position = { x, y, z };
 }
 
 bool SoundSystem::AddSource(SoundSource& source)

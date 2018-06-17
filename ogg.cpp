@@ -1,4 +1,4 @@
-#include "ogg.h"
+ï»¿#include "ogg.h"
 #include "Utility.hpp"
 
 void Ogg::ClearOggData(OggVorbis_File* oggFile)
@@ -21,8 +21,8 @@ DWORD Ogg::GetPcmSize(OggVorbis_File* pOvf)
 	ogg_int64_t sampleNum;
 	DWORD pcmBytes;
 
-	//ŠJ‚¢‚Ä‚¢‚éoggƒtƒ@ƒCƒ‹‚Ì‘ƒTƒ“ƒvƒ‹”‚Æƒ`ƒƒƒ“ƒlƒ‹”‚ð’²‚×
-	//•K—v‚ÈƒoƒCƒg”‚ðŽæ“¾‚·‚é
+	//é–‹ã„ã¦ã„ã‚‹oggãƒ•ã‚¡ã‚¤ãƒ«ã®ç·ã‚µãƒ³ãƒ—ãƒ«æ•°ã¨ãƒãƒ£ãƒ³ãƒãƒ«æ•°ã‚’èª¿ã¹
+	//å¿…è¦ãªãƒã‚¤ãƒˆæ•°ã‚’å–å¾—ã™ã‚‹
 	info = ov_info(pOvf, -1);
 	sampleNum = ov_pcm_total(pOvf, -1);
 	pcmBytes = (DWORD)sampleNum * OV_PCM_BITRATE_B * info->channels;
@@ -73,9 +73,9 @@ long Ogg::Read(OggVorbis_File* pOvf, char* pBuffer, int* bitstream)
 		pOvf,
 		pBuffer,
 		OV_BUFFER_SIZE,
-		0,	// 0‚È‚çƒŠƒgƒ‹ƒGƒ“ƒfƒBƒAƒ“AƒrƒbƒO‚È‚ç1‚ðŽw’è
-		2,	// WORDŒ^‚ÌByte‚ðŽw’èAWindows‚Í2Byte
-		1,	// •„†—L‚è
+		0,	// 0ãªã‚‰ãƒªãƒˆãƒ«ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ã€ãƒ“ãƒƒã‚°ãªã‚‰1ã‚’æŒ‡å®š
+		2,	// WORDåž‹ã®Byteã‚’æŒ‡å®šã€Windowsã¯2Byte
+		1,	// ç¬¦å·æœ‰ã‚Š
 		bitstream);
 }
 
@@ -86,7 +86,7 @@ void Ogg::SetWaveFomatEx(WAVEFORMATEX* pWave, DWORD nSamplesPerSec, WORD wChanne
 	pWave->nChannels = wChannels;
 	pWave->nSamplesPerSec = nSamplesPerSec;
 	pWave->wBitsPerSample = wBitsPerSample;
-	pWave->nBlockAlign = pWave->wBitsPerSample * pWave->nChannels / 8;	//Bit‚©‚çByte‚Ö•ÏŠ·
+	pWave->nBlockAlign = pWave->wBitsPerSample * pWave->nChannels / 8;	//Bitã‹ã‚‰Byteã¸å¤‰æ›
 	pWave->nAvgBytesPerSec = pWave->nSamplesPerSec * pWave->nBlockAlign;
 }
 
@@ -105,21 +105,21 @@ bool Ogg::CreateOggToWavEX(OggVorbis_File * pOvf, const std::string path)
 {
 	int errorNo;
 
-	//	ƒtƒ@ƒCƒ‹‚ðŠJ‚­
+	//	ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã
 	errorNo = ov_fopen(path.c_str(), pOvf);
 	if (errorNo != OV_SUCCESSFUL)
 	{
 		return false;
 	}
 
-	//	PCM‚ÌŒ`Ž®‚ð‚ ‚é’ö“x’²‚×‚é
+	//	PCMã®å½¢å¼ã‚’ã‚ã‚‹ç¨‹åº¦èª¿ã¹ã‚‹
 	vorbis_info *info = ov_info(pOvf, -1);
 	if (info == nullptr)
 	{
 		ClearOggData(pOvf);
 	}
 
-	//waveî•ñ‚ðƒZƒbƒg
+	//waveæƒ…å ±ã‚’ã‚»ãƒƒãƒˆ
 	SetWaveFomatEx(&wave, (DWORD)info->rate, (WORD)info->channels, OV_PCM_BITRATE);
 
 	return true;
@@ -127,25 +127,48 @@ bool Ogg::CreateOggToWavEX(OggVorbis_File * pOvf, const std::string path)
 
 bool Ogg::Load(const std::string path)
 {
-	//oggƒtƒ@ƒCƒ‹‚ÌƒI[ƒvƒ“
-	ErrorMessage(IsOgg(path),"‚±‚ê‚Íoggƒtƒ@ƒCƒ‹‚Å‚Í‚ ‚è‚Ü‚¹‚ñ","Error");
-	//ov_open‚µ‚ÄwaveEX‚ÉƒZƒbƒg
-	ErrorMessage(CreateOggToWavEX(&ovf, path),"oggƒtƒ@ƒCƒ‹ƒI[ƒvƒ“‚ÉŽ¸”s‚µ‚Ü‚µ‚½","Error");
-	//ƒfƒR[ƒh
-	int total = 0;
+	FILE* pOggFile = fopen(path.c_str(), "rb");
+	if (!pOggFile)
+	{
+		throw std::runtime_error("");
+		return false;
+	}
+
+	if (ov_open(pOggFile, &ovf, NULL, 0) != 0)
+	{
+		throw std::runtime_error("");
+	}
+
+	vorbis_info* oggInfo = ov_info(&ovf, -1);
+
+	wave.wFormatTag = WAVE_FORMAT_PCM;
+	wave.nChannels = (WORD)oggInfo->channels;
+	wave.nSamplesPerSec = oggInfo->rate;
+	wave.wBitsPerSample = 16;
+	wave.nBlockAlign = (WORD)oggInfo->channels * 16 / 8;
+	wave.nAvgBytesPerSec = wave.nSamplesPerSec * wave.nBlockAlign;
+	wave.cbSize = 0;
+	wavData = new char[4096];
+	int current;
 	while (1)
 	{
-		total = Read(&ovf, buffer, NULL);
-		if (!total)
+		int readSize = ov_read(
+			&ovf,
+			wavData,
+			4096,
+			0,
+			2,
+			1,
+			&current
+		);
+		if (readSize == 0)
 		{
 			break;
 		}
 	}
-
+	
 	waveSize = GetPcmSize(&ovf);
 	ov_clear(&ovf);
-
-	
 	return true;
 }
 
@@ -160,7 +183,7 @@ const WAVEFORMATEX Ogg::GetWaveFmtEx() const
 
 const BYTE* Ogg::GetWaveData() const
 {
-	return (BYTE*)&buffer[0];
+	return (BYTE*)&wavData[0];
 }
 
 const size_t Ogg::GetWaveByteSize() const

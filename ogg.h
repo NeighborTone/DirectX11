@@ -19,9 +19,9 @@ private:
 	static constexpr int OV_PCM_BITRATE_B = OV_PCM_BITRATE / 8;
 	static constexpr int OV_SUCCESSFUL = 0;
 	
-	char buffer[OV_BUFFER_SIZE];
 	OggVorbis_File ovf;
 	WAVEFORMATEX wave;
+	
 	size_t waveSize;
 	//oggファイルクリア
 	void ClearOggData(OggVorbis_File* oggFile);
@@ -42,7 +42,7 @@ private:
 public:
 	Ogg();
 	~Ogg();
-
+	char* wavData;
 	bool Load(const std::string path);
 	const WAVEFORMATEX GetWaveFmtEx() const;
 	const BYTE* GetWaveData() const;

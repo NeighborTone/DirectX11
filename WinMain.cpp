@@ -27,7 +27,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 
 	SoundSource sound, sound2;
 	sound.Load("Resource/Grass.wav");
-	sound2.Load("Resource/se.ogg");
+	sound2.Load("Resource/test.wav");
 	Engine::GetSoundSystem().AddSource(sound);
 	Engine::GetSoundSystem().AddSource(sound2);
 	EffectParameters::Equalizer_DESC eq;
@@ -49,7 +49,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		//==========3DRendering==============//
 		//================================//
 		camera3D.Run(true);
-
+		Engine::GetSoundSystem().SetListenerPosition(camera3D.pos.x, camera3D.pos.y, camera3D.pos.z);
 		if (KeyBoard::Down(KeyBoard::Key::KEY_ESCAPE) ||
 			Pad::Down(Pad::Button::PAD_START))
 		{
@@ -74,9 +74,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		if (KeyBoard::Down(KeyBoard::Key::KEY_X))
 		{
 			sound2.PlaySE();
+			
 			ef2.Play(Vec3(camera3D.pos.x, 5, camera3D.pos.z + 20));
 		}
-
+		sound2.UpDataPosition(Vec3(200,0,0));
 		ef2.Draw(camera3D);
 
 
@@ -86,7 +87,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		//================================//
 		camera2D.Run(false);
 
-		std::cout << Engine::GetFps().GetFrameRate() << std::endl;
+		std::cout << sound.GetCurrentSampleTime()<< std::endl;
 	}
 
 	//I—¹
