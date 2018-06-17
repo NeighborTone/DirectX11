@@ -1,5 +1,7 @@
 #include "audio.h"
 #include "Engine.h"
+#include "Utility.hpp"
+
 using namespace EffectParameters;
 
 void SoundSource::GetState()
@@ -31,44 +33,38 @@ bool SoundSource::Load(const std::string path)
 {
 	std::string str_ogg = ".ogg";
 	std::string str_wav = ".wav";
-	
 
-	if(std::equal(path.begin() + path.find("."), path.end(), str_ogg.begin()))
+	if (std::equal(path.begin() + path.find("."), path.end(), str_ogg.begin()))
 	{
 		fileType = OGG;
-		if (!ogg.Load(path))
-		{
-			MessageBox(NULL, "ソースボイスの作成に失敗しました", "Error", MB_OK);
-			return false;
-		}
+		ErrorMessage(ogg.Load(path), "oggの読み込みに失敗しました", "Error");
 	}
-	if(std::equal(path.begin() + path.find("."), path.end(), str_wav.begin()))
+	else if (std::equal(path.begin() + path.find("."), path.end(), str_wav.begin()))
 	{
 		fileType = WAVE;
-		if (!wav.Load(path.c_str()))
-		{
-			MessageBox(NULL, "ソースボイスの作成に失敗しました", "Error", MB_OK);
-			return false;
-		}
+		ErrorMessage(wav.Load(path.c_str()), "wavの読み込みに失敗しました", "Error");
 	}
-	
-	
+	else
+	{
+		ErrorMessage("不正なファイルかサポート外のフォーマットです", "Error");
+		return false;
+	}
 	return true;
 }
 
-void SoundSource::PlayBGM(int loopNum,float gain, float pitch)
-{	
+void SoundSource::PlayBGM(int loopNum, float gain, float pitch)
+{
 	HRESULT hr;
 	buf = { 0 };
 	if (fileType == WAVE)
 	{
-		buf.AudioBytes = wav.GetWaveSize();
+		buf.AudioBytes = wav.GetWaveByteSize();
 		buf.pAudioData = wav.GetWaveData();
 	}
-	else
+	else if (fileType == OGG)
 	{
-		buf.AudioBytes = ogg.GetSize();
-		buf.pAudioData = ogg.GetData();
+		buf.AudioBytes = ogg.GetWaveByteSize();
+		buf.pAudioData = ogg.GetWaveData();
 	}
 	buf.Flags = XAUDIO2_END_OF_STREAM;	//このバッファの後にデータがないことをソースボイスに伝える
 	buf.LoopCount = loopNum;	//ループ回数を指定。デフォルトで無限ループにしておく
@@ -92,25 +88,25 @@ void SoundSource::PlaySE(float gain, float pitch)
 	buf = { 0 };
 	if (fileType == WAVE)
 	{
-		buf.AudioBytes = wav.GetWaveSize();
+		buf.AudioBytes = wav.GetWaveByteSize();
 		buf.pAudioData = wav.GetWaveData();
 	}
-	else
+	else if (fileType == OGG)
 	{
-		buf.AudioBytes = ogg.GetSize();
-		buf.pAudioData = ogg.GetData();
+		buf.AudioBytes = ogg.GetWaveByteSize();	//オーディオ データのサイズ (バイト単位) 
+		buf.pAudioData = ogg.GetWaveData();	//オーディオ データへのポインター
 	}
 	buf.Flags = XAUDIO2_END_OF_STREAM;
 	buf.LoopCount = 0;	//ループ回数を指定。
-	buf.LoopBegin = 0;
-
-	
+	buf.LoopBegin = 0;	//ループされる領域の最初のサンプル
+	buf.LoopLength = 0;
+	buf.pContext = nullptr;
 	pSource->SetFrequencyRatio(pitch);			//ピッチ
 	pSource->SetVolume(gain);					//ゲイン
 	pSource->Stop(0);							//一旦停止
 	pSource->FlushSourceBuffers();				//ボイスキューを削除(再生位置を戻すため)
 	pSource->SubmitSourceBuffer(&buf, nullptr);	//Sourceに音源の情報を送る
-	
+
 	if (pSource)
 	{
 		pSource->Start();
@@ -135,7 +131,7 @@ void SoundSource::Stop()
 		pSource->FlushSourceBuffers();			//ボイスキューを削除(再生位置を戻すため)
 		pSource->SubmitSourceBuffer(&buf, nullptr);	//Sourceに音源の情報を送る
 	}
-	
+
 }
 void SoundSource::ExitLoop()
 {
@@ -254,7 +250,7 @@ void SoundSource::SetReverb(Reverb_DESC& reverb_desc)
 	rev.DecayTime = reverb_desc.DecayTime;
 	rev.Density = reverb_desc.Density;
 	rev.RoomSize = reverb_desc.RoomSize;
-	
+
 
 	//セットする
 	pSource->SetEffectParameters(0, &rev, sizeof(XAUDIO2FX_REVERB_PARAMETERS));
@@ -423,7 +419,12 @@ FileType SoundSource::GetFileType()
 	return fileType;
 }
 
-SoundSystem::SoundSystem():
+
+
+
+
+
+SoundSystem::SoundSystem() :
 	pXAudio2(nullptr),
 	pMaster(nullptr)
 {
@@ -458,6 +459,7 @@ SoundSystem::~SoundSystem()
 bool SoundSystem::Create()
 {
 	HRESULT hr;
+
 	//XAudio2の初期化
 	hr = XAudio2Create(&pXAudio2, 0);
 	if (FAILED(hr))
@@ -467,7 +469,7 @@ bool SoundSystem::Create()
 	}
 	//マスターボイスの生成
 	hr = pXAudio2->CreateMasteringVoice(
-		&pMaster, 
+		&pMaster,
 		XAUDIO2_DEFAULT_CHANNELS,
 		XAUDIO2_DEFAULT_SAMPLERATE,
 		0,
@@ -488,18 +490,18 @@ void SoundSystem::SetMasterGain(float gain)
 
 bool SoundSystem::AddSource(SoundSource& source)
 {
-	HRESULT hr;
+	HRESULT hr = 0;
 	if (source.GetFileType() == WAVE)
 	{
 		hr = pXAudio2->CreateSourceVoice(
 			source.GetSource(),
 			&source.GetWav().GetWaveFmtEx());
 	}
-	else
+	else if (source.GetFileType() == OGG)
 	{
 		hr = pXAudio2->CreateSourceVoice(
 			source.GetSource(),
-			&source.GetOgg().GetWav());
+			&source.GetOgg().GetWaveFmtEx());
 	}
 	if (FAILED(hr))
 	{
@@ -527,7 +529,7 @@ bool SoundSystem::AddSourceUseCallBack(SoundSource& source)
 	{
 		hr = pXAudio2->CreateSourceVoice(
 			source.GetSource(),
-			&source.GetOgg().GetWav(),
+			&source.GetOgg().GetWaveFmtEx(),
 			0,
 			XAUDIO2_DEFAULT_FREQ_RATIO,
 			&voiceCallback,

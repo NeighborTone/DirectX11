@@ -8,7 +8,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 {
 	ShowConsole();
 	//ゲームエンジン生成
-	Engine ge("DirectX11",640,480,true);
+	Engine ge("DirectX11", 640, 480, true);
 
 	//カメラ生成
 	Camera camera3D;
@@ -16,16 +16,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	camera3D.angle.x = 20;
 	camera3D.SetPerspective(45.0f, 1, 10000.0f);
 	camera3D.SetDepthTest(true);
-	
+
 	Camera camera2D;
 	camera2D.SetDepthTest(false);
-	camera2D.SetOrthographic(1,0.1f,1000.0f);
+	camera2D.SetOrthographic(1, 0.1f, 1000.0f);
 
 	Particle ef("Resource/fire.efk");
 	Particle ef2;
 	ef2.Load("Resource/testEf.efk");
 
-	SoundSource sound,sound2;
+	SoundSource sound, sound2;
 	sound.Load("Resource/Grass.wav");
 	sound2.Load("Resource/se.ogg");
 	Engine::GetSoundSystem().AddSource(sound);
@@ -39,7 +39,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	delay.DelayTime = 300;
 	EffectParameters::Limiter_DESC limiter;
 	limiter.Loudness = 1100;
-	sound2.SetMultiEffecter(eq,rev,delay,limiter);
+	sound2.SetMultiEffecter(eq, rev, delay, limiter);
 	sound.PlayBGM();
 
 
@@ -49,7 +49,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		//==========3DRendering==============//
 		//================================//
 		camera3D.Run(true);
-		
+
 		if (KeyBoard::Down(KeyBoard::Key::KEY_ESCAPE) ||
 			Pad::Down(Pad::Button::PAD_START))
 		{
@@ -76,7 +76,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 			sound2.PlaySE();
 			ef2.Play(Vec3(camera3D.pos.x, 5, camera3D.pos.z + 20));
 		}
-	
+
 		ef2.Draw(camera3D);
 
 

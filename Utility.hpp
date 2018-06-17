@@ -590,6 +590,10 @@ public:
 			MessageBox(NULL, text, category, MB_OK);
 		}
 	}
+	ErrorMessage(const char* text, const char* category)
+	{
+		MessageBox(NULL, text, category, MB_OK);
+	}
 };
 
 /*! @class Vertex

@@ -4,7 +4,8 @@
 Text::Text():
 	bitmap(nullptr),
 	brush(nullptr),
-	textFormat(nullptr)
+	textFormat(nullptr),
+	textLayout(nullptr)
 {
 	__super::Initialize();
 	color = Float4(0.0f, 0.0f, 0.0f, 1.0f);
@@ -13,7 +14,8 @@ Text::Text():
 Text::Text(const std::string& text, float fontSize, const std::string& fontFace) :
 	bitmap(nullptr),
 	brush(nullptr),
-	textFormat(nullptr)
+	textFormat(nullptr),
+	textLayout(nullptr)
 {
 	__super::Initialize();
 	color = Float4(0.0f, 0.0f, 0.0f, 1.0f);
@@ -100,7 +102,6 @@ void Text::Draw()
 	Engine::GetDXContext2D().BeginDraw();
 	Engine::GetDXContext2D().Clear(D2D1::ColorF(1.0f, 1.0f, 1.0f, 0.0f));
 
-	Microsoft::WRL::ComPtr<IDWriteTextLayout> textLayout = nullptr;
 	Engine::GetTextFactory().CreateTextLayout(StringConverter::StringToWString(text).c_str(), (UINT32)text.length(), textFormat.Get(), static_cast<float>(texture.GetSize().x), static_cast<float>(texture.GetSize().y), textLayout.GetAddressOf());
 
 	Engine::GetDXContext2D().DrawTextLayout(D2D1::Point2F(0.0f, 0.0f), textLayout.Get(), brush.Get());

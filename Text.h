@@ -30,6 +30,7 @@ private:
 	std::string text;
 	DirectX::XMINT2 length;
 	ATL::CComPtr<ID2D1Bitmap1> bitmap;
+	Microsoft::WRL::ComPtr<IDWriteTextLayout> textLayout;
 	Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> brush;
 	Microsoft::WRL::ComPtr<IDWriteTextFormat> textFormat;
 };

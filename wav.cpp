@@ -83,7 +83,7 @@ bool Wav::ReadToWaveFmtEx()
 			MessageBox(NULL, "読み込んだwavのデータサイズが異なります", "Error", MB_OK);
 			return false;
 		}
-		
+
 	}
 
 	return true;
@@ -175,7 +175,7 @@ const BYTE* Wav::GetWaveData()const
 	return &wavData[0];
 }
 
-const size_t Wav::GetWaveSize()const
+const size_t Wav::GetWaveByteSize()const
 {
 	return wavData.size();
 }

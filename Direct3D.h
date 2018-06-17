@@ -1,5 +1,5 @@
 #pragma once
-#pragma warning (disable : 4005)	
+#pragma warning (disable : 4005)	//DirectX側の警告(マクロ二重定義)
 #include "System.h"
 #include <d2d1_1.h>
 #include <d3d11.h>

@@ -26,7 +26,7 @@ private:
 	Ogg ogg;
 	XAUDIO2_VOICE_STATE xstate;
 	void GetState();
-	
+
 	FileType fileType;
 public:
 	SoundSource();
@@ -51,9 +51,9 @@ public:
 	void SetDelay(EffectParameters::Delay_DESC& delay_desc);
 	void SetLimiter(EffectParameters::Limiter_DESC& limiter_desc);
 	void SetMultiEffecter(
-		EffectParameters::Equalizer_DESC& eq_desc, 
-		EffectParameters::Reverb_DESC& reverb_desc, 
-		EffectParameters::Delay_DESC& delay_desc, 
+		EffectParameters::Equalizer_DESC& eq_desc,
+		EffectParameters::Reverb_DESC& reverb_desc,
+		EffectParameters::Delay_DESC& delay_desc,
 		EffectParameters::Limiter_DESC& limiter_desc
 	);
 
@@ -66,11 +66,13 @@ public:
 };
 
 //サウンド管理部
-class SoundSystem 
+class SoundSystem
 {
 private:
-	class XAudio2Callback : public IXAudio2VoiceCallback 
+	
+	class XAudio2Callback : public IXAudio2VoiceCallback
 	{
+		
 	private:
 		HANDLE handle;
 	public:
@@ -103,18 +105,19 @@ private:
 	IXAudio2MasteringVoice* pMaster;
 	//サウンドシステムの初期化、一度だけ作ればよい
 	bool Create();
-	
+
 public:
 	SoundSystem();
 	~SoundSystem();
 
 	//ソースボイスの登録
 	bool AddSource(SoundSource& source);
-	
+
 	bool AddSourceUseCallBack(SoundSource& source);
 
 	//登録したサウンド全体の音量調整
 	void SetMasterGain(float gain);
+
 	void DestroySystem(SoundSource& source);
 };
 

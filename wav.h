@@ -33,5 +33,5 @@ public:
 	const WAVEFORMATEX&		GetWaveFmtEx()const;	// WAVE フォーマットを取得
 	const std::string&		GetFileName()const;		// ファイル名の取得
 	const BYTE*				GetWaveData()const;			// Wave データを取得
-	const size_t			GetWaveSize()const;			// Wave データのサイズを取得
+	const size_t			GetWaveByteSize()const;			// Wave データのサイズを取得
 };
