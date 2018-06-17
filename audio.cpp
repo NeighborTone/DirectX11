@@ -554,8 +554,12 @@ bool SoundSystem::Create()
 	}
 
 	//3Dインターフェースの初期化
-	X3DAudioInitialize(GetChannelMask(), X3DAUDIO_SPEED_OF_SOUND, x3DInstance);
-
+	hr = X3DAudioInitialize(GetChannelMask(), X3DAUDIO_SPEED_OF_SOUND, x3DInstance);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, "X3DAudioの初期化に失敗しました", "Error", MB_OK);
+		return false;
+	}
 	return true;
 }
 
