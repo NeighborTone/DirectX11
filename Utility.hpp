@@ -1,5 +1,5 @@
 #pragma once
-#pragma warning (disable : 4458)	 //this‚ğg‚¤
+#pragma warning (disable : 4458)	//this‚ğg‚¤‚½‚ßÁ‚·
 #include <Windows.h>
 #include <DirectXMath.h>
 #include <math.h>
@@ -639,7 +639,7 @@ struct Vertex
 		normal(0,0,0),
 		uv(0,0)
 	{}
-	Vertex(Vec3& pos, Vec3& normal, Vec2& uv)
+	Vertex(Vec3&& pos, Vec3&& normal, Vec2&& uv)
 	{
 		this->pos = pos;
 		this->normal = normal;
