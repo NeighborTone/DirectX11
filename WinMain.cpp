@@ -12,7 +12,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 
 	//ÉJÉÅÉâê∂ê¨
 	Camera camera3D;
-	camera3D.pos = Vec3(0.0f, 12.0f, -20.0f);
+	camera3D.pos = Vec3(0.0f, 0.0f, 0.0f);
 	camera3D.angle.x = 20;
 	camera3D.SetPerspective(45.0f, 1, 10000.0f);
 	camera3D.SetDepthTest(true);
@@ -26,10 +26,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	ef2.Load("Resource/testEf.efk");
 
 	SoundSource sound, sound2;
-	sound.Load("Resource/Grass.wav");
-	sound2.Load("Resource/test.wav");
-	Engine::GetSoundSystem().AddSource(sound);
-	Engine::GetSoundSystem().AddSource(sound2);
+	sound.Load("Resource/Grass.wav",false);
+	sound2.Load("Resource/se.wav", true);
 	EffectParameters::Equalizer_DESC eq;
 	eq.FrequencyCenter3 = 200.0f;
 	eq.Gain3 = 0.126f;
@@ -40,7 +38,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	EffectParameters::Limiter_DESC limiter;
 	limiter.Loudness = 1100;
 	sound2.SetMultiEffecter(eq, rev, delay, limiter);
-	sound.PlayBGM();
+	sound.PlayBGM(255,0.2f);
 
 
 	while (ge.Run())
@@ -49,7 +47,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		//==========3DRendering==============//
 		//================================//
 		camera3D.Run(true);
-		Engine::GetSoundSystem().SetListenerPosition(camera3D.pos.x, camera3D.pos.y, camera3D.pos.z);
 		if (KeyBoard::Down(KeyBoard::Key::KEY_ESCAPE) ||
 			Pad::Down(Pad::Button::PAD_START))
 		{
@@ -75,9 +72,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		{
 			sound2.PlaySE();
 			
-			ef2.Play(Vec3(camera3D.pos.x, 5, camera3D.pos.z + 20));
+			ef2.Play(Vec3(0, 0, 0));
 		}
-		sound2.UpDataPosition(Vec3(200,0,0));
+		sound2.UpData3DSound(Vec3(0,0,0),Vec3(camera3D.pos));
 		ef2.Draw(camera3D);
 
 
@@ -87,7 +84,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		//================================//
 		camera2D.Run(false);
 
-		std::cout << sound.GetCurrentSampleTime()<< std::endl;
+		std::cout << sound2.GetCurrentSampleTime()<< std::endl;
 	}
 
 	//èIóπ

@@ -36,6 +36,7 @@
     <ClCompile Include="Pad.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="RigidBody.cpp" />
+    <ClCompile Include="SoundSource.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="Text.cpp" />
@@ -65,6 +66,7 @@
     <ClInclude Include="Pad.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="RigidBody.h" />
+    <ClInclude Include="SoundSource.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="StringConverter.hpp" />
     <ClInclude Include="System.h" />
@@ -151,12 +153,12 @@
       <BrowseInformation>true</BrowseInformation>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
-      <AdditionalIncludeDirectories>C:\Users\game\Desktop\DirectX11\DirectXTK\Inc;C:\Users\game\Desktop\DirectX11\ODE\include;C:\Users\tonari\Desktop\DirectX11\DirectXTK\Inc;C:\Users\tonari\Desktop\DirectX11\ODE\include;C:\Users\tonari\Desktop\D3D11\DirectXTK\Inc;C:\Users\game\Desktop\aa\ODE\include;C:\Users\tonari\Desktop\D3D11\ODE\include;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include\fbxsdk;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;./ODE/include;./DirectXTK/Inc;./Effekseer/include;./Ogg/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\game\Desktop\DirectX11\Ogg\temp;C:\Users\game\Desktop\DirectX11\DirectXTK\Inc;C:\Users\game\Desktop\DirectX11\ODE\include;C:\Users\tonari\Desktop\DirectX11\DirectXTK\Inc;C:\Users\tonari\Desktop\DirectX11\ODE\include;C:\Users\tonari\Desktop\D3D11\DirectXTK\Inc;C:\Users\game\Desktop\aa\ODE\include;C:\Users\tonari\Desktop\D3D11\ODE\include;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include\fbxsdk;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;./ODE/include;./DirectXTK/Inc;./Effekseer/include;./Ogg/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>C:\Users\game\Desktop\DirectX11\Effekseer\lib;C:\Users\tonari\Desktop\DirectX11\Effekseer\lib;C:\Users\tonari\Desktop\DirectX11\Effekseer\lib\VS2015\Debug;C:\Users\game\Desktop\DirectX11\DirectXTK\lib\Debug;C:\Users\game\Desktop\DirectX11\ODE\lib\Debug;C:\Users\tonari\Desktop\DirectX11\DirectXTK\lib\Debug;C:\Users\tonari\Desktop\DirectX11\ODE\lib\Debug;C:\Users\tonari\Desktop\D3D11\DirectXTK\lib\Debug;C:\Users\game\Desktop\aa\ODE\lib\Debug;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\debug;C:\Users\tonari\Desktop\D3D11\ODE\lib\Debug;./ODE/lib/debug;./DirectXTK/lib/Debug;./Ogg/libOgg/Debug;./Ogg/libVorbis/Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\game\Desktop\DirectX11\Ogg\lib;C:\Users\game\Desktop\DirectX11\Effekseer\lib;C:\Users\tonari\Desktop\DirectX11\Effekseer\lib;C:\Users\tonari\Desktop\DirectX11\Effekseer\lib\VS2015\Debug;C:\Users\game\Desktop\DirectX11\DirectXTK\lib\Debug;C:\Users\game\Desktop\DirectX11\ODE\lib\Debug;C:\Users\tonari\Desktop\DirectX11\DirectXTK\lib\Debug;C:\Users\tonari\Desktop\DirectX11\ODE\lib\Debug;C:\Users\tonari\Desktop\D3D11\DirectXTK\lib\Debug;C:\Users\game\Desktop\aa\ODE\lib\Debug;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\debug;C:\Users\tonari\Desktop\D3D11\ODE\lib\Debug;./ODE/lib/debug;./DirectXTK/lib/Debug;./Ogg/libOgg/Debug;./Ogg/libVorbis/Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
       <GenerateMapFile>false</GenerateMapFile>
       <MapFileName>map</MapFileName>

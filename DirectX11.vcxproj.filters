@@ -68,6 +68,9 @@
     <ClCompile Include="ogg.cpp">
       <Filter>Engine\Sounds</Filter>
     </ClCompile>
+    <ClCompile Include="SoundSource.cpp">
+      <Filter>Engine\Sounds</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -152,6 +155,9 @@
       <Filter>Engine\Sounds</Filter>
     </ClInclude>
     <ClInclude Include="ogg.h">
+      <Filter>Engine\Sounds</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundSource.h">
       <Filter>Engine\Sounds</Filter>
     </ClInclude>
   </ItemGroup>
