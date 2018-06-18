@@ -6,22 +6,15 @@
 #include "EffectParameter.hpp"
 #include "Utility.hpp"
 #include "wav.h"
-//#include "ogg.h"
+#include "ogg.h"
 
 #define _USE_VOICECALLBACK_
 #pragma comment(lib,"XAudio2.lib")
-//MEMO:付属のサンプルに書いてあったのを引用
-static constexpr X3DAUDIO_DISTANCE_CURVE_POINT Emitter_LFE_CurvePoints[3] = { 0.0f, 1.0f, 0.25f, 0.0f, 1.0f, 0.0f };
-static constexpr X3DAUDIO_DISTANCE_CURVE Emitter_LFE_Curve = { (X3DAUDIO_DISTANCE_CURVE_POINT*)&Emitter_LFE_CurvePoints[0], 3 };
-static constexpr X3DAUDIO_DISTANCE_CURVE_POINT Emitter_Reverb_CurvePoints[3] = { 0.0f, 0.5f, 0.75f, 1.0f, 1.0f, 0.0f };
-static constexpr X3DAUDIO_DISTANCE_CURVE Emitter_Reverb_Curve = { (X3DAUDIO_DISTANCE_CURVE_POINT*)&Emitter_Reverb_CurvePoints[0], 3 };
-static constexpr int INPUTCHANNELS = 1;
 
 class SoundSource;
 
 class XAudio2Callback : public IXAudio2VoiceCallback
 {
-
 private:
 	HANDLE handle;
 public:
@@ -50,7 +43,6 @@ public:
 class SoundSystem
 {
 private:
-	
 
 	XAUDIO2_VOICE_DETAILS voiceDetails;
 	//インターフェース
