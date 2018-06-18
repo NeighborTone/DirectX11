@@ -45,7 +45,7 @@ bool SoundSource::Load(const std::string path, bool is3DSound)
 	if (std::equal(path.begin() + path.find("."), path.end(), str_ogg.begin()))
 	{
 		fileType = OGG;
-		//	ErrorMessage(ogg.Load(path), "ogg‚Ì“Ç‚Ýž‚Ý‚ÉŽ¸”s‚µ‚Ü‚µ‚½", "Error");
+		ErrorMessage(ogg.Load(path), "ogg‚Ì“Ç‚Ýž‚Ý‚ÉŽ¸”s‚µ‚Ü‚µ‚½", "Error");
 	}
 	else if (std::equal(path.begin() + path.find("."), path.end(), str_wav.begin()))
 	{
@@ -136,8 +136,8 @@ void SoundSource::PlaySE(float gain, float pitch)
 	}
 	else if (fileType == OGG)
 	{
-		//buf.AudioBytes = ogg.GetWaveByteSize();
-		//buf.pAudioData = ogg.GetWaveData();
+		buf.AudioBytes = ogg.GetWaveByteSize();
+		buf.pAudioData = ogg.GetWaveData();
 	}
 	buf.pContext = this;
 	buf.Flags = XAUDIO2_END_OF_STREAM;
@@ -179,7 +179,7 @@ void SoundSource::Stop() const
 	}
 }
 
-void SoundSource::UpData3DSound(Vec3&& pos, Vec3&& listenerPos)
+void SoundSource::UpDate3DSound(Vec3&& pos, Vec3&& listenerPos)
 {
 	if (!is3D)
 	{
@@ -298,8 +298,6 @@ void SoundSource::SetEQ(Equalizer_DESC& eq_desc)
 	eq.FrequencyCenter3 = eq_desc.FrequencyCenter3;
 	//ƒZƒbƒg‚·‚é
 	pSource->SetEffectParameters(0, &eq, sizeof(FXEQ_PARAMETERS));
-
-
 }
 
 void SoundSource::SetSimpleReverb(SimpleReverb_DESC& reverb_desc)
@@ -527,10 +525,10 @@ Wav SoundSource::GetWav()
 	return wav;
 }
 
-//Ogg SoundSource::GetOgg()
-//{
-//	return ogg;
-//}
+Ogg SoundSource::GetOgg()
+{
+	return ogg;
+}
 
 FileType SoundSource::GetFileType()
 {

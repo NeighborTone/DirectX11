@@ -87,19 +87,19 @@ void PhysicsWorld::NearCallback(void *data, dGeomID o1, dGeomID o2)
 	int n = dCollide(o1, o2, N, &contact[0].geom, sizeof(dContact));	//nには衝突点数が返る
 
 	//---------------こんな感じで取得できた-------------------------------------------------------------
-	if (pPhysics->pRigidBody[0]->GetGeomID() == o1 || pPhysics->pRigidBody[0]->GetGeomID() == o2)
-	{
-		if(pPhysics->pRigidBody[1]->GetGeomID() == o1 || pPhysics->pRigidBody[1]->GetGeomID() == o2)
-		//箱が当たっていればHit!!!!!!!!!!!!
-		std::cout << "HogeBox Hit!!!!!!" << std::endl;
-	}
+	//if (pPhysics->pRigidBody[0]->GetGeomID() == o1 || pPhysics->pRigidBody[0]->GetGeomID() == o2)
+	//{
+	//	if(pPhysics->pRigidBody[1]->GetGeomID() == o1 || pPhysics->pRigidBody[1]->GetGeomID() == o2)
+	//	//箱が当たっていればHit!!!!!!!!!!!!
+	//	std::cout << "HogeBox Hit!!!!!!" << std::endl;
+	//}
 
-	if (pPhysics->pGeometry[0]->GetGeomID() == o1 || pPhysics->pGeometry[0]->GetGeomID() == o2)
-	{
-		if (pPhysics->pGeometry[1]->GetGeomID() == o1 || pPhysics->pGeometry[1]->GetGeomID() == o2)
-			//棒と床が当たっていればHit!!!!!!!!!!
-			std::cout << "Ground Hit!!!!!!" << std::endl;
-	}
+	//if (pPhysics->pGeometry[0]->GetGeomID() == o1 || pPhysics->pGeometry[0]->GetGeomID() == o2)
+	//{
+	//	if (pPhysics->pGeometry[1]->GetGeomID() == o1 || pPhysics->pGeometry[1]->GetGeomID() == o2)
+	//		//棒と床が当たっていればHit!!!!!!!!!!
+	//		std::cout << "Ground Hit!!!!!!" << std::endl;
+	//}
 	//-----------------------------------------------------------------------------------------------
 
 	//接触点を算出したり、接触点の性質などを設定

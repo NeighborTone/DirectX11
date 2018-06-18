@@ -69,13 +69,6 @@ bool SoundSystem::Create()
 		return false;
 	}
 	
-	//listener.Position = { 0,0,0 };	//XMFLOTA3
-	////以下二つは直交にしなければならない
-	//listener.OrientFront = { 0,0,1 };	//前方方向の定義
-	//listener.OrientTop = { 0,1,0 };	//上方向の定義
-	//listener.pCone = nullptr;				//NULLは全方向性と同じ
-	//listener.Velocity = { 0,0,0 };	//ドップラー効果に用いるPositionには影響しない
-
 	//マスターボイスの生成
 	hr = pXAudio2->CreateMasteringVoice(
 		&pMaster,

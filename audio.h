@@ -6,7 +6,7 @@
 #include "EffectParameter.hpp"
 #include "Utility.hpp"
 #include "wav.h"
-//#include "ogg.h"
+#include "ogg.h"
 
 #define _USE_VOICECALLBACK_
 #pragma comment(lib,"XAudio2.lib")

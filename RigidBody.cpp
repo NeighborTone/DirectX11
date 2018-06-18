@@ -30,7 +30,7 @@ dBodyID RigidBody::GetBodyID() const
 }
 Vec3 RigidBody::GetPosition() const
 {
-	auto values = dBodyGetPosition(body);
+	const dReal* values = dBodyGetPosition(body);
 	return Vec3((float)values[0], (float)values[1], (float)values[2]);
 }
 
@@ -52,7 +52,7 @@ void RigidBody::AddVelocity(const Vec3 & velocity)
 
 Vec3 RigidBody::GetVelocity() const
 {
-	auto vel = dBodyGetLinearVel(body);
+	const dReal* vel = dBodyGetLinearVel(body);
 	return Vec3((float)vel[0], (float)vel[1], (float)vel[2]);
 }
 
@@ -73,7 +73,7 @@ void RigidBody::SetQuaternion(Vec3& angle)
 Vec3 RigidBody::GetQuaternion()
 {
 	//‚Ü‚¾‚È‚Ì‚Å“K“–
-	auto val = dBodyGetQuaternion(body);
+	const dReal* val = dBodyGetQuaternion(body);
 
 	return Vec3(
 		DirectX::XMConvertToDegrees((float)val[1]), 

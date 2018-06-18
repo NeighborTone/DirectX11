@@ -18,15 +18,13 @@ private:
 	IXAudio2SourceVoice* pSource;
 	//wavデータ格納用
 	Wav wav;
-	//Ogg ogg;
+	Ogg ogg;
 	//ソースの情報格納用
 	XAUDIO2_VOICE_STATE xstate;
 	//3Dオーディオソースの定義
 	X3DAUDIO_EMITTER emitter;
 	//リスナー位置
 	X3DAUDIO_LISTENER listener;
-
-
 	//ファイル情報
 	FileType fileType;
 
@@ -41,7 +39,7 @@ public:
 	~SoundSource();
 	bool Load(const std::string path, bool is3DSound);
 	//音源の位置などの更新
-	void UpData3DSound(Vec3&& pos, Vec3&& listenerPos);
+	void UpDate3DSound(Vec3&& pos, Vec3&& listenerPos);
 	//BGM再生に適した再生を行います
 	void PlayBGM(int loopNum = XAUDIO2_LOOP_INFINITE, float gain = 1.0f, float pitch = 1.0f);
 	//効果音再生に適した再生を行います
@@ -70,10 +68,10 @@ public:
 		EffectParameters::Limiter_DESC& limiter_desc
 	);
 
-	//サンプル数で再生時間を返す
+	//サンプル数で再生時間を返す。
 	int GetCurrentSampleTime();
 	IXAudio2SourceVoice** GetSource();
 	Wav GetWav();
-	//Ogg GetOgg();
+	Ogg GetOgg();
 	FileType GetFileType();
 };

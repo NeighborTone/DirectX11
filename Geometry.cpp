@@ -24,7 +24,7 @@ dGeomID Geometry::GetGeomID() const
 
 Vec3 Geometry::GetPosition() const
 {
-	auto values = dGeomGetPosition(geom);
+	const dReal* values = dGeomGetPosition(geom);
 	return Vec3((float)values[0], (float)values[1], (float)values[2]);
 }
 

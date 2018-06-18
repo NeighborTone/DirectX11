@@ -26,7 +26,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	ef2.Load("Resource/testEf.efk");
 
 	SoundSource sound, sound2;
-	sound.Load("Resource/Grass.wav",false);
+	sound.Load("Resource/Grass.wav",true);
 	sound2.Load("Resource/se.wav", true);
 	EffectParameters::Equalizer_DESC eq;
 	eq.FrequencyCenter3 = 200.0f;
@@ -38,7 +38,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	EffectParameters::Limiter_DESC limiter;
 	limiter.Loudness = 1100;
 	sound2.SetMultiEffecter(eq, rev, delay, limiter);
-	sound.PlayBGM(255,0.2f);
+	sound.PlayBGM(255,1.0f);
 
 
 	while (ge.Run())
@@ -74,7 +74,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 			
 			ef2.Play(Vec3(0, 0, 0));
 		}
-		sound2.UpData3DSound(Vec3(0,0,0),Vec3(camera3D.pos));
+		sound.UpDate3DSound(Vec3(0, 0, 20), Vec3(camera3D.pos));
+		sound2.UpDate3DSound(Vec3(0, 0, 0),Vec3(camera3D.pos));
 		ef2.Draw(camera3D);
 
 
