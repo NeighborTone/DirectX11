@@ -53,7 +53,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	while (ge.Run())
 	{
 		//===================================//
-		//==========3DRendering==============//
+		//==========3DRendering=================//
 		//===================================//
 		camera3D.Run(true);
 		if (KeyBoard::Down(KeyBoard::Key::KEY_ESCAPE) ||
@@ -93,7 +93,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 
 		
 		//===================================//
-		//==========2DRendering==============//
+		//==========2DRendering=================//
 		//===================================//
 		camera2D.Run(false);
 		if (KeyBoard::Down(KeyBoard::Key::KEY_M))

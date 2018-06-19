@@ -13,6 +13,7 @@ Camera::Camera():
 	isDepthTest(false)
 {
 	Engine::COMInitialize();
+	SetOrthographic(1.0f, -D3D11_FLOAT32_MAX, D3D11_FLOAT32_MAX);
 	Create();
 	System::AddProcedure(this);
 }
@@ -195,12 +196,11 @@ void Camera::OnProceed(HWND, UINT message, WPARAM, LPARAM)
 
 	if (Engine::GetWindowSize().x <= 0.0f || Engine::GetWindowSize().y <= 0.0f)
 		return;
-	
+
 	if (isPerspective)
 		SetPerspective(fieldOfView, nearClip, farClip);
 	else
 		SetOrthographic(size, nearClip, farClip);
 
 	Create();
-
 }

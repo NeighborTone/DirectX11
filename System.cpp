@@ -19,20 +19,18 @@ bool System::UpDate()
 	//メッセージを取得
 	GetMessage(&msg, NULL, 0, 0);
 	//メッセージループ(入力などの命令を読む)
-	if (msg.message == WM_QUIT)
+	while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 	{
-		return false;
-	}
-	if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-	{
-		//メッセージをデコードしてWinProcに渡す
+		if (msg.message == WM_QUIT)
+			return false;
+
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
-		
 	}
 	
 	PostMessage(handle, WM_APP, 0, 0);
-
+	if (GetSize().x <= 0.0f || GetSize().y <= 0.0f)
+		Sleep(100);
 	return true;
 
 }
@@ -94,6 +92,7 @@ bool System::Create(std::string str, int width, int height)
 
 	//ウィンドウサイズと初期座標位置
 	SetSize(width,height);
+	SetWindowLongPtr(handle, GWLP_WNDPROC, (LONG_PTR)WinProc);
 	//ウィンドウ作成
 	ShowWindow(handle, SW_SHOWNORMAL);
 

@@ -69,63 +69,30 @@ void Direct3D::UpDate()
 
 bool Direct3D::Create(bool isFull)
 {
-	ErrorMessage(IsCreateSwapChain(isFull), "スワップチェーンの作成に失敗", "Error");
+	ErrorMessage(IsCreateDevice(isFull), "デバイスの作成に失敗", "Error");
 	ErrorMessage(IsCreateBlendState(), "アルファブレンドの設定に失敗", "Error");
 	ErrorMessage(IsCreateD2D(), "Direct2Dの作成に失敗", "Error");
+	
+	//ビューとスワップチェイン
+	CreateSwapChain();
 	System::AddProcedure(this);
-	SetViewport();
+	
 
 	return true;
 }
 
-bool Direct3D::IsCreateSwapChain(bool isFull)
+bool Direct3D::IsCreateDevice(bool isFull)
 {
-	DXGI_SWAP_CHAIN_DESC swapDesc;
-	HRESULT hr;
-	SecureZeroMemory(&swapDesc, sizeof(swapDesc));
+
 
 	UINT flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;	//Direct2DとDirectX11を連携させるのに必須
 #if defined(_DEBUG)
 	flags |= D3D11_CREATE_DEVICE_DEBUG;		//デバッグ用
 #endif
-
-	//シングルバックバッファ(裏画面)を設定
-	swapDesc.BufferCount = 1;
-
-	//バックバッファのウィンドウ幅を設定
-	swapDesc.BufferDesc.Width = Engine::GetWindowSize().x;
-	swapDesc.BufferDesc.Height = Engine::GetWindowSize().y;
-
-	//バックバッファを32bitに設定
-	swapDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-
-	//リフレッシュレートの設定
-	swapDesc.BufferDesc.RefreshRate.Numerator = 60;
-	swapDesc.BufferDesc.RefreshRate.Denominator = 1;
-	//Usageの設定
-	//Usageはテクスチャの性質や確保するメモリの場所を指定するオプション
-	swapDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-
-	//ウィンドウハンドルの設定
-	swapDesc.OutputWindow = Engine::GetWindowHandle();
-
-	//マルチサンプリングをオフにする
-	swapDesc.SampleDesc.Count = 1;
-	swapDesc.SampleDesc.Quality = 0;
-
-	//ウィンドウモード設定
-	swapDesc.Windowed = isFull;
-
-	//走査線の順序とスケーリングを不特定に設定する
-	swapDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-	swapDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-
-	//表示済みのバックバッファの破棄
-	swapDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-
-	swapDesc.Flags = 0;
-
-		//ドライバータイプの列挙
+	
+	HRESULT hr;
+	
+	//ドライバータイプの列挙
 	std::array<D3D_DRIVER_TYPE, 5> driverType =
 	{
 		D3D_DRIVER_TYPE_HARDWARE,
@@ -143,22 +110,20 @@ bool Direct3D::IsCreateSwapChain(bool isFull)
 		D3D_FEATURE_LEVEL_9_1,
 	};
 
-	//スワップチェイン(フロントバッファ)とコンテキストの作成
+	//デバイスとコンテキストの作成
 	for (size_t i = 0; i < driverType.size(); ++i)
 	{
-		hr = D3D11CreateDeviceAndSwapChain(
-			NULL,					//デバイスの作成時に使用するビデオアダプターへのポインター
+		hr = D3D11CreateDevice(
+			nullptr,					//デバイスの作成時に使用するビデオアダプターへのポインター
 			driverType[i],			//作成するデバイスの種類
-			NULL,					//ソフトウェアラスタライザーを実装するDLLのハンドル
+			nullptr,					//ソフトウェアラスタライザーを実装するDLLのハンドル
 			flags,					//有効にするランタイムレイヤー
 			feature,				//作成を試みる機能レベルの順序を指定するD3D_FEATURE_LEVELの配列へのポインター
 			6,						//pFeatureLevelsの要素数
 			D3D11_SDK_VERSION,		//SDKのバージョン。D3D11_SDK_VERSIONを指定
-			&swapDesc,				//スワップチェーンの初期化パラメーターを格納するスワップチェーンの記述へのポインター
-			&swapChain,				//レンダリングに使用するスワップ チェーンを表すIDXGISwapChainオブジェクトへのポインターのアドレスを返す
-			&device3D,				//作成されたデバイスを表すID3D11Deviceオブジェクトへのポインターのアドレスを返す。NULLを指定すると、pFeatureLevelでサポートされている最高の機能レベルが返される
-			NULL,					//このデバイスでサポートされている機能レベルの配列にある最初の要素を表すD3D_FEATURE_LEVELへのポインターを返す
-			&context3D);			//デバイス コンテキストを表すID3D11DeviceContextオブジェクトへのポインターのアドレスを返す
+			&device3D,
+			nullptr,
+			&context3D);
 		if (SUCCEEDED(hr))
 		{
 			break;
@@ -263,6 +228,60 @@ bool Direct3D::IsCreateD2D()
 	return true;
 }
 
+void Direct3D::CreateSwapChain()
+{
+	CComPtr<IDXGIDevice> dxgi = nullptr;
+	device3D->QueryInterface(&dxgi);
+
+	CComPtr<IDXGIAdapter> adapter = nullptr;
+	dxgi->GetAdapter(&adapter);
+
+	CComPtr<IDXGIFactory> factory = nullptr;
+	adapter->GetParent(__uuidof(IDXGIFactory), reinterpret_cast<void**>(&factory));
+
+	DXGI_SWAP_CHAIN_DESC swapDesc;
+	SecureZeroMemory(&swapDesc, sizeof(swapDesc));
+	//シングルバックバッファ(裏画面)を設定
+	swapDesc.BufferCount = 1;
+
+	//バックバッファのウィンドウ幅を設定
+	swapDesc.BufferDesc.Width = Engine::GetWindowSize().x;
+	swapDesc.BufferDesc.Height = Engine::GetWindowSize().y;
+
+	//バックバッファを32bitに設定
+	swapDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+
+	//リフレッシュレートの設定
+	swapDesc.BufferDesc.RefreshRate.Numerator = 60;
+	swapDesc.BufferDesc.RefreshRate.Denominator = 1;
+	//Usageの設定
+	//Usageはテクスチャの性質や確保するメモリの場所を指定するオプション
+	swapDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+
+	//ウィンドウハンドルの設定
+	swapDesc.OutputWindow = Engine::GetWindowHandle();
+
+	//マルチサンプリングをオフにする
+	swapDesc.SampleDesc.Count = 1;
+	swapDesc.SampleDesc.Quality = 0;
+
+	//ウィンドウモード設定
+	swapDesc.Windowed = isFullScreen;
+
+	//走査線の順序とスケーリングを不特定に設定する
+	swapDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+	swapDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+
+	//表示済みのバックバッファの破棄
+	swapDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+
+	swapDesc.Flags = 0;
+	swapChain.Release();
+	factory->CreateSwapChain(device3D, &swapDesc, &swapChain);
+	factory->MakeWindowAssociation(Engine::GetWindowHandle(), DXGI_MWA_NO_WINDOW_CHANGES | DXGI_MWA_NO_ALT_ENTER);
+	SetViewport();
+}
+
 void Direct3D::SetViewport()
 {
 	//ビューポートの作成
@@ -283,5 +302,5 @@ void Direct3D::OnProceed(HWND, UINT message, WPARAM, LPARAM)
 	if (Engine::GetWindowSize().x <= 0.0f || Engine::GetWindowSize().y <= 0.0f)
 		return;
 
-	SetViewport();
+	CreateSwapChain();
 }

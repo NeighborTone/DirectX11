@@ -3,7 +3,7 @@
 #include <tchar.h>
 #include <string>
 #include <DirectXMath.h>
-#include <forward_list>
+#include <list>
 
 /*! @class System
 *   @brief ウィンドウを生成します
@@ -60,9 +60,9 @@ public:
 	DirectX::XMINT2 GetSize();
 
 private:
-	static std::forward_list<Proceedable*>& GetProcedures()
+	static std::list<Proceedable*>& GetProcedures()
 	{
-		static std::forward_list<Proceedable*> procedures;
+		static std::list<Proceedable*> procedures;
 		return procedures;
 	}
 	static LRESULT CALLBACK WinProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam);
@@ -73,7 +73,7 @@ public:
 	*/
 	static void AddProcedure(Proceedable* const procedure)
 	{
-		GetProcedures().push_front(procedure);
+		GetProcedures().emplace_back(procedure);
 	}
 	/*!
 	* @brief DirectXからのメッセージ送信を破棄します

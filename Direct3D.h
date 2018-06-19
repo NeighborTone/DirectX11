@@ -48,9 +48,10 @@ private:
 	//CComPtrマイクロソフトのユニークポインタ
 
 	bool Create(bool isFullScreen);
-	bool IsCreateSwapChain(bool isFullScreen);
+	bool IsCreateDevice(bool isFullScreen);
 	bool IsCreateBlendState();
 	bool IsCreateD2D();
+	void CreateSwapChain();
 	void SetViewport();
 	void OnProceed(HWND, UINT message, WPARAM, LPARAM) override;
 	static bool isFullScreen;
