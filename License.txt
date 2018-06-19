@@ -28,5 +28,3 @@ Copyright (c) 2017 itukikikuti
 
 https://github.com/itukikikuti/XLibrary11
 https://github.com/itukikikuti/XModelLibrary11  
-
-¦“Á‚É‚±‚Ìƒ‰ƒCƒuƒ‰ƒŠ‚ÍDirectX11‚É‰‚ß‚ÄG‚ê‚é„‚É‚Æ‚Á‚Ä”ñí‚É‚ ‚è‚ª‚½‚¢‘¶İ‚Å‚µ‚½

@@ -504,13 +504,13 @@ void SoundSource::SetMultiEffecter(Equalizer_DESC& eq_desc, Reverb_DESC& reverb_
 	pSource->SetEffectParameters(3, &limiter, sizeof(FXMASTERINGLIMITER_PARAMETERS));
 }
 
-int SoundSource::GetCurrentSampleTime()
+long long SoundSource::GetCurrentSampleTime()
 {
 	GetState();
-	int currentTime = -1;
+	long long currentTime = -1;
 	if (xstate.BuffersQueued > 0)
 	{
-		currentTime = (int)xstate.SamplesPlayed;
+		currentTime = (long long)xstate.SamplesPlayed;
 	}
 	return currentTime;
 }

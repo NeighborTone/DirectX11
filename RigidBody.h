@@ -39,70 +39,70 @@ public:
 	* @brief dGeomIDを取得します
 	* @return dGeomID
 	*/
-	dGeomID GetGeomID() const;
+	virtual dGeomID GetGeomID() const final;
 	/*!
 	* @brief dBodyIDを取得します
 	* @return dBodyID
 	*/
-	dBodyID GetBodyID() const;
+	virtual dBodyID GetBodyID() const final;
 	/*!
 	* @brief 座標を取得します
 	* @return Vec3
 	*/
-	Vec3 GetPosition() const;
+	virtual Vec3 GetPosition() const final;
 	/*!
 	* @brief 座標を設定します
 	* @param (pos) 座標
 	*/
-	void SetPosition(const Vec3& pos);
+	virtual void SetPosition(const Vec3& pos) final;
 	/*!
 	* @brief ボディの重心に作用する力を設定します。これは主にボディを有効化するときに使用します。
 	* @detail このメソッドを用いることで、剛体ごとに重力をかけるようなことができます
 	* @param (force) 向きに対して与えたい力
 	*/
-	void AddForce(const Vec3& force);
+	virtual void AddForce(const Vec3& force) final;
 	/*!
 	* @brief 剛体に速度を与えます
 	* @param (velocity) 向きに対して与えたい速度
 	*/
-	void AddVelocity(const Vec3& velocity);
+	virtual void AddVelocity(const Vec3& velocity) final;
 	/*!
 	* @brief 剛体の速度を得ます
 	* @return Vec3
 	*/
-	Vec3 GetVelocity() const;
+	virtual Vec3 GetVelocity() const final;
 	/*!
 	* @brief 未実装
 	*/
-	void SetQuaternion(Vec3& angle);
+	virtual void SetQuaternion(Vec3& angle) final;
 	/*!
 	* @brief 未実装
 	*/
-	Vec3 GetQuaternion();
+	virtual Vec3 GetQuaternion() final;
 	/*!
 	* @brief 任意の軸1つに対しての姿勢を設定します
 	* @param (axis) 軸
 	* @param (degree) 回転値
 	*/
-	void SetAxisAndAngle(Axis axis,float degree);
+	virtual void SetAxisAndAngle(Axis axis,float degree) final;
 	/*!
 	* @brief 剛体に対しての姿勢を設定します
 	* @param (angle) 度数(degree)での回転値
 	*/
-	void SetRotation(const Vec3& angle);
+	virtual void SetRotation(const Vec3& angle) final;
 	/*!
 	* @brief 剛体の姿勢を回転行列で得ます
 	* @return DirectX::XMMATRIX
 	*/
-	DirectX::XMMATRIX GetRotation() const;
+	virtual DirectX::XMMATRIX GetRotation() const final;
 	/*!
 	* @brief 剛体の物理演算を有効にします
 	*/
-	void BodyEnable();
+	virtual void BodyEnable() final;
 	/*!
 	* @brief 剛体の物理演算を無効にします
 	*/
-	void BodyDisable();
+	virtual void BodyDisable() final;
 	/*!
 	* @brief 剛体の形状を描画します(現在Boxのみ)
 	* @param (tex) 描画に使いたいテクスチャー
@@ -115,23 +115,22 @@ public:
 *	@class DynamicBox
 *   @brief 直方体を生成します
 */
-class DynamicBox : public RigidBody
+class DynamicBox final : public RigidBody
 {
 private:
 	Mesh mesh;
+	void Create(const Vec3& pos, const Vec3& scale, dReal totalMass);
 public:
-	DynamicBox(const Vec3& pos, const Vec3& scale, dReal totalMass);
-	DynamicBox(const DynamicBox& box);
-	DynamicBox();
-	~DynamicBox();
 	/*!
 	* @brief 直方体を生成します
 	* @param (pos)       剛体の中心座標
 	* @param (scale)	 剛体のそれぞれの軸の1辺の大きさ
 	* @param (totalMass) 質量
 	*/
-	void Create(const Vec3& pos, const Vec3& scale, dReal totalMass);
-
+	DynamicBox(const Vec3& pos, const Vec3& scale, dReal totalMass);
+	DynamicBox(const DynamicBox& box);
+	DynamicBox();
+	~DynamicBox();
 	void Draw(Texture& tex) override;
 
 	//アライメント対策
@@ -150,20 +149,22 @@ public:
 *	@class DynamicSphere
 *   @brief 球を生成します
 */
-class DynamicSphere : public RigidBody
+class DynamicSphere final : public RigidBody
 {
+private:
+	void Create(const Vec3& pos, const dReal& radius, const dReal totalMass);
 public:
-	DynamicSphere(const Vec3& pos, const dReal& radius,dReal totalMass);
-	DynamicSphere(const DynamicSphere& sphere);
-	DynamicSphere();
-	~DynamicSphere();
 	/*!
 	* @brief 球を生成します
 	* @param (pos)       剛体の中心座標
 	* @param (radius)    半径
 	* @param (totalMass) 質量
 	*/
-	void Create(const Vec3& pos, const dReal& radius, const dReal totalMass);
+	DynamicSphere(const Vec3& pos, const dReal& radius,dReal totalMass);
+	DynamicSphere(const DynamicSphere& sphere);
+	DynamicSphere();
+	~DynamicSphere();
+	
 	void Draw(Texture& tex) override;
 };
 
@@ -171,13 +172,11 @@ public:
 *	@class DynamicCylinder
 *   @brief 円筒を生成します
 */
-class DynamicCylinder : public RigidBody
+class DynamicCylinder final : public RigidBody
 {
+private:
+	void Create(const Vec3& pos, const dReal totalmass, const int direction, const dReal radius, const dReal length);
 public:
-	DynamicCylinder(const Vec3& pos, const dReal totalMass, const int direction, const dReal radius, const dReal length);
-	DynamicCylinder(const DynamicCylinder& cylinder);
-	DynamicCylinder();
-	~DynamicCylinder();
 	/*!
 	* @brief 円筒を生成します
 	* @param (pos)       剛体の中心座標
@@ -186,7 +185,11 @@ public:
 	* @param (radius)    半径
 	* @param (length)    長さ
 	*/
-	void Create(const Vec3& pos , const dReal totalmass, const int direction, const dReal radius, const dReal length);
+	DynamicCylinder(const Vec3& pos, const dReal totalMass, const int direction, const dReal radius, const dReal length);
+	DynamicCylinder(const DynamicCylinder& cylinder);
+	DynamicCylinder();
+	~DynamicCylinder();
+
 	void Draw(Texture& tex) override;
 };
  
@@ -194,13 +197,11 @@ public:
 *	@class DynamicCapsule
 *   @brief カプセルを生成します
 */
-class DynamicCapsule : public RigidBody
+class DynamicCapsule final : public RigidBody
 {
+private:
+	void Create(const Vec3& pos, const dReal totalMass, const int direction, const dReal radius, const dReal length);
 public:
-	DynamicCapsule(const Vec3& pos, const dReal totalMass, const int direction, const dReal radius, const dReal length);
-	DynamicCapsule(const DynamicCapsule& capsule);
-	DynamicCapsule();
-	~DynamicCapsule();
 	/*!
 	* @brief カプセルを生成します
 	* @param (pos)       剛体の中心座標
@@ -209,6 +210,11 @@ public:
 	* @param (radius)    半径
 	* @param (length)    長さ
 	*/
-	void Create(const Vec3& pos, const dReal totalMass, const int direction, const dReal radius, const dReal length);
+
+	DynamicCapsule(const Vec3& pos, const dReal totalMass, const int direction, const dReal radius, const dReal length);
+	DynamicCapsule(const DynamicCapsule& capsule);
+	DynamicCapsule();
+	~DynamicCapsule();
+
 	void Draw(Texture& tex) override;
 };

@@ -25,13 +25,17 @@ private:
 	void Create();
 	void Update();
 	void EffectDraw(Camera& camera);
-	
+	void Init();
 public:
+	Vec3 pos;
+	Vec3 scale;
+	Vec3 angle;
 	Particle(const char* path);
 	Particle();
 	~Particle();
 	void Load(const char* path);
-	void Play(Vec3&& pos);
+	void Play();
+	void Stop();
 	void Draw(Camera &camera);
 
 	

@@ -58,12 +58,12 @@ bool Ogg::IsOgg(const std::string path)
 	fread_s(c, sizeof(c), 3, 1, fp);
 	fclose(fp);
 
-	bool isTreu =
+	bool isogg =
 		(c[0] == 'O') &&
 		(c[1] == 'g') &&
 		(c[2] == 'g');
 
-	return  isTreu;
+	return  isogg;
 	
 }
 

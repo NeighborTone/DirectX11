@@ -22,64 +22,67 @@ public:
 	* @brief dGeomIDを取得します
 	* @return dGeomID
 	*/
-	dGeomID GetGeomID() const;
+	virtual dGeomID GetGeomID() const final;
 	/*!
 	* @brief 座標を取得します
 	* @return Vec3
 	*/
-	Vec3 GetPosition() const;
+	virtual Vec3 GetPosition() const final;
 	/*!
 	* @brief 座標を設定します
 	* @param (pos) 座標
 	*/
-	void SetPosition(const Vec3& pos);
+	virtual void SetPosition(const Vec3& pos) final;
 	/*!
 	* @brief 形状の姿勢を設定します
 	* @param (angle) 度数(degree)での回転値
 	*/
-	void SetRotation(const Vec3& angle);
+	virtual void SetRotation(const Vec3& angle) final;
 	/*!
 	* @brief 形状の姿勢を回転行列で得ます
 	* @return DirectX::XMMATRIX
 	*/
-	DirectX::XMMATRIX GetRotation() const;
+	virtual DirectX::XMMATRIX GetRotation() const final;
 	
 };
 
 
-class StaticBox : public Geometry
+class StaticBox final : public Geometry
 {
+private:
+	void Create(const Vec3& pos, const Vec3& scale);
 public:
 	StaticBox(const Vec3& pos, const Vec3& scale);
 	StaticBox();
-	void Create(const Vec3& pos, const Vec3& scale);
 	~StaticBox();
-	
 };
 
-class StaticSphere : public Geometry
+class StaticSphere final : public Geometry
 {
+private:
+	void Create(const Vec3& pos, const dReal& radius);
 public:
 	StaticSphere(const Vec3& pos, const dReal& radius);
 	StaticSphere();
-	~StaticSphere();
-	void Create(const Vec3& pos, const dReal& radius);
+	~StaticSphere();	
 };
 
-class StaticCylinder : public Geometry
+class StaticCylinder final : public Geometry
 {
+private:
+	void Create(const Vec3& pos, const int direction, const dReal radius, const dReal length);
 public:
 	StaticCylinder(const Vec3& pos, const int direction, const dReal radius, const dReal length);
 	StaticCylinder();
 	~StaticCylinder();
-	void Create(const Vec3& pos, const int direction, const dReal radius, const dReal length);
 };
 
-class StaticCapsule : public Geometry
+class StaticCapsule final : public Geometry
 {
+private:
+	void Create(const Vec3& pos, const int direction, const dReal radius, const dReal length);
 public:
 	StaticCapsule(const Vec3& pos, const int direction, const dReal radius, const dReal length);
 	StaticCapsule();
 	~StaticCapsule();
-	void Create(const Vec3& pos, const int direction, const dReal radius, const dReal length);
 };

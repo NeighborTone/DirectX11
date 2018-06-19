@@ -12,7 +12,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 
 	//カメラ生成
 	Camera camera3D;
-	camera3D.pos = Vec3(0.0f, 0.0f, 0.0f);
+	camera3D.pos = 0;
 	camera3D.angle.x = 20;
 	camera3D.SetPerspective(45.0f, 1, 10000.0f);
 	camera3D.SetDepthTest(true);
@@ -24,7 +24,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	Particle ef("Resource/fire.efk");
 	Particle ef2;
 	ef2.Load("Resource/testEf.efk");
-
+	ef2.pos.z = 5;
 	SoundSource sound, sound2;
 	sound.Load("Resource/Grass.wav",true);
 	sound2.Load("Resource/se.wav", true);
@@ -40,12 +40,21 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	sound2.SetMultiEffecter(eq, rev, delay, limiter);
 	sound.PlayBGM(255,1.0f);
 
+	PhysicsWorld p;
+	Texture tex("Resource/box.jpg");
+
+	Mesh box;
+	box.pos.z = 4;
+	box.GetMaterial().SetTexture(0, &tex);
+	box.CreateCube();
+	
+	p.AddGeometry(new StaticBox(box.pos,box.scale));
 
 	while (ge.Run())
 	{
-		//================================//
+		//===================================//
 		//==========3DRendering==============//
-		//================================//
+		//===================================//
 		camera3D.Run(true);
 		if (KeyBoard::Down(KeyBoard::Key::KEY_ESCAPE) ||
 			Pad::Down(Pad::Button::PAD_START))
@@ -72,19 +81,27 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		{
 			sound2.PlaySE();
 			
-			ef2.Play(Vec3(0, 0, 0));
+			ef2.Play();
 		}
 		sound.UpDate3DSound(Vec3(0, 0, 20), Vec3(camera3D.pos));
 		sound2.UpDate3DSound(Vec3(0, 0, 0),Vec3(camera3D.pos));
+		box.pos = p.pGeometry[0]->GetPosition();
+		//パーティクルはメッシュの後に描画
+		box.Draw();
+
 		ef2.Draw(camera3D);
 
-
-
-		//================================//
+		
+		//===================================//
 		//==========2DRendering==============//
-		//================================//
+		//===================================//
 		camera2D.Run(false);
-
+		if (KeyBoard::Down(KeyBoard::Key::KEY_M))
+		{
+			ef.Play();
+		}
+		ef.scale = 50;
+		ef.Draw(camera2D);
 		std::cout << sound2.GetCurrentSampleTime()<< std::endl;
 	}
 

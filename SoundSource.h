@@ -69,7 +69,7 @@ public:
 	);
 
 	//ƒTƒ“ƒvƒ‹”‚ÅÄ¶ŠÔ‚ğ•Ô‚·B
-	int GetCurrentSampleTime();
+	long long GetCurrentSampleTime();
 	IXAudio2SourceVoice** GetSource();
 	Wav GetWav();
 	Ogg GetOgg();

@@ -1,23 +1,21 @@
 #include "Particle.h"
 #include "Engine.h"
 
-Particle::Particle(const char* path):
+Particle::Particle(const char* path) :
 	renderer(nullptr),
 	manager(nullptr),
 	effect(nullptr),
 	handle(0)
 {
+	Init();
 	Create();
 	Load(path);
-	
+
 }
 
-Particle::Particle():
-	renderer(nullptr),
-	manager(nullptr),
-	effect(nullptr),
-	handle(0)
+Particle::Particle()
 {
+	Init();
 	Create();
 }
 
@@ -43,9 +41,21 @@ void Particle::Create()
 	manager->SetTextureLoader(renderer->CreateTextureLoader());
 }
 
-void Particle::Play(Vec3&& pos)
+void Particle::Play()
 {
-	manager->Play(effect, pos.x, pos.y, pos.z);
+	handle = manager->Play(effect, pos.x, pos.y, pos.z);
+	manager->SetScale(handle, scale.x, scale.y, scale.z);
+	manager->SetRotation(
+		handle, 
+		DirectX::XMConvertToRadians(angle.x), 
+		DirectX::XMConvertToRadians(angle.y), 
+		DirectX::XMConvertToRadians(angle.z)
+	);
+}
+
+void Particle::Stop()
+{
+	manager->StopEffect(handle);
 }
 
 void Particle::Draw(Camera& camera)
@@ -70,8 +80,8 @@ void Particle::EffectDraw(Camera& camera)
 	{
 		for (int x = 0; x < 4; ++x)
 		{
-			  view.Values[y][x] = camera.constant.view.r[y].m128_f32[x];
-			  projection.Values[y][x] = camera.constant.projection.r[y].m128_f32[x];
+			view.Values[y][x] = camera.constant.view.r[y].m128_f32[x];
+			projection.Values[y][x] = camera.constant.projection.r[y].m128_f32[x];
 		}
 	}
 	//=====重要===============
@@ -83,10 +93,21 @@ void Particle::EffectDraw(Camera& camera)
 	renderer->SetProjectionMatrix(projection);
 	// カメラ行列の更新
 	renderer->SetCameraMatrix(view);
-	
+
 	renderer->BeginRendering();
 	manager->Draw();
 	renderer->EndRendering();
+}
+
+void Particle::Init()
+{
+	pos = 0;
+	scale = 1;
+	angle = 0;
+	renderer = nullptr;
+	manager = nullptr;
+	effect = nullptr;
+	handle = 0;
 }
 
 Particle::~Particle()

@@ -8,7 +8,7 @@ SoundSystem::SoundSystem() :
 	Engine::COMInitialize();
 	SecureZeroMemory(&x3DInstance, sizeof(x3DInstance));
 	SecureZeroMemory(&voiceDetails, sizeof(voiceDetails));
-	x3DInstance;
+	SecureZeroMemory(&x3DInstance, sizeof(x3DInstance));
 
 	Create();
 }

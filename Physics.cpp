@@ -75,7 +75,7 @@ void Physics::WorldStep(const float stepTime)
 }
 
 
-void PhysicsWorld::NearCallback(void *data, dGeomID o1, dGeomID o2)
+void PhysicsWorld::NearCallback([[maybe_unused]]void *data, dGeomID o1, dGeomID o2)
 {
 	/*void *data‚É”CˆÓ‚Ìƒ|ƒCƒ“ƒ^‚ğ‚½‚¹‚ç‚ê‚é */
 	PhysicsWorld* pPhysics = static_cast<PhysicsWorld*>(data);

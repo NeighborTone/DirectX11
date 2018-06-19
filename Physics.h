@@ -55,7 +55,7 @@ enum CylinderDir
 class PhysicsWorld final
 {
 private:
-	static void NearCallback(void* data, dGeomID o1, dGeomID o2);
+	static void NearCallback([[maybe_unused]]void* data, dGeomID o1, dGeomID o2);
 
 public:
 	
