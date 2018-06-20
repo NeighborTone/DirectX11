@@ -3,7 +3,23 @@
 #include "Particle.h"
 #include "Console.hpp"
 #include "Easing.hpp"
-
+//TODO:
+//:物理エンジン管理クラスの使い勝手が悪いので何とかする
+//:柔軟な衝突検知
+//:oggファイルの再生
+//:プリミティブの追加
+//:サウンドエフェクトクラス化
+//:XInputに対応
+//:警告レベル4での警告を最小限にする
+//:パッド、マウス、キー入力のグローバル変数の解消
+//:モデルに複数のテクスチャをアタッチできるようにする
+//:スカイボックス
+//:その他のモデル形式の読み込み
+//:スプライトアニメーション
+//:ライトの配置
+//:フォグ
+//:昔に作った機能のリファクタリング
+//:書いてないところのDoxy形式のコメント文追加
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow)
 {
@@ -68,9 +84,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		box[i].ID = physicsWorld.AddGeometry(new StaticBox(box[i].mesh.pos, box[i].mesh.scale));
 		physicsWorld.pGeometry[box[i].ID]->SetRotation(box[i].mesh.angle);
 	}
-	me.ID = physicsWorld.AddGeometry(new StaticBox(me.mesh.pos, me.mesh.scale));
-	physicsWorld.pGeometry[me.ID]->SetRotation(me.mesh.angle);
-
+	me.ID = physicsWorld.AddRigidBody(new DynamicBox(me.mesh.pos, me.mesh.scale,10));
+	physicsWorld.pRigidBody[me.ID]->SetRotation(me.mesh.angle);
 
 	while (ge.Run())
 	{
@@ -114,6 +129,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 			box[i].mesh.pos = physicsWorld.pGeometry[box[i].ID]->GetPosition();
 			box[i].mesh.Draw();
 		}
+		me.mesh.pos = physicsWorld.pRigidBody[me.ID]->GetPosition();
+		me.mesh.Draw();
 		if (KeyBoard::On(KeyBoard::Key::KEY_S))
 		{
 			me.mesh.pos.y -= 1;
@@ -130,10 +147,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		{
 			me.mesh.pos.x += 1;
 		}
-		physicsWorld.pGeometry[me.ID]->SetPosition(me.mesh.pos);
-		me.mesh.pos = physicsWorld.pGeometry[me.ID]->GetPosition();
-		physicsWorld.IsHitGeom(box[2].ID, me.ID);
-		me.mesh.Draw();
+		
 
 		//===================================//
 		//==========2DRendering=================//

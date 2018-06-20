@@ -55,7 +55,6 @@ void Camera::Run(bool clearBack)
 	//Worldに逆行列をかけてビューを作成
 	//ビュー行列は平行移動行列の逆行列に回転行列の逆行列を掛け算すると求まる
 	//ビューマトリックスの初期化
-
 	constant.view = XMMatrixTranspose(
 		XMMatrixInverse(
 			nullptr,

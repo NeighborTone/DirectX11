@@ -210,7 +210,6 @@ public:
 	* @param (radius)    ”¼Œa
 	* @param (length)    ’·‚³
 	*/
-
 	DynamicCapsule(const Vec3& pos, const dReal totalMass, const int direction, const dReal radius, const dReal length);
 	DynamicCapsule(const DynamicCapsule& capsule);
 	DynamicCapsule();

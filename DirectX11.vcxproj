@@ -156,6 +156,7 @@
       <AdditionalIncludeDirectories>C:\Users\game\Desktop\DirectX11\Ogg\temp;C:\Users\game\Desktop\DirectX11\DirectXTK\Inc;C:\Users\game\Desktop\DirectX11\ODE\include;C:\Users\tonari\Desktop\DirectX11\DirectXTK\Inc;C:\Users\tonari\Desktop\DirectX11\ODE\include;C:\Users\tonari\Desktop\D3D11\DirectXTK\Inc;C:\Users\game\Desktop\aa\ODE\include;C:\Users\tonari\Desktop\D3D11\ODE\include;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include\fbxsdk;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;./ODE/include;./DirectXTK/Inc;./Effekseer/include;./Ogg/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <EnableModules>true</EnableModules>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

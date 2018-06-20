@@ -76,20 +76,20 @@ void Physics::WorldStep(const float stepTime)
 
 void PhysicsWorld::IsHitGeom(int ID1, int ID2)
 {
-	if (pGeometry[ID1]->GetGeomID() == g1 || pGeometry[ID1]->GetGeomID() == g2)
-	{
-		if (pGeometry[ID2]->GetGeomID() == g1 || pGeometry[ID2]->GetGeomID() == g2)
-		{
-			std::cout << "foooooooooooooooooooooo" << std::endl;
-		}
-	}
-
+	//このままだと判定1個分（最後に呼んだやつ）しか取れない
+	g1 = pGeometry[ID1]->GetGeomID();
+	g2 = pGeometry[ID2]->GetGeomID();
 }
 
-void PhysicsWorld::NearCallback([[maybe_unused]]void *data, dGeomID o1, dGeomID o2)
+void PhysicsWorld::NearCallback(void *data, dGeomID o1, dGeomID o2)
 {
 	/*void *dataに任意のポインタを持たせられる */
 	PhysicsWorld* pPhysics = static_cast<PhysicsWorld*>(data);
+	
+	dBodyID b1 = dGeomGetBody(o1); // 物体1
+	dBodyID b2 = dGeomGetBody(o2); // 物体2
+	if (b1 && b2 && dAreConnectedExcluding(b1, b2, dJointTypeContact))
+		return; // 衝突対象でない物体の衝突ははずす
 
 	/*衝突時しそうなときにしかこの関数は呼ばれない*/
 	//NearCallback(近似的に衝突判定された2つのジオメトリの詳細な当たり判定を行う)
@@ -97,14 +97,11 @@ void PhysicsWorld::NearCallback([[maybe_unused]]void *data, dGeomID o1, dGeomID 
 	dContact contact[N];
 	int n = dCollide(o1, o2, N, &contact[0].geom, sizeof(dContact));	//nには衝突点数が返る
 
-	pPhysics->g1 = o1;
-	pPhysics->g2 = o2;
-
 	
 	//---------------こんな感じで取得できた-------------------------------------------------------------
-	//if (pPhysics->pRigidBody[0]->GetGeomID() == o1 || pPhysics->pRigidBody[0]->GetGeomID() == o2)
+	//if (pPhysics->g1 == o1 || pPhysics->g1 == o2)
 	//{
-	//	if(pPhysics->pRigidBody[1]->GetGeomID() == o1 || pPhysics->pRigidBody[1]->GetGeomID() == o2)
+	//	if(pPhysics->g2 == o1 || pPhysics->g2 == o2)
 	//	//箱が当たっていればHit!!!!!!!!!!!!
 	//	std::cout << "HogeBox Hit!!!!!!" << std::endl;
 	//}
