@@ -4,6 +4,7 @@
 #include "Console.hpp"
 #include "Easing.hpp"
 
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow)
 {
 	ShowConsole();
@@ -12,7 +13,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 
 	//カメラ生成
 	Camera camera3D;
-	camera3D.pos = 0;
+	camera3D.pos.z = -200;
+	camera3D.pos.y = 50;
 	camera3D.angle.x = 20;
 	camera3D.SetPerspective(45.0f, 1, 10000.0f);
 	camera3D.SetDepthTest(true);
@@ -21,37 +23,58 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	camera2D.SetDepthTest(false);
 	camera2D.SetOrthographic(1, 0.1f, 1000.0f);
 
-	Particle ef("Resource/fire.efk");
-	Particle ef2;
-	ef2.Load("Resource/testEf.efk");
-	ef2.pos.z = 5;
-	SoundSource sound, sound2;
-	sound.Load("Resource/Grass.wav",true);
-	sound2.Load("Resource/se.wav", true);
-	EffectParameters::Equalizer_DESC eq;
-	eq.FrequencyCenter3 = 200.0f;
-	eq.Gain3 = 0.126f;
-	EffectParameters::Reverb_DESC rev;
-	rev.RoomSize = 50.0f;
-	EffectParameters::Delay_DESC delay;
-	delay.DelayTime = 300;
-	EffectParameters::Limiter_DESC limiter;
-	limiter.Loudness = 1100;
-	sound2.SetMultiEffecter(eq, rev, delay, limiter);
-	sound.PlayBGM(255,1.0f);
-
-	PhysicsWorld p;
 	Texture tex("Resource/box.jpg");
+	Texture tex2("Resource/white.png");
+	PhysicsWorld physicsWorld;
+	struct Wall
+	{
+		Mesh mesh;
+		int ID;
+	};
+	Wall box[3];
+	Wall me;
+	me.mesh.GetMaterial().SetTexture(0,&tex2);
+	me.mesh.CreateCube();
+	me.mesh.pos = camera3D.pos;
+	me.mesh.pos.y -= 5;
+	me.mesh.pos.z += 10;
+	for (int i = 0; i < 3; ++i)
+	{
+		box[i].mesh.GetMaterial().SetTexture(0, &tex);
+		box[i].mesh.CreateCube();
+	}
+	//L
+	box[0].mesh.pos.x = -25;
+	box[0].mesh.pos.y = 10.f;
+	box[0].mesh.pos.z = 0;
+	box[0].mesh.scale.y = 20;
+	box[0].mesh.scale.z = 500;
+	//R
+	box[1].mesh.pos.x = 25;
+	box[1].mesh.pos.y = 10.f;
+	box[1].mesh.pos.z = 0;
+	box[1].mesh.scale.y = 20;
+	box[1].mesh.scale.z = 500;
+	//C
+	box[2].mesh.pos.x = 0;
+	box[2].mesh.pos.z = 0;
+	box[2].mesh.angle.x = 0;
+	box[2].mesh.scale.x = 50;
+	box[2].mesh.scale.y = 1;
+	box[2].mesh.scale.z = 500;
 
-	Mesh box;
-	box.pos.z = 4;
-	box.GetMaterial().SetTexture(0, &tex);
-	box.CreateCube();
-	
-	p.AddGeometry(new StaticBox(box.pos,box.scale));
+	for (int i = 0; i < 3; ++i)
+	{
+		box[i].ID = physicsWorld.AddGeometry(new StaticBox(box[i].mesh.pos, box[i].mesh.scale));
+		physicsWorld.pGeometry[box[i].ID]->SetRotation(box[i].mesh.angle);
+	}
+	me.ID = physicsWorld.AddGeometry(new StaticBox(me.mesh.pos, me.mesh.scale));
+	physicsWorld.pGeometry[me.ID]->SetRotation(me.mesh.angle);
+
 
 	while (ge.Run())
 	{
+		physicsWorld.UpDate();
 		//===================================//
 		//==========3DRendering=================//
 		//===================================//
@@ -61,14 +84,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		{
 			break;
 		}
-		if (KeyBoard::On(KeyBoard::Key::KEY_UP))
-		{
-			camera3D.pos.z += 0.6f;
-		}
-		if (KeyBoard::On(KeyBoard::Key::KEY_DOWN))
-		{
-			camera3D.pos.z -= 0.6f;
-		}
 		if (KeyBoard::On(KeyBoard::Key::KEY_RIGHT))
 		{
 			camera3D.pos.x += 0.6f;
@@ -77,32 +92,55 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		{
 			camera3D.pos.x -= 0.6f;
 		}
-		if (KeyBoard::Down(KeyBoard::Key::KEY_X))
+		if (KeyBoard::On(KeyBoard::Key::KEY_LCONTROL))
 		{
-			sound2.PlaySE();
-			
-			ef2.Play();
+			camera3D.pos.y += 0.6f;
 		}
-		sound.UpDate3DSound(Vec3(0, 0, 20), Vec3(camera3D.pos));
-		sound2.UpDate3DSound(Vec3(0, 0, 0),Vec3(camera3D.pos));
-		box.pos = p.pGeometry[0]->GetPosition();
-		//パーティクルはメッシュの後に描画
-		box.Draw();
+		if (KeyBoard::On(KeyBoard::Key::KEY_RCONTROL))
+		{
+			camera3D.pos.y -= 0.6f;
+		}
+		if (KeyBoard::On(KeyBoard::Key::KEY_UP))
+		{
+			camera3D.pos.z += 0.6f;
+		}
+		if (KeyBoard::On(KeyBoard::Key::KEY_DOWN))
+		{
+			camera3D.pos.z -= 0.6f;
+		}
 
-		ef2.Draw(camera3D);
+		for (int i = 0; i < 3; ++i)
+		{
+			box[i].mesh.pos = physicsWorld.pGeometry[box[i].ID]->GetPosition();
+			box[i].mesh.Draw();
+		}
+		if (KeyBoard::On(KeyBoard::Key::KEY_S))
+		{
+			me.mesh.pos.y -= 1;
+		}
+		if (KeyBoard::On(KeyBoard::Key::KEY_W))
+		{
+			me.mesh.pos.y += 1;
+		}
+		if (KeyBoard::On(KeyBoard::Key::KEY_A))
+		{
+			me.mesh.pos.x -= 1;
+		}
+		if (KeyBoard::On(KeyBoard::Key::KEY_D))
+		{
+			me.mesh.pos.x += 1;
+		}
+		physicsWorld.pGeometry[me.ID]->SetPosition(me.mesh.pos);
+		me.mesh.pos = physicsWorld.pGeometry[me.ID]->GetPosition();
+		physicsWorld.IsHitGeom(box[2].ID, me.ID);
+		me.mesh.Draw();
 
-		
 		//===================================//
 		//==========2DRendering=================//
 		//===================================//
 		camera2D.Run(false);
-		if (KeyBoard::Down(KeyBoard::Key::KEY_M))
-		{
-			ef.Play();
-		}
-		ef.scale = 50;
-		ef.Draw(camera2D);
-		std::cout << sound2.GetCurrentSampleTime()<< std::endl;
+
+		std::cout << Engine::GetFps().GetFrameRate() << std::endl;
 	}
 
 	//終了

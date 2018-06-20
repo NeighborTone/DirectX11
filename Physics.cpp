@@ -71,9 +71,20 @@ void Physics::SetGravity(const Vec3_d& gravity)
 
 void Physics::WorldStep(const float stepTime)
 {
-	dWorldQuickStep(world, stepTime);
+	dWorldStep(world, stepTime);
 }
 
+void PhysicsWorld::IsHitGeom(int ID1, int ID2)
+{
+	if (pGeometry[ID1]->GetGeomID() == g1 || pGeometry[ID1]->GetGeomID() == g2)
+	{
+		if (pGeometry[ID2]->GetGeomID() == g1 || pGeometry[ID2]->GetGeomID() == g2)
+		{
+			std::cout << "foooooooooooooooooooooo" << std::endl;
+		}
+	}
+
+}
 
 void PhysicsWorld::NearCallback([[maybe_unused]]void *data, dGeomID o1, dGeomID o2)
 {
@@ -86,6 +97,10 @@ void PhysicsWorld::NearCallback([[maybe_unused]]void *data, dGeomID o1, dGeomID 
 	dContact contact[N];
 	int n = dCollide(o1, o2, N, &contact[0].geom, sizeof(dContact));	//n‚É‚ÍÕ“Ë“_”‚ª•Ô‚é
 
+	pPhysics->g1 = o1;
+	pPhysics->g2 = o2;
+
+	
 	//---------------‚±‚ñ‚ÈŠ´‚¶‚Åæ“¾‚Å‚«‚½-------------------------------------------------------------
 	//if (pPhysics->pRigidBody[0]->GetGeomID() == o1 || pPhysics->pRigidBody[0]->GetGeomID() == o2)
 	//{
@@ -94,12 +109,6 @@ void PhysicsWorld::NearCallback([[maybe_unused]]void *data, dGeomID o1, dGeomID 
 	//	std::cout << "HogeBox Hit!!!!!!" << std::endl;
 	//}
 
-	//if (pPhysics->pGeometry[0]->GetGeomID() == o1 || pPhysics->pGeometry[0]->GetGeomID() == o2)
-	//{
-	//	if (pPhysics->pGeometry[1]->GetGeomID() == o1 || pPhysics->pGeometry[1]->GetGeomID() == o2)
-	//		//–_‚Æ°‚ª“–‚½‚Á‚Ä‚¢‚ê‚ÎHit!!!!!!!!!!
-	//		std::cout << "Ground Hit!!!!!!" << std::endl;
-	//}
 	//-----------------------------------------------------------------------------------------------
 
 	//ÚG“_‚ğZo‚µ‚½‚èAÚG“_‚Ì«¿‚È‚Ç‚ğİ’è
@@ -121,14 +130,16 @@ void PhysicsWorld::NearCallback([[maybe_unused]]void *data, dGeomID o1, dGeomID 
 }
 
 
-void PhysicsWorld::AddRigidBody(RigidBody* pBody)
+int PhysicsWorld::AddRigidBody(RigidBody* pBody)
 {
 	pRigidBody.emplace_back(pBody);
+	return pRigidBody.size() - 1;
 }
 
-void PhysicsWorld::AddGeometry(Geometry* pGeom)
+int PhysicsWorld::AddGeometry(Geometry* pGeom)
 {
 	pGeometry.emplace_back(pGeom);
+	return pGeometry.size() - 1;
 }
 
 void PhysicsWorld::UpDate()

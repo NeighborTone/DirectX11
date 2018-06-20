@@ -56,7 +56,8 @@ class PhysicsWorld final
 {
 private:
 	static void NearCallback([[maybe_unused]]void* data, dGeomID o1, dGeomID o2);
-
+	dGeomID g1;
+	dGeomID g2;
 public:
 	
 	PhysicsWorld() {};
@@ -66,9 +67,10 @@ public:
 	std::vector<std::unique_ptr<Geometry>> pGeometry;
 
 	//オブジェクトのセットアップを行う
-	void AddRigidBody(RigidBody* pBody);
-	void AddGeometry(Geometry* pGeom);
-
+	int AddRigidBody(RigidBody* pBody);
+	int AddGeometry(Geometry* pGeom);
+	//いったんvoid
+	void IsHitGeom(int ID1, int ID2d);
 	//ワールドを更新
 	void UpDate();
 	void SetGravity(const Vec3_d& gravity);
