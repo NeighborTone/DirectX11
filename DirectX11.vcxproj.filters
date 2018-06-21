@@ -166,7 +166,6 @@
     <ClInclude Include="XInput.h">
       <Filter>Engine\Inputs</Filter>
     </ClInclude>
-    <ClInclude Include="Test.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Engine">

@@ -71,7 +71,6 @@
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="StringConverter.hpp" />
     <ClInclude Include="System.h" />
-    <ClInclude Include="Test.hpp" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Utility.hpp" />

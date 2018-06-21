@@ -6,16 +6,18 @@ DX::XMFLOAT2 XInput::Controller::GetThumb(const short x, const short y) const
 	{
 		return DX::XMFLOAT2(0,0);
 	}
-	float ret_x = x >= 0 ? 3276.0f : 32768.0f;
-	float ret_y = y >= 0 ? 3276.0f : 32768.0f;
+	float ret_x =
+		x;
+	float ret_y =
+		y;
 	return DX::XMFLOAT2
 	(
-		static_cast<float>(ret_x / x),
-		static_cast<float>(ret_y / y)
+		static_cast<float>(ret_x),
+		static_cast<float>(ret_y)
 	);
 }
 
-void XInput::Controller::EliminationOfPlayValue(XINPUT_STATE & st)
+void XInput::Controller::EliminationOfPlayValue(XINPUT_STATE& st)
 {
 	if ((st.Gamepad.sThumbLX < deadZone &&
 		st.Gamepad.sThumbLX > -deadZone) &&
@@ -184,6 +186,10 @@ XInput::XInput()
 	controllers.push_back(Controller(ID::P2));
 	controllers.push_back(Controller(ID::P3));
 	controllers.push_back(Controller(ID::P4));
+}
+
+XInput::~XInput()
+{
 }
 
 XInput* XInput::GetInstance()
@@ -362,20 +368,14 @@ float XInput::GetLeftTrigger(ID id)
 	return GetInstance()->LeftTrigger(id);
 }
 
-Vec2 XInput::GetRightThumb(ID id)
+DX::XMFLOAT2 XInput::GetRightThumb(ID id)
 {
-	Vec2 ret;
-	ret.x = GetInstance()->RightThumb(id).x;
-	ret.y = GetInstance()->RightThumb(id).y;
-	return ret;
+	return GetInstance()->RightThumb(id);
 }
 
-Vec2 XInput::GetLeftThumb(ID id)
+DX::XMFLOAT2 XInput::GetLeftThumb(ID id)
 {
-	Vec2 ret;
-	ret.x = GetInstance()->LeftThumb(id).x;
-	ret.y = GetInstance()->LeftThumb(id).y;
-	return ret;
+	return  GetInstance()->LeftThumb(id);
 }
 
 void XInput::Vibration(float leftPow, float rihgtPow, ID id)

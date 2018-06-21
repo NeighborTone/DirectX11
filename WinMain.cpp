@@ -3,7 +3,6 @@
 #include "Particle.h"
 #include "Console.hpp"
 #include "Easing.hpp"
-#include "Test.hpp"
 #include "XInput.h"
 
 //TODO:
@@ -138,21 +137,20 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		}
 		me.mesh.pos = physicsWorld.pRigidBody[me.ID]->GetPosition();
 		me.mesh.Draw();
-		Vec2 v = XInput::GetLeftThumb();
-		if (v.y <= -1.0f)
+		DX::XMFLOAT2 v = XInput::GetRightThumb();
+		if (v.y <= -32768)
 		{
-			std::cout << v.x << std::endl << v.y << std::endl;
 			me.vel.y -= 8;
 		}
-		if (KeyBoard::On(KeyBoard::Key::KEY_W))
+		if (v.y >= 32767)
 		{
 			me.vel.y += 8;
 		}
-		if (KeyBoard::On(KeyBoard::Key::KEY_A))
+		if (v.x <= -32768)
 		{
 			me.vel.x -= 8;
 		}
-		if (KeyBoard::On(KeyBoard::Key::KEY_D))
+		if (v.x >= 32767)
 		{
 			me.vel.x += 8;
 		}
@@ -162,8 +160,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		//==========2DRendering=================//
 		//===================================//
 		camera2D.Run(false);
-
-		std::cout << Engine::GetFps().GetFrameRate() << std::endl;
+		std::cout << v.y << std::endl;
+		//std::cout << Engine::GetFps().GetFrameRate() << std::endl;
 	}
 
 	//I—¹

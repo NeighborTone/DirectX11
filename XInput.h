@@ -83,9 +83,9 @@ private:
 		float GetRightTrigger() const;
 		//トリガースティックの左の情報を取得,0.0f~1.0f
 		float GetLeftTrigger() const;
-		//アナログスティック右の情報を取得,0.0f~1.0f
+		//アナログスティック右の情報を取得,-1.0f~1.0f
 		DX::XMFLOAT2 RightThumb() const;
-		//アナログスティック左の情報を取得,0.0f~1.0f
+		//アナログスティック左の情報を取得,-1.0f~1.0f
 		DX::XMFLOAT2 LeftThumb() const;
 		//パッドを振動させる(両手)
 		void Vibration(float leftPow, float rihgtPow);
@@ -99,6 +99,7 @@ private:
 	XInput(const XInput&) {};
 	XInput(const XInput&&) {};
 	XInput();
+	~XInput();
 public:
 	static XInput* GetInstance();
 private:
@@ -158,9 +159,9 @@ public:
 	 //トリガースティックの左の情報を取得,0.0f~1.0f
 	static float GetLeftTrigger(ID id = ID::P1);
 	//アナログスティック右の情報を取得,0.0f~1.0f
-	static Vec2 GetRightThumb(ID id = ID::P1);
+	static DX::XMFLOAT2 GetRightThumb(ID id = ID::P1);
 	//アナログスティック左の情報を取得,0.0f~1.0f
-	static Vec2 GetLeftThumb(ID id = ID::P1);
+	static DX::XMFLOAT2 GetLeftThumb(ID id = ID::P1);
 	 //パッドを振動させる(両手)
 	static void Vibration(float leftPow, float rihgtPow, ID id = ID::P1);
 	 //パッドを振動させる(右手)
