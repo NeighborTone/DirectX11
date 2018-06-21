@@ -17,6 +17,7 @@
 //:その他のモデル形式の読み込み
 //:スプライトアニメーション
 //:ライトの配置
+//:フルスクリーンで画面がゆがむ
 //:フォグ
 //:昔に作った機能のリファクタリング
 //:書いてないところのDoxy形式のコメント文追加
@@ -46,6 +47,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	{
 		Mesh mesh;
 		int ID;
+		Vec3 vel;
 	};
 	Wall box[3];
 	Wall me;
@@ -86,7 +88,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	}
 	me.ID = physicsWorld.AddRigidBody(new DynamicBox(me.mesh.pos, me.mesh.scale,10));
 	physicsWorld.pRigidBody[me.ID]->SetRotation(me.mesh.angle);
-
+	me.vel = 0;
+	physicsWorld.SetGravity(Vec3_d(0, 0, 0));
 	while (ge.Run())
 	{
 		physicsWorld.UpDate();
@@ -133,22 +136,22 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		me.mesh.Draw();
 		if (KeyBoard::On(KeyBoard::Key::KEY_S))
 		{
-			me.mesh.pos.y -= 1;
+			me.vel.y -= 8;
 		}
 		if (KeyBoard::On(KeyBoard::Key::KEY_W))
 		{
-			me.mesh.pos.y += 1;
+			me.vel.y += 8;
 		}
 		if (KeyBoard::On(KeyBoard::Key::KEY_A))
 		{
-			me.mesh.pos.x -= 1;
+			me.vel.x -= 8;
 		}
 		if (KeyBoard::On(KeyBoard::Key::KEY_D))
 		{
-			me.mesh.pos.x += 1;
+			me.vel.x += 8;
 		}
-		
-
+		physicsWorld.pRigidBody[me.ID]->AddVelocity(me.vel);
+		me.vel = 0;
 		//===================================//
 		//==========2DRendering=================//
 		//===================================//
