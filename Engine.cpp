@@ -6,21 +6,21 @@ std::string Engine::title = "";
 int Engine::width = 0;
 int Engine::height = 0;
 bool Engine::isFullScreen = false;
-Engine::Engine(std::string WindowTitle, int width, int height,bool isFullScreen)
+Engine::Engine(std::string WindowTitle, int width, int height, bool isFullScreen)
 {
 	title = WindowTitle;
 	this->width = width;
 	this->height = height;
 	this->isFullScreen = isFullScreen;
 	in.CreateInput(GetWindow().GetHwnd());
-	pad.CreatePadInput(GetWindow().GetHwnd());
+//	pad.CreatePadInput(GetWindow().GetHwnd());
 	mouse.CreateMousenput(GetWindow().GetHwnd());
 	COMInitialize();
 }
 
 Engine::~Engine()
 {
-					
+
 }
 
 void Engine::COMInitialize()
@@ -48,7 +48,7 @@ bool Engine::Run()
 {
 	KeyBoard::UpDate();
 	Mouse::UpDate();
-	Pad::UpDate();
+	//DInput::UpDate();
 	GetDirect3D().UpDate();
 	GetFps().UpDate();
 	return GetWindow().UpDate();
@@ -108,8 +108,8 @@ SoundSystem& Engine::GetSoundSystem()
 
 System& Engine::GetWindow()
 {
-	static std::unique_ptr<System>window(new System(title,width,height));
-	return *window.get();	
+	static std::unique_ptr<System>window(new System(title, width, height));
+	return *window.get();
 }
 
 Direct3D& Engine::GetDirect3D()

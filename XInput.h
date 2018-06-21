@@ -1,7 +1,9 @@
 #pragma once
+#pragma warning (disable : 4458)
 #pragma comment(lib,"xinput.lib ")
 #include <DirectXMath.h>
 #include <Windows.h>
+#include "Utility.hpp"
 #include <vector>
 #include <XInput.h>
 
@@ -45,7 +47,7 @@ private:
 	class Controller
 	{
 	private:
-		//ニュートラル時のあそびび値の範囲
+		//ニュートラル時のあそび値の範囲
 		const float deadZone = static_cast<float>(0x7FFF)*0.24f;
 		int id;	//コントローラーの番号
 		XINPUT_STATE state;	//ボタン情報
@@ -74,33 +76,34 @@ private:
 		//押されていないか
 		bool CheckFree(const ButtonID buttonID, int interval = 1) const;
 		//押されたか
-		bool CheckPush(const ButtonID buttonID, int interval = 1) const;
+		bool CheckPush(const ButtonID buttonID) const;
 		//離されたか
-		bool CheckPull(const ButtonID buttonID, int interval = 1) const;
+		bool CheckPull(const ButtonID buttonID) const;
 		//トリガースティックの右の情報を取得,0.0f~1.0f
-		float GetRightTrigger(ID id = ID::P1) const;
+		float GetRightTrigger() const;
 		//トリガースティックの左の情報を取得,0.0f~1.0f
-		float GetLeftTrigger(ID id = ID::P1) const;
-		//アナログスティック右の情報を取得
+		float GetLeftTrigger() const;
+		//アナログスティック右の情報を取得,0.0f~1.0f
 		DX::XMFLOAT2 RightThumb() const;
-		//アナログスティック左の情報を取得
+		//アナログスティック左の情報を取得,0.0f~1.0f
 		DX::XMFLOAT2 LeftThumb() const;
 		//パッドを振動させる(両手)
-		void Vibration(float leftPow, float rihgtPow, ID id = ID::P1);
+		void Vibration(float leftPow, float rihgtPow);
 		//パッドを振動させる(右手)
-		void VibrationR(float rihgtPow, ID id = ID::P1);
+		void VibrationR(float rihgtPow);
 		//パッドを振動させる(左手)
-		void VibrationL(float leftPow, ID id = ID::P1);
+		void VibrationL(float leftPow);
 	};
 	std::vector<Controller> controllers;
 	//シングルトンなのでプライベート
 	XInput(const XInput&) {};
 	XInput(const XInput&&) {};
 	XInput();
-
 public:
 	static XInput* GetInstance();
-	void UpDate();
+private:
+	
+	void Run();
 	//押されているか
 	bool CheckPress(const ButtonID buttonID, int interval = 1, ID id = ID::P1) const;
 	//押されていないか
@@ -118,26 +121,30 @@ public:
 	//1P~4Pまでどのボタンが離されたか
 	bool ChekAnyPull(const ButtonID buttonID) const;
 	//トリガースティックの右の情報を取得,0.0f~1.0f
-	float RightThumb(ID id = ID::P1) const;
+	float RightTrigger(ID id = ID::P1) const;
 	//トリガースティックの左の情報を取得,0.0f~1.0f
-	float LeftThumb(ID id = ID::P1) const;
+	float LeftTrigger(ID id = ID::P1) const;
+	//アナログスティック右の情報を取得,0.0f~1.0f
+	DX::XMFLOAT2 RightThumb(ID id = ID::P1) const;
+	//アナログスティック左の情報を取得,0.0f~1.0f
+	DX::XMFLOAT2 LeftThumb(ID id = ID::P1) const;
 	//パッドを振動させる(両手)
 	void VibrationAll(float leftPow, float rihgtPow, ID id = ID::P1);
 	//パッドを振動させる(右手)
 	void Vibration_R(float rihgtPow, ID id = ID::P1);
 	//パッドを振動させる(左手)
 	void Vibration_L(float leftPow, ID id = ID::P1);
-
+public:
 	//関数でアクセスできるようにする
-	static void Run();
+	static void UpDate();
 	 //押されているか,
 	static bool On(const ButtonID buttonID, int interval = 1, ID id = ID::P1);
 	 //押されていないか
 	static bool Free(const ButtonID buttonID, int interval = 1, ID id = ID::P1);
 	 //押されたか
-	static bool Down(const ButtonID buttonID, int interval = 1, ID id = ID::P1);
+	static bool Down(const ButtonID buttonID,  ID id = ID::P1);
 	 //離されたか
-	static bool Pull(const ButtonID buttonID, int interval = 1, ID id = ID::P1);
+	static bool Pull(const ButtonID buttonID, ID id = ID::P1);
 	 //1P~4Pまでどのボタンが押されているか
 	static bool ChekAllOn(const ButtonID buttonID);
 	 //1P~4Pまでどのボタンが押されたか
@@ -150,6 +157,10 @@ public:
 	static float GetRightTrigger(ID id = ID::P1);
 	 //トリガースティックの左の情報を取得,0.0f~1.0f
 	static float GetLeftTrigger(ID id = ID::P1);
+	//アナログスティック右の情報を取得,0.0f~1.0f
+	static Vec2 GetRightThumb(ID id = ID::P1);
+	//アナログスティック左の情報を取得,0.0f~1.0f
+	static Vec2 GetLeftThumb(ID id = ID::P1);
 	 //パッドを振動させる(両手)
 	static void Vibration(float leftPow, float rihgtPow, ID id = ID::P1);
 	 //パッドを振動させる(右手)

@@ -110,7 +110,7 @@ bool XInput::Controller::CheckFree(const ButtonID buttonID, int interval) const
 	return ((prev & flag) == 0 && (frameState[static_cast<int>(buttonID)].pullFrame % interval) == 0);
 }
 
-bool XInput::Controller::CheckPush(const ButtonID buttonID, int interval) const
+bool XInput::Controller::CheckPush(const ButtonID buttonID) const
 {
 	if (!isConnected)
 	{
@@ -120,7 +120,7 @@ bool XInput::Controller::CheckPush(const ButtonID buttonID, int interval) const
 	return ((prev & flag) != 0 && (now & flag) == 0);
 }
 
-bool XInput::Controller::CheckPull(const ButtonID buttonID, int interval) const
+bool XInput::Controller::CheckPull(const ButtonID buttonID) const
 {
 	if (!isConnected)
 	{
@@ -130,7 +130,7 @@ bool XInput::Controller::CheckPull(const ButtonID buttonID, int interval) const
 	return ((prev & flag) != 0) && ((now & flag) == 0);
 }
 
-float XInput::Controller::GetRightTrigger(ID id) const
+float XInput::Controller::GetRightTrigger() const
 {
 	if (!isConnected)
 	{
@@ -139,7 +139,7 @@ float XInput::Controller::GetRightTrigger(ID id) const
 	return static_cast<float>(state.Gamepad.bRightTrigger) / 255.0f;
 }
 
-float XInput::Controller::GetLeftTrigger(ID id) const
+float XInput::Controller::GetLeftTrigger() const
 {
 	if (!isConnected)
 	{
@@ -150,163 +150,245 @@ float XInput::Controller::GetLeftTrigger(ID id) const
 
 DX::XMFLOAT2 XInput::Controller::RightThumb() const
 {
-	return DX::XMFLOAT2();
+	return GetThumb(state.Gamepad.sThumbRX,state.Gamepad.sThumbRY);
 }
 
 DX::XMFLOAT2 XInput::Controller::LeftThumb() const
 {
-	return DX::XMFLOAT2();
+	return GetThumb(state.Gamepad.sThumbLX, state.Gamepad.sThumbLY);
 }
 
-void XInput::Controller::Vibration(float leftPow, float rihgtPow, ID id)
+void XInput::Controller::Vibration(float leftPow, float rihgtPow)
 {
+	vibration.wLeftMotorSpeed = static_cast<WORD>(65535.0f * leftPow);
+	vibration.wRightMotorSpeed = static_cast<WORD>(65535.0f * rihgtPow);
+	XInputSetState(id, &vibration);
 }
 
-void XInput::Controller::VibrationR(float rihgtPow, ID id)
+void XInput::Controller::VibrationR(float rihgtPow)
 {
+	vibration.wRightMotorSpeed = static_cast<WORD>(65535.0f * rihgtPow);
+	XInputSetState(id, &vibration);
 }
 
-void XInput::Controller::VibrationL(float leftPow, ID id)
+void XInput::Controller::VibrationL(float leftPow)
 {
+	vibration.wLeftMotorSpeed = static_cast<WORD>(65535.0f * leftPow);
+	XInputSetState(id, &vibration);
 }
 
-XInput * XInput::GetInstance()
+XInput::XInput()
 {
-	return nullptr;
+	controllers.clear();
+	controllers.push_back(Controller(ID::P1));
+	controllers.push_back(Controller(ID::P2));
+	controllers.push_back(Controller(ID::P3));
+	controllers.push_back(Controller(ID::P4));
 }
 
-void XInput::UpDate()
+XInput* XInput::GetInstance()
 {
+	static XInput instance;
+	return &instance;
+}
+
+void XInput::Run()
+{
+	for (auto& it : controllers)
+	{
+		it.UpDate();
+	}
 }
 
 bool XInput::CheckPress(const ButtonID buttonID, int interval, ID id) const
 {
-	return false;
+	return controllers[static_cast<int>(id)].CheckPress(buttonID,interval);
 }
 
 bool XInput::CheckFree(const ButtonID buttonID, int interval, ID id) const
 {
-	return false;
+	return controllers[static_cast<int>(id)].CheckFree(buttonID, interval);
 }
 
 bool XInput::CheckPush(const ButtonID buttonID, ID id) const
 {
-	return false;
+	return controllers[static_cast<int>(id)].CheckPush(buttonID);
 }
 
 bool XInput::CheckPull(const ButtonID buttonID, ID id) const
 {
-	return false;
+	return controllers[static_cast<int>(id)].CheckPull(buttonID);
 }
 
 bool XInput::ChekAnyPress(const ButtonID buttonID) const
 {
+	for (const auto& it : controllers)
+	{
+		if (it.CheckPress(buttonID, 1))
+		{
+			return true;
+		}
+	}
 	return false;
 }
 
 bool XInput::ChekAnyPush(const ButtonID buttonID) const
 {
+	for (const auto& it : controllers)
+	{
+		if (it.CheckPush(buttonID))
+		{
+			return true;
+		}
+	}
 	return false;
 }
 
 bool XInput::ChekAnyFree(const ButtonID buttonID) const
 {
+	for (const auto& it : controllers)
+	{
+		if (it.CheckFree(buttonID,1))
+		{
+			return true;
+		}
+	}
 	return false;
 }
 
 bool XInput::ChekAnyPull(const ButtonID buttonID) const
 {
+	for (const auto& it : controllers)
+	{
+		if (it.CheckPull(buttonID))
+		{
+			return true;
+		}
+	}
 	return false;
 }
 
-float XInput::RightThumb(ID id) const
+float XInput::RightTrigger(ID id) const
 {
-	return 0.0f;
+	return controllers[static_cast<int>(id)].GetRightTrigger();
 }
 
-float XInput::LeftThumb(ID id) const
+float XInput::LeftTrigger(ID id) const
 {
-	return 0.0f;
+	return controllers[static_cast<int>(id)].GetLeftTrigger();
+}
+
+DX::XMFLOAT2 XInput::RightThumb(ID id) const
+{
+	return controllers[static_cast<int>(id)].RightThumb();
+}
+
+DX::XMFLOAT2 XInput::LeftThumb(ID id) const
+{
+	return controllers[static_cast<int>(id)].LeftThumb();
 }
 
 void XInput::VibrationAll(float leftPow, float rihgtPow, ID id)
 {
+	controllers[static_cast<int>(id)].Vibration(leftPow, rihgtPow);
 }
 
 void XInput::Vibration_R(float rihgtPow, ID id)
 {
+	controllers[static_cast<int>(id)].VibrationR(rihgtPow);
 }
 
 void XInput::Vibration_L(float leftPow, ID id)
 {
+	controllers[static_cast<int>(id)].VibrationL(leftPow);
 }
 
 
 //----------//
 //-statics-//
 //---------//
-void XInput::Run()
+void XInput::UpDate()
 {
+	GetInstance()->Run();
 }
 
 bool XInput::On(const ButtonID buttonID, int interval, ID id)
 {
-	return false;
+	return GetInstance()->CheckPress(buttonID, interval, id);
 }
 
 bool XInput::Free(const ButtonID buttonID, int interval, ID id)
 {
-	return false;
+	return GetInstance()->CheckFree(buttonID, interval, id);
 }
 
-bool XInput::Down(const ButtonID buttonID, int interval, ID id)
+bool XInput::Down(const ButtonID buttonID, ID id)
 {
-	return false;
+	return GetInstance()->CheckPush(buttonID, id);
 }
 
-bool XInput::Pull(const ButtonID buttonID, int interval, ID id)
+bool XInput::Pull(const ButtonID buttonID,  ID id)
 {
-	return false;
+	return GetInstance()->CheckPull(buttonID, id);
 }
 
 bool XInput::ChekAllOn(const ButtonID buttonID)
 {
-	return false;
+	return GetInstance()->ChekAnyPress(buttonID);
 }
 
 bool XInput::ChekAllDown(const ButtonID buttonID)
 {
-	return false;
+	return GetInstance()->ChekAnyPush(buttonID);
 }
 
 bool XInput::ChekAllFree(const ButtonID buttonID)
 {
-	return false;
+	return GetInstance()->ChekAnyFree(buttonID);
 }
 
 bool XInput::ChekAllPull(const ButtonID buttonID)
 {
-	return false;
+	return GetInstance()->ChekAnyPull(buttonID);
 }
 
 float XInput::GetRightTrigger(ID id)
 {
-	return 0.0f;
+	return GetInstance()->RightTrigger(id);
 }
 
 float XInput::GetLeftTrigger(ID id)
 {
-	return 0.0f;
+	return GetInstance()->LeftTrigger(id);
+}
+
+Vec2 XInput::GetRightThumb(ID id)
+{
+	Vec2 ret;
+	ret.x = GetInstance()->RightThumb(id).x;
+	ret.y = GetInstance()->RightThumb(id).y;
+	return ret;
+}
+
+Vec2 XInput::GetLeftThumb(ID id)
+{
+	Vec2 ret;
+	ret.x = GetInstance()->LeftThumb(id).x;
+	ret.y = GetInstance()->LeftThumb(id).y;
+	return ret;
 }
 
 void XInput::Vibration(float leftPow, float rihgtPow, ID id)
 {
+	GetInstance()->VibrationAll(leftPow, rihgtPow, id);
 }
 
 void XInput::VibrationR(float rihgtPow, ID id)
 {
+	GetInstance()->Vibration_R(rihgtPow, id);
 }
 
 void XInput::VibrationL(float leftPow, ID id)
 {
+	GetInstance()->Vibration_L(leftPow, id);
 }

@@ -99,13 +99,12 @@ void PhysicsWorld::NearCallback(void *data, dGeomID o1, dGeomID o2)
 
 	
 	//---------------‚±‚ñ‚ÈŠ´‚¶‚ÅŽæ“¾‚Å‚«‚½-------------------------------------------------------------
-	//if (pPhysics->g1 == o1 || pPhysics->g1 == o2)
-	//{
-	//	if(pPhysics->g2 == o1 || pPhysics->g2 == o2)
-	//	//” ‚ª“–‚½‚Á‚Ä‚¢‚ê‚ÎHit!!!!!!!!!!!!
-	//	std::cout << "HogeBox Hit!!!!!!" << std::endl;
-	//}
-
+	if (pPhysics->g1 == o1 || pPhysics->g1 == o2)
+	{
+		if(pPhysics->g2 == o1 || pPhysics->g2 == o2)
+		//” ‚ª“–‚½‚Á‚Ä‚¢‚ê‚ÎHit!!!!!!!!!!!!
+		std::cout << "HogeBox Hit!!!!!!" << std::endl;
+	}
 	//-----------------------------------------------------------------------------------------------
 
 	//ÚG“_‚ðŽZo‚µ‚½‚èAÚG“_‚Ì«Ž¿‚È‚Ç‚ðÝ’è

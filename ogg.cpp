@@ -172,14 +172,10 @@ bool Ogg::Load(const std::string path)
 	return true;
 }
 
-
-
-
 const WAVEFORMATEX Ogg::GetWaveFmtEx() const
 {
 	return wave;
 }
-
 
 const BYTE* Ogg::GetWaveData() const
 {

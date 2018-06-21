@@ -1,7 +1,7 @@
 #pragma once
 #include "Direct_Input.h"
 #include "Keyboard.h"
-class Pad
+class DInput
 {
 public:
 	enum class NO {
@@ -42,14 +42,14 @@ public:
  
 	static void UpDate();
 
-	static bool Down(const Button& key, const NO& no = Pad::NO::P1);
+	static bool Down(const Button& key, const NO& no = DInput::NO::P1);
 
-	static bool On(const Button& key, const NO& no = Pad::NO::P1);
+	static bool On(const Button& key, const NO& no = DInput::NO::P1);
 
-	static bool Free(const Button& key, const NO& no = Pad::NO::P1);
+	static bool Free(const Button& key, const NO& no = DInput::NO::P1);
 
-	static bool Pull(const Button& key, const NO& no = Pad::NO::P1);
+	static bool Pull(const Button& key, const NO& no = DInput::NO::P1);
 
-	static bool StickOn(const Stick& key, const NO& no = Pad::NO::P1);
+	static bool StickOn(const Stick& key, const NO& no = DInput::NO::P1);
 
 };

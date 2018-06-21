@@ -15,7 +15,7 @@ SoundSource::SoundSource() :
 	pSource(nullptr),
 	is3D(false)
 {
-	
+
 }
 
 SoundSource::SoundSource(const std::string path, bool is3DSound) :
@@ -64,7 +64,9 @@ bool SoundSource::Load(const std::string path, bool is3DSound)
 
 	is3D = is3DSound;
 
-
+	//:
+	//:
+	//:
 	hr = Engine::GetSoundSystem().GetXAudio2()->CreateSubmixVoice(
 		&subMixVoice,
 		wav.GetWaveFmtEx().nChannels,
@@ -112,7 +114,7 @@ void SoundSource::PlayBGM(int loopNum, float gain, float pitch)
 	buf.LoopCount = loopNum;	//ループ回数を指定。デフォルトで無限ループにしておく
 	buf.LoopBegin = 0;
 	pSource->SetFrequencyRatio(pitch);	//ピッチ
-	pSource->SetVolume(gain);					//ゲイン
+	pSource->SetVolume(gain);				//ゲイン
 	hr = pSource->SubmitSourceBuffer(&buf, nullptr);	//Sourceに音源の情報を送る
 	if (FAILED(hr))
 	{
@@ -189,13 +191,12 @@ void SoundSource::UpDate3DSound(Vec3&& pos, Vec3&& listenerPos)
 	XAUDIO2_VOICE_DETAILS& deviceDetails = Engine::GetSoundSystem().GetVoiceDetails();
 	subMixVoice->GetVoiceDetails(&voiceDetails);
 
-	
 	float emitterAzimuths[1] = { 0.0f };
 	emitter.pCone = NULL;
 	emitter.Position = { 0, 0, 0 };
 	emitter.OrientFront = { 0, 0, 1 };
 	emitter.OrientTop = { 0 , 1, 0 };
-	emitter.ChannelCount = voiceDetails.InputChannels;;		//ソースのチャンネル数
+	emitter.ChannelCount = voiceDetails.InputChannels;		//ソースのチャンネル数
 	emitter.ChannelRadius = 1.0f;							//エミッタでの行列の計算のみに使用。この値は0.0f以上であることが必要
 	emitter.pChannelAzimuths = emitterAzimuths;	//方位角。チャンネル半径と共に使用される。行列の計算のみに使用
 	emitter.InnerRadius = 1.0f;					 //内部半径の計算に使用される値。0.0f ～ MAX_FLTの値を指定
@@ -234,9 +235,9 @@ void SoundSource::UpDate3DSound(Vec3&& pos, Vec3&& listenerPos)
 		//X3DAUDIO_CALCULATE_REDIRECT_TO_LFE;	//すべてのソースチャンネルの均等ミックスを低周波効果 (LFE) デスティネーションチャンネルに適用します。
 
 	X3DAudioCalculate(
-		Engine::GetSoundSystem().Get3DInstance(), 
-		&listener, 
-		&emitter, 
+		Engine::GetSoundSystem().Get3DInstance(),
+		&listener,
+		&emitter,
 		calculateFlags,
 		&dsp);
 
@@ -246,7 +247,7 @@ void SoundSource::UpDate3DSound(Vec3&& pos, Vec3&& listenerPos)
 	XAUDIO2_FILTER_PARAMETERS filterParameters = { LowPassFilter, 2.0f * sinf(X3DAUDIO_PI / 4.0f * dsp.LPFDirectCoefficient),  1.0f };
 
 	subMixVoice->SetFilterParameters(&filterParameters);
-	
+
 }
 
 void SoundSource::ExitLoop() const

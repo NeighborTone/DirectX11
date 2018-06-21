@@ -3,13 +3,15 @@
 #include "Particle.h"
 #include "Console.hpp"
 #include "Easing.hpp"
+#include "Test.hpp"
+#include "XInput.h"
+
 //TODO:
 //:物理エンジン管理クラスの使い勝手が悪いので何とかする
 //:柔軟な衝突検知
 //:oggファイルの再生
 //:プリミティブの追加
 //:サウンドエフェクトクラス化
-//:XInputに対応
 //:警告レベル4での警告を最小限にする
 //:パッド、マウス、キー入力のグローバル変数の解消
 //:モデルに複数のテクスチャをアタッチできるようにする
@@ -39,7 +41,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	Camera camera2D;
 	camera2D.SetDepthTest(false);
 	camera2D.SetOrthographic(1, 0.1f, 1000.0f);
-
+	
 	Texture tex("Resource/box.jpg");
 	Texture tex2("Resource/white.png");
 	PhysicsWorld physicsWorld;
@@ -97,8 +99,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		//==========3DRendering=================//
 		//===================================//
 		camera3D.Run(true);
+		XInput::UpDate();
 		if (KeyBoard::Down(KeyBoard::Key::KEY_ESCAPE) ||
-			Pad::Down(Pad::Button::PAD_START))
+			XInput::Down(XInput::ButtonID::START,XInput::ID::P1)||
+			XInput::Down(XInput::ButtonID::START, XInput::ID::P2))
 		{
 			break;
 		}
@@ -134,8 +138,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		}
 		me.mesh.pos = physicsWorld.pRigidBody[me.ID]->GetPosition();
 		me.mesh.Draw();
-		if (KeyBoard::On(KeyBoard::Key::KEY_S))
+		Vec2 v = XInput::GetLeftThumb();
+		if (v.y <= -1.0f)
 		{
+			std::cout << v.x << std::endl << v.y << std::endl;
 			me.vel.y -= 8;
 		}
 		if (KeyBoard::On(KeyBoard::Key::KEY_W))
