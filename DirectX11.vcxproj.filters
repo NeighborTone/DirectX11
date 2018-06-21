@@ -71,6 +71,7 @@
     <ClCompile Include="SoundSource.cpp">
       <Filter>Engine\Sounds</Filter>
     </ClCompile>
+    <ClCompile Include="XInput.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -160,6 +161,7 @@
     <ClInclude Include="SoundSource.h">
       <Filter>Engine\Sounds</Filter>
     </ClInclude>
+    <ClInclude Include="XInput.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Engine">

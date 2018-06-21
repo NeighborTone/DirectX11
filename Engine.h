@@ -26,6 +26,8 @@ public:
 	* @param (isFullScreen) フルスクリーンにするか(falseで全画面)
 	*/
 	Engine(std::string WindowTitle,int width,int height, bool isFullScreen);
+	Engine() = delete;
+	Engine(const Engine&) = delete;
 	~Engine();
 	/*!
 	* @brief COMの初期化を行います。複数回実行されません
