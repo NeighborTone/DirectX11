@@ -65,7 +65,7 @@ bool SoundSource::Load(const std::string path, bool is3DSound)
 	is3D = is3DSound;
 
 	//:
-	//:
+	//現在wavのみの対応
 	//:
 	hr = Engine::GetSoundSystem().GetXAudio2()->CreateSubmixVoice(
 		&subMixVoice,
@@ -193,7 +193,7 @@ void SoundSource::UpDate3DSound(Vec3&& pos, Vec3&& listenerPos)
 
 	float emitterAzimuths[1] = { 0.0f };
 	emitter.pCone = NULL;
-	emitter.Position = { 0, 0, 0 };
+	emitter.Position = { pos.x, pos.y, pos.z};
 	emitter.OrientFront = { 0, 0, 1 };
 	emitter.OrientTop = { 0 , 1, 0 };
 	emitter.ChannelCount = voiceDetails.InputChannels;		//ソースのチャンネル数
