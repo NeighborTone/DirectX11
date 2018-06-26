@@ -42,17 +42,16 @@ namespace SoundEngine
 
 	};
 
-	class EngineCallBack : public IXAudio2EngineCallback
-	{
-	public:
-		void __stdcall OnProcessingPassEnd() override {}
-		void __stdcall OnProcessingPassStart() override {}
-		void __stdcall OnCriticalError(HRESULT Error) override {}
-	};
-
 	class Audio
 	{
 	private:
+		class EngineCallBack : public IXAudio2EngineCallback
+		{
+		public:
+			void __stdcall OnProcessingPassEnd() override {}
+			void __stdcall OnProcessingPassStart() override {}
+			void __stdcall OnCriticalError(HRESULT Error) override {}
+		};
 		//コールバック
 		EngineCallBack engineCallBack;
 		//作成フラグ、入力チャンネル、およびボイスのサンプルレートに関する情報
