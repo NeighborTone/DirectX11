@@ -34,42 +34,6 @@ void Text::Create(const std::string& text, float fontSize, const std::string&  f
 	{
 		return;
 	}
-		
-	this->text = text;
-
-	length = DirectX::XMINT2(0, 1);
-	int maxLength = 0;
-	for (UINT i = 0; i < text.length(); ++i)
-	{
-		if (text[i] == '\n')
-		{
-			maxLength = 0;
-			++length.y;
-			continue;
-		}
-
-		++maxLength;
-
-		if (length.x < maxLength)
-		{
-			length.x = maxLength;
-		}
-	}
-
-	DirectX::XMINT2 textureSize(static_cast<int>(length.x * fontSize), static_cast<int>(length.y * fontSize * 2.0f));
-	std::unique_ptr<BYTE[]> buffer(new BYTE[textureSize.x * textureSize.y * 4]);
-	texture.Create(buffer.get(), textureSize.x, textureSize.y);
-
-	ATL::CComPtr<IDXGISurface> surface = nullptr;
-	texture.GetInterface().QueryInterface(&surface);
-
-	D2D1_BITMAP_PROPERTIES1 bitmapProperties = {};
-	bitmapProperties.pixelFormat.format = DXGI_FORMAT_B8G8R8A8_UNORM;
-	bitmapProperties.pixelFormat.alphaMode = D2D1_ALPHA_MODE_PREMULTIPLIED;
-	bitmapProperties.bitmapOptions = D2D1_BITMAP_OPTIONS_TARGET;
-
-	bitmap.Release();
-	Engine::GetDXContext2D().CreateBitmapFromDxgiSurface(surface, bitmapProperties, &bitmap);
 
 	brush.Reset();
 	Engine::GetDXContext2D().CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), brush.GetAddressOf());
@@ -85,10 +49,44 @@ void Text::Create(const std::string& text, float fontSize, const std::string&  f
 		fontSize, 
 		L"ja-jp", 
 		textFormat.GetAddressOf());
-
 	textFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
 	textFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+	
+	textLayout.Reset();
+	Engine::GetTextFactory().CreateTextLayout(
+		StringConverter::StringToWString(text).c_str(), 
+		(UINT32)text.length(),
+		textFormat.Get(), 
+		FLT_MAX, FLT_MAX, 
+		textLayout.GetAddressOf());
+	
+	DWRITE_TEXT_METRICS textMetrics;
+	textLayout->GetMetrics(&textMetrics);
+	
+	textLayout.Reset();
+	Engine::GetTextFactory().CreateTextLayout(
+		StringConverter::StringToWString(text).c_str(),
+		(UINT32)text.length(),
+		textFormat.Get(),
+		textMetrics.width, 
+		textMetrics.height, 
+		textLayout.GetAddressOf());
+	
+	std::unique_ptr<BYTE[]> buffer(new BYTE[(unsigned int)textMetrics.width * (unsigned int)textMetrics.height * 4]);
+	texture.Create(buffer.get(), (int)textMetrics.width, (int)textMetrics.height);
 
+	Microsoft::WRL::ComPtr<IDXGISurface> surface = nullptr;
+	texture.GetInterface().QueryInterface(surface.GetAddressOf());
+
+	D2D1_BITMAP_PROPERTIES1 bitmapProperties = {};
+	bitmapProperties.pixelFormat.format = DXGI_FORMAT_B8G8R8A8_UNORM;
+	bitmapProperties.pixelFormat.alphaMode = D2D1_ALPHA_MODE_PREMULTIPLIED;
+	bitmapProperties.bitmapOptions = D2D1_BITMAP_OPTIONS_TARGET;
+
+	bitmap.Release();
+	Engine::GetDXContext2D().CreateBitmapFromDxgiSurface(surface.Get(), bitmapProperties, &bitmap);
+
+	
 	mesh.GetMaterial().SetTexture(0, &texture);
 
 	SetPivot(Vec2(0,0));
@@ -102,8 +100,6 @@ void Text::Draw()
 
 	Engine::GetDXContext2D().BeginDraw();
 	Engine::GetDXContext2D().Clear(D2D1::ColorF(1.0f, 1.0f, 1.0f, 0.0f));
-
-	Engine::GetTextFactory().CreateTextLayout(StringConverter::StringToWString(text).c_str(), (UINT32)text.length(), textFormat.Get(), static_cast<float>(texture.GetSize().x), static_cast<float>(texture.GetSize().y), textLayout.GetAddressOf());
 
 	Engine::GetDXContext2D().DrawTextLayout(D2D1::Point2F(0.0f, 0.0f), textLayout.Get(), brush.Get());
 

@@ -43,14 +43,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	
 	Texture tex("Resource/brick.jpg");
 	
-	Model m("Resource/ball.fbx");
+	//Model m("Resource/ball.fbx");
 
-	
+	Text text("Hoge");
+
+	text.scale = 2;
+	text.pos.y = 10;
 	while (ge.Run())
 	{
 	
 		//===================================//
-		//==========3DRendering==============//
+		//==========3DRendering=================//
 		//===================================//
 		camera3D.Run(true);
 		XInput::UpDate();
@@ -84,12 +87,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		{
 			camera3D.pos.z -= 0.6f;
 		}
-		tex.Attach(0);
-		m.Draw();
-
+		//tex.Attach(0);
+		//m.Draw();
+		text.pos.y = 10;
+		text.Draw();
 		
+		text.color.r = 1;
+		text.pos.y = -10;
+		text.Draw();
 		//===================================//
-		//==========2DRendering==============//
+		//==========2DRendering=================//
 		//===================================//
 		camera2D.Run(false);
 		

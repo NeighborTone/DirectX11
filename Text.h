@@ -27,8 +27,6 @@ public:
 	void Load(const char* const filePath) = delete;
 	void Create(const BYTE* const buffer, int width, int height) = delete;
 private:
-	std::string text;
-	DirectX::XMINT2 length;
 	ATL::CComPtr<ID2D1Bitmap1> bitmap;
 	Microsoft::WRL::ComPtr<IDWriteTextLayout> textLayout;
 	Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> brush;

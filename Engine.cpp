@@ -49,7 +49,8 @@ bool Engine::Run()
 {
 	KeyBoard::UpDate();
 	Mouse::UpDate();
-	//DInput::UpDate();
+	DInput::UpDate();
+
 	GetDirect3D().UpDate();
 	GetFps().UpDate();
 	return GetWindow().UpDate();
