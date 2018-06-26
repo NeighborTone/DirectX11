@@ -1,5 +1,4 @@
 #pragma once
-#include "SoundSource.h"
 #include "Keyboard.h"
 #include "Mouse.h"
 #include "Pad.h"
@@ -84,11 +83,6 @@ public:
 	* @return IDWriteFactory&
 	*/
 	static IDWriteFactory& GetTextFactory();
-	/*!
-	* @brief サウンドエンジンを取得します
-	* @return SoundSystem&
-	*/
-	static SoundSystem& GetSoundSystem();
 	/*!
 	* @brief FPSクラスを取得します
 	* @return FPS&

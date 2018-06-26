@@ -92,61 +92,20 @@ void Material::Create(const std::string & source)
 	std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDesc;
 	
 	inputElementDesc.push_back({
-		"POSITION",										//シェーダー入力署名でこの要素に関連付けられているHLSLセマンティクス(ソースコード中で利用されている変数や文が正しく動作するかを判断する基準)
-		0,														//要素のセマンティクスインデックス
-		DXGI_FORMAT_R32G32B32_FLOAT,   //要素データのデータ型
-		0,														//入力アセンブラーを識別する整数値
-		0,														//(省略可能)各要素間のオフセット (バイト単位)
+		"POSITION",						//シェーダー入力署名でこの要素に関連付けられているHLSLセマンティクス(ソースコード中で利用されている変数や文が正しく動作するかを判断する基準)
+		0,								//要素のセマンティクスインデックス
+		DXGI_FORMAT_R32G32B32_FLOAT,    //要素データのデータ型
+		0,								//入力アセンブラーを識別する整数値
+		0,								//(省略可能)各要素間のオフセット (バイト単位)
 		D3D11_INPUT_PER_VERTEX_DATA,	//単一の入力スロットの入力データ クラスを識別
-		0 });													//バッファーの中で要素の 1 つ分進む前に、インスタンス単位の同じデータを使用して描画するインスタンスの数
-	inputElementDesc.push_back({ 
-		"NORMAL", 
-		0, 
-		DXGI_FORMAT_R32G32B32_FLOAT, 
-		0, 
-		12, 
-		D3D11_INPUT_PER_VERTEX_DATA, 
-		0 });
-	inputElementDesc.push_back({ 
-		"TEXCOORD", 
-		0, 
-		DXGI_FORMAT_R32G32_FLOAT, 
-		0,
-		24, 
-		D3D11_INPUT_PER_VERTEX_DATA, 
-		0 });
-	inputElementDesc.push_back({
-		"BLENDINDICES",
-		0,
-		DXGI_FORMAT_R32G32B32A32_UINT,
-		0,
-		32,
-		D3D11_INPUT_PER_VERTEX_DATA,
-		0 });
-	inputElementDesc.push_back({ 
-		"BLENDINDICES",
-		1, 
-		DXGI_FORMAT_R32G32B32A32_UINT, 
-		0,
-		48,
-		D3D11_INPUT_PER_VERTEX_DATA, 
-		0 });
-	inputElementDesc.push_back({ 
-		"BLENDWEIGHT", 
-		0, 
-		DXGI_FORMAT_R32G32B32A32_FLOAT, 
-		0, 
-		64, 
-		D3D11_INPUT_PER_VERTEX_DATA, 
-		0 });
-	inputElementDesc.push_back({ 
-		"BLENDWEIGHT", 
-		1, 
-		DXGI_FORMAT_R32G32B32A32_FLOAT, 
-		0, 
-		80, 
-		D3D11_INPUT_PER_VERTEX_DATA, 
-		0 });
+		0 });							//バッファーの中で要素の 1 つ分進む前に、インスタンス単位の同じデータを使用して描画するインスタンスの数
+	inputElementDesc.push_back({ "NORMAL", 	0, 	DXGI_FORMAT_R32G32B32_FLOAT, 	0, 	12, 	D3D11_INPUT_PER_VERTEX_DATA, 0 });
+	inputElementDesc.push_back({ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 });
+	inputElementDesc.push_back({ "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0 });
+	inputElementDesc.push_back({ "BLENDINDICES", 0, DXGI_FORMAT_R32G32B32A32_UINT, 0, 44, D3D11_INPUT_PER_VERTEX_DATA, 0 });
+	inputElementDesc.push_back({ "BLENDINDICES", 1, DXGI_FORMAT_R32G32B32A32_UINT, 0, 60, D3D11_INPUT_PER_VERTEX_DATA, 0 });
+	inputElementDesc.push_back({ "BLENDWEIGHT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 76, D3D11_INPUT_PER_VERTEX_DATA, 0 });
+	inputElementDesc.push_back({ "BLENDWEIGHT", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 92, D3D11_INPUT_PER_VERTEX_DATA, 0 });
 	//頂点レイアウト(入力レイアウト)オブジェクトを作成しデバイスに登録
 	//インプットレイアウトは、頂点情報とシェーダーの情報を集約します
 	hr = Engine::GetDXDevice3D().CreateInputLayout(

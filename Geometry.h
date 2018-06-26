@@ -70,9 +70,9 @@ public:
 class StaticCylinder final : public Geometry
 {
 private:
-	void Create(const Vec3& pos, const int direction, const dReal radius, const dReal length);
+	void Create(const Vec3& pos, const dReal radius, const dReal length);
 public:
-	StaticCylinder(const Vec3& pos, const int direction, const dReal radius, const dReal length);
+	StaticCylinder(const Vec3& pos, const dReal radius, const dReal length);
 	StaticCylinder();
 	~StaticCylinder();
 };
@@ -80,9 +80,9 @@ public:
 class StaticCapsule final : public Geometry
 {
 private:
-	void Create(const Vec3& pos, const int direction, const dReal radius, const dReal length);
+	void Create(const Vec3& pos, const dReal radius, const dReal length);
 public:
-	StaticCapsule(const Vec3& pos, const int direction, const dReal radius, const dReal length);
+	StaticCapsule(const Vec3& pos, const dReal radius, const dReal length);
 	StaticCapsule();
 	~StaticCapsule();
 };

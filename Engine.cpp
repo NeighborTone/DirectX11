@@ -13,8 +13,9 @@ Engine::Engine(std::string WindowTitle, int width, int height, bool isFullScreen
 	this->height = height;
 	this->isFullScreen = isFullScreen;
 	in.CreateInput(GetWindow().GetHwnd());
-//	pad.CreatePadInput(GetWindow().GetHwnd());
+	pad.CreatePadInput(GetWindow().GetHwnd());
 	mouse.CreateMousenput(GetWindow().GetHwnd());
+	GetWindow().SetFullScreen(this->isFullScreen);
 	COMInitialize();
 }
 
@@ -97,13 +98,6 @@ IWICImagingFactory& Engine::GetTextureFactory()
 IDWriteFactory& Engine::GetTextFactory()
 {
 	return  GetDirect3D().GetTextFactory();
-}
-
-
-SoundSystem& Engine::GetSoundSystem()
-{
-	static std::unique_ptr<SoundSystem>soundSystem(new SoundSystem);
-	return *soundSystem.get();
 }
 
 System& Engine::GetWindow()

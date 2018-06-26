@@ -1,68 +1,79 @@
 #pragma once
 #pragma warning (disable : 4100)	//コールバック関数
 #include <atlbase.h>
-#include <XAudio2.h>
+#include <Windows.h>
+#include <xaudio2.h>
 #include <x3daudio.h>
-#include "EffectParameter.hpp"
-#include "Utility.hpp"
-#include "wav.h"
-#include "ogg.h"
 
-#define _USE_VOICECALLBACK_
-#pragma comment(lib,"XAudio2.lib")
-
-class SoundSource;
-
-class XAudio2Callback : public IXAudio2VoiceCallback
+#pragma comment(lib,"xaudio2")
+namespace SoundEngine
 {
-private:
-	HANDLE handle;
-public:
-	XAudio2Callback() { }
-	~XAudio2Callback() { }
-	void STDMETHODCALLTYPE OnVoiceProcessingPassStart(UINT32 BytesRequired) override
-	{ }
-	void STDMETHODCALLTYPE OnVoiceProcessingPassEnd() override
-	{ }
-	void STDMETHODCALLTYPE OnStreamEnd() override
+	class XAudio2Callback : public IXAudio2VoiceCallback
 	{
-		SetEvent(handle);
-	}
-	void STDMETHODCALLTYPE OnBufferStart(void* pBufferContext) override
+	public:
+		HANDLE handle;
+		XAudio2Callback() :
+			handle(CreateEventEx(nullptr, nullptr, 0, EVENT_MODIFY_STATE | SYNCHRONIZE))
+		{ }
+		virtual ~XAudio2Callback()
+		{
+			CloseHandle(handle);
+		}
+		//ストリーミング用?
+		void __stdcall OnStreamEnd() override
+		{
+			SetEvent(handle);
+		}
+		void __stdcall OnBufferStart(void* pBufferContext) override
+		{
+			SetEvent(handle);
+		}
+		//スタブ
+		void __stdcall OnVoiceProcessingPassStart(UINT32 BytesRequired) override
+		{ }
+		void __stdcall OnVoiceProcessingPassEnd() override
+		{ }
+		void __stdcall OnBufferEnd(void* pBufferContext) override
+		{ }
+		void __stdcall OnLoopEnd(void* pBufferContext) override
+		{ }
+		void __stdcall OnVoiceError(void* pBufferContext, HRESULT Error) override
+		{ }
+
+	};
+
+	class EngineCallBack : public IXAudio2EngineCallback
 	{
-		SetEvent(handle);
-	}
-	void STDMETHODCALLTYPE OnBufferEnd(void* pBufferContext) override
-	{ }
-	void STDMETHODCALLTYPE OnLoopEnd(void* pBufferContext) override
-	{ }
-	void STDMETHODCALLTYPE OnVoiceError(void* pBufferContext, HRESULT Error) override
-	{ }
-};
-//サウンド管理部
-class SoundSystem
-{
-private:
-	XAUDIO2_VOICE_DETAILS voiceDetails;
-	//インターフェース
-	ATL::CComPtr<IXAudio2> pXAudio2;
-	//3Dインターフェース
-	X3DAUDIO_HANDLE x3DInstance;
-	//マスターヴォイス
-	IXAudio2MasteringVoice* pMaster;
-	//サウンドシステムの初期化、一度だけ作ればよい
-	bool Create();
+	public:
+		void __stdcall OnProcessingPassEnd() override {}
+		void __stdcall OnProcessingPassStart() override {}
+		void __stdcall OnCriticalError(HRESULT Error) override {}
+	};
 
-public:
-	SoundSystem();
-	~SoundSystem();
+	class Audio
+	{
+	private:
+		//コールバック
+		EngineCallBack engineCallBack;
+		//作成フラグ、入力チャンネル、およびボイスのサンプルレートに関する情報
+		XAUDIO2_VOICE_DETAILS voiceDetails;
+		//インターフェース
+		ATL::CComPtr<IXAudio2> pXAudio2;
+		//3Dインターフェース
+		X3DAUDIO_HANDLE x3DInstance;
+		//マスタリングヴォイス(これはCOMではない)
+		IXAudio2MasteringVoice* pMaster;
+		//サウンドシステムの初期化、一度だけ作ればよい
+		void Create();
+		//シングルトン
+		Audio();
+	public:
+		~Audio();
+		IXAudio2* GetXAudio2() const;
+		IXAudio2MasteringVoice* GetMaster() const;
+		X3DAUDIO_HANDLE& Get3DInstance();
+		XAUDIO2_VOICE_DETAILS& GetVoiceDetails();
+		static Audio* GetInstance();
 
-	IXAudio2* GetXAudio2() const;
-	IXAudio2MasteringVoice* GetMaster() const;
-	X3DAUDIO_HANDLE& Get3DInstance();
-	XAUDIO2_VOICE_DETAILS& GetVoiceDetails();
-	//登録したサウンド全体の音量調整
-	void SetMasterGain(float gain);
-	void DestroySystem(SoundSource& source);
-};
-
+	};
+}

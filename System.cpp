@@ -108,6 +108,25 @@ HWND System::GetHwnd()
 	return handle;
 }
 
+void System::SetFullScreen(bool isFullScreen)
+{
+	static DirectX::XMINT2 size = GetSize();
+
+	if (isFullScreen)
+	{
+		size = GetSize();
+		int w = GetSystemMetrics(SM_CXSCREEN);
+		int h = GetSystemMetrics(SM_CYSCREEN);
+		SetWindowLongPtrW(handle, GWL_STYLE, WS_VISIBLE | WS_POPUP);
+		SetWindowPos(handle, HWND_TOP, 0, 0, w, h, SWP_FRAMECHANGED);
+	}
+	else
+	{
+		SetWindowLongPtrW(handle, GWL_STYLE, WS_VISIBLE | WS_OVERLAPPEDWINDOW);
+		SetWindowPos(handle, nullptr, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE);
+		SetSize(size.x, size.y);
+	}
+}
 
 DirectX::XMINT2 System::GetSize()
 {

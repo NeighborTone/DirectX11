@@ -59,6 +59,11 @@ public:
 	*/
 	DirectX::XMINT2 GetSize();
 
+	/*!
+	* @brief ウィンドウのサイズ変更を行います
+	* @param (title) ウィンドウタイトル
+	*/
+	void SetFullScreen(bool isFullScreen);
 private:
 	static std::list<Proceedable*>& GetProcedures()
 	{

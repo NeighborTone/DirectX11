@@ -4,13 +4,13 @@
 #include "Console.hpp"
 #include "Easing.hpp"
 #include "XInput.h"
+#include "SoundSource.h"
 
 //TODO:
 //:物理エンジン管理クラスの使い勝手が悪いので何とかする
 //:柔軟な衝突検知
-//:oggファイルの再生
 //:プリミティブの追加
-//:サウンドエフェクトクラス化
+//:サウンドエフェクトクラスを柔軟にする
 //:警告レベル4での警告を最小限にする
 //:パッド、マウス、キー入力のグローバル変数の解消
 //:モデルに複数のテクスチャをアタッチできるようにする
@@ -44,6 +44,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	Texture tex("Resource/box.jpg");
 	Texture tex2("Resource/white.png");
 	PhysicsWorld physicsWorld;
+	SoundEngine::SoundSource s;
+
+	s.Load("Resource/se.ogg",false);
 	struct Wall
 	{
 		Mesh mesh;
@@ -57,6 +60,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	me.mesh.pos = camera3D.pos;
 	me.mesh.pos.y -= 5;
 	me.mesh.pos.z += 10;
+
 	for (int i = 0; i < 3; ++i)
 	{
 		box[i].mesh.GetMaterial().SetTexture(0, &tex);
@@ -91,11 +95,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	physicsWorld.pRigidBody[me.ID]->SetRotation(me.mesh.angle);
 	me.vel = 0;
 	physicsWorld.SetGravity(Vec3_d(0, 0, 0));
+	Particle pt;
+	SoundEngine::SoundSource sound;
+	sound.Load("Resource/se.ogg",false);
+	pt.Load("Resource/testEf.efk");
 	while (ge.Run())
 	{
 		physicsWorld.UpDate();
 		//===================================//
-		//==========3DRendering=================//
+		//==========3DRendering==============//
 		//===================================//
 		camera3D.Run(true);
 		XInput::UpDate();
@@ -138,26 +146,38 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		me.mesh.pos = physicsWorld.pRigidBody[me.ID]->GetPosition();
 		me.mesh.Draw();
 		DX::XMFLOAT2 v = XInput::GetRightThumb();
-		if (v.y <= -32768)
+		if (v.y <= -32768 ||
+			KeyBoard::On(KeyBoard::Key::KEY_S))
 		{
 			me.vel.y -= 8;
 		}
-		if (v.y >= 32767)
+		if (v.y >= 32767 ||
+			KeyBoard::On(KeyBoard::Key::KEY_W))
 		{
 			me.vel.y += 8;
 		}
-		if (v.x <= -32768)
+		if (v.x <= -32768 ||
+			KeyBoard::On(KeyBoard::Key::KEY_A))
 		{
 			me.vel.x -= 8;
 		}
-		if (v.x >= 32767)
+		if (v.x >= 32767 ||
+			KeyBoard::On(KeyBoard::Key::KEY_D))
 		{
 			me.vel.x += 8;
 		}
+		if (KeyBoard::Down(KeyBoard::Key::KEY_SPACE))
+		{
+			pt.pos = me.mesh.pos;
+			sound.PlaySE();
+			pt.Play();
+		}
+		pt.Draw(camera3D);
 		physicsWorld.pRigidBody[me.ID]->AddVelocity(me.vel);
 		me.vel = 0;
+		physicsWorld.IsHitGeom(me.ID,box[1].ID);
 		//===================================//
-		//==========2DRendering=================//
+		//==========2DRendering==============//
 		//===================================//
 		camera2D.Run(false);
 		std::cout << v.y << std::endl;

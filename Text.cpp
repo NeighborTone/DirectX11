@@ -97,6 +97,7 @@ void Text::Create(const std::string& text, float fontSize, const std::string&  f
 
 void Text::Draw()
 {
+	Engine::GetDXContext2D().SetTextAntialiasMode(D2D1_TEXT_ANTIALIAS_MODE_DEFAULT);
 	Engine::GetDXContext2D().SetTarget(bitmap);
 
 	Engine::GetDXContext2D().BeginDraw();

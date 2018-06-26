@@ -285,7 +285,8 @@ void Model::LoadMeshWithPolygonVertex(FbxMesh* mesh, Mesh* item)
 			if (mesh->GetElementUVCount() > 0)
 				mesh->GetPolygonVertexUV(i, j, uvSetNames[0], uv, isMapped);
 			vertex.uv = Vec2((float)uv.mData[0], 1.0f - (float)uv.mData[1]);
-
+			Vec3 yUp(0, 1, 0);
+			vertex.tangent = vertex.normal.Cross(yUp);
 			item->vertices.push_back(vertex);
 		}
 	}

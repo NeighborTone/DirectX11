@@ -38,12 +38,6 @@
     <ClCompile Include="FPS.cpp">
       <Filter>Engine\Utilitys</Filter>
     </ClCompile>
-    <ClCompile Include="wav.cpp">
-      <Filter>Engine\Sounds</Filter>
-    </ClCompile>
-    <ClCompile Include="audio.cpp">
-      <Filter>Engine\Sounds</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Engine\Graphics</Filter>
     </ClCompile>
@@ -65,14 +59,26 @@
     <ClCompile Include="Particle.cpp">
       <Filter>Engine\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="ogg.cpp">
-      <Filter>Engine\Sounds</Filter>
+    <ClCompile Include="XInput.cpp">
+      <Filter>Engine\Inputs</Filter>
     </ClCompile>
     <ClCompile Include="SoundSource.cpp">
       <Filter>Engine\Sounds</Filter>
     </ClCompile>
-    <ClCompile Include="XInput.cpp">
-      <Filter>Engine\Inputs</Filter>
+    <ClCompile Include="WavDecoder.cpp">
+      <Filter>Engine\Sounds</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio.cpp">
+      <Filter>Engine\Sounds</Filter>
+    </ClCompile>
+    <ClCompile Include="OggDecoder.cpp">
+      <Filter>Engine\Sounds</Filter>
+    </ClCompile>
+    <ClCompile Include="PCM.cpp">
+      <Filter>Engine\Sounds</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundEffect.cpp">
+      <Filter>Engine\Sounds</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -118,12 +124,6 @@
     <ClInclude Include="FPS.h">
       <Filter>Engine\Utilitys</Filter>
     </ClInclude>
-    <ClInclude Include="wav.h">
-      <Filter>Engine\Sounds</Filter>
-    </ClInclude>
-    <ClInclude Include="audio.h">
-      <Filter>Engine\Sounds</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Engine\Graphics</Filter>
     </ClInclude>
@@ -154,17 +154,26 @@
     <ClInclude Include="Easing.hpp">
       <Filter>Engine\Utilitys</Filter>
     </ClInclude>
-    <ClInclude Include="EffectParameter.hpp">
-      <Filter>Engine\Sounds</Filter>
-    </ClInclude>
-    <ClInclude Include="ogg.h">
-      <Filter>Engine\Sounds</Filter>
+    <ClInclude Include="XInput.h">
+      <Filter>Engine\Inputs</Filter>
     </ClInclude>
     <ClInclude Include="SoundSource.h">
       <Filter>Engine\Sounds</Filter>
     </ClInclude>
-    <ClInclude Include="XInput.h">
-      <Filter>Engine\Inputs</Filter>
+    <ClInclude Include="WavDecoder.h">
+      <Filter>Engine\Sounds</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio.h">
+      <Filter>Engine\Sounds</Filter>
+    </ClInclude>
+    <ClInclude Include="OggDecoder.h">
+      <Filter>Engine\Sounds</Filter>
+    </ClInclude>
+    <ClInclude Include="PCM.h">
+      <Filter>Engine\Sounds</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundEffect.h">
+      <Filter>Engine\Sounds</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

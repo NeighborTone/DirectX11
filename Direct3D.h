@@ -47,8 +47,8 @@ private:
 	//ComPtrマイクロソフトのシェアポインタ
 	//CComPtrマイクロソフトのユニークポインタ
 
-	bool Create(bool isFullScreen);
-	bool IsCreateDevice(bool isFullScreen);
+	bool Create();
+	bool IsCreateDevice();
 	bool IsCreateBlendState();
 	bool IsCreateD2D();
 	void CreateSwapChain();

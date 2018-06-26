@@ -14,7 +14,7 @@ Direct3D::Direct3D(bool isFullScreen) :
 {
 	this->isFullScreen =  isFullScreen;
 	Engine::COMInitialize();
-	Create(this->isFullScreen);
+	Create();
 }
 
 Direct3D::~Direct3D()
@@ -67,9 +67,9 @@ void Direct3D::UpDate()
 	swapChain->Present(1, 0);
 }
 
-bool Direct3D::Create(bool isFull)
+bool Direct3D::Create()
 {
-	ErrorMessage(IsCreateDevice(isFull), "デバイスの作成に失敗", "Error");
+	ErrorMessage(IsCreateDevice(), "デバイスの作成に失敗", "Error");
 	ErrorMessage(IsCreateBlendState(), "アルファブレンドの設定に失敗", "Error");
 	ErrorMessage(IsCreateD2D(), "Direct2Dの作成に失敗", "Error");
 	
@@ -81,9 +81,8 @@ bool Direct3D::Create(bool isFull)
 	return true;
 }
 
-bool Direct3D::IsCreateDevice(bool isFull)
+bool Direct3D::IsCreateDevice()
 {
-
 
 	UINT flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;	//Direct2DとDirectX11を連携させるのに必須
 #if defined(_DEBUG)
@@ -274,7 +273,6 @@ void Direct3D::CreateSwapChain()
 
 	//表示済みのバックバッファの破棄
 	swapDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-
 	swapDesc.Flags = 0;
 	swapChain.Release();
 	factory->CreateSwapChain(device3D, &swapDesc, &swapChain);

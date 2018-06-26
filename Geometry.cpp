@@ -137,9 +137,9 @@ void StaticSphere::Create(const Vec3& pos, const dReal& radius)
 	dGeomSetPosition(geom, pos.x, pos.y, pos.z);
 }
 
-StaticCylinder::StaticCylinder(const Vec3 & pos, const int direction, const dReal radius, const dReal length)
+StaticCylinder::StaticCylinder(const Vec3 & pos, const dReal radius, const dReal length)
 {
-	Create(pos, direction, radius, length);
+	Create(pos, radius, length);
 }
 
 StaticCylinder::StaticCylinder()
@@ -152,15 +152,15 @@ StaticCylinder::~StaticCylinder()
 
 }
 
-void StaticCylinder::Create(const Vec3 & pos, const int direction, const dReal radius, const dReal length)
+void StaticCylinder::Create(const Vec3& pos, const dReal radius, const dReal length)
 {
 	geom = dCreateCylinder(Engine::GetPhysics().GetCollsionSpace(), radius, length);
 	dGeomSetPosition(geom, pos.x, pos.y, pos.z);
 }
 
-StaticCapsule::StaticCapsule(const Vec3 & pos, const int direction, const dReal radius, const dReal length)
+StaticCapsule::StaticCapsule(const Vec3 & pos, const dReal radius, const dReal length)
 {
-	Create(pos, direction, radius, length);
+	Create(pos, radius, length);
 }
 
 StaticCapsule::StaticCapsule()
@@ -173,7 +173,7 @@ StaticCapsule::~StaticCapsule()
 
 }
 
-void StaticCapsule::Create(const Vec3 & pos, const int direction, const dReal radius, const dReal length)
+void StaticCapsule::Create(const Vec3 & pos, const dReal radius, const dReal length)
 {
 	geom = dCreateCapsule(Engine::GetPhysics().GetCollsionSpace(), radius, length);
 	dGeomSetPosition(geom, pos.x, pos.y, pos.z);
