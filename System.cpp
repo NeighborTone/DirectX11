@@ -112,7 +112,7 @@ void System::SetFullScreen(bool isFullScreen)
 {
 	static DirectX::XMINT2 size = GetSize();
 
-	if (isFullScreen)
+	if (!isFullScreen)
 	{
 		size = GetSize();
 		int w = GetSystemMetrics(SM_CXSCREEN);
