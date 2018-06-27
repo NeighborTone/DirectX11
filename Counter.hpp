@@ -30,7 +30,7 @@ public:
 	* @brief カウンターを加算値分足します
 	* @return 現在のカウンターの値
 	*/
-	void operator++() const
+	T operator++() 
 	{
 		if (now > max)
 		{
@@ -47,7 +47,7 @@ public:
 	* @brief カウンターを加算値分引きます
 	* @return 現在のカウンターの値
 	*/
-	void operator--() const
+	T operator--()
 	{
 		if (now < min)
 		{

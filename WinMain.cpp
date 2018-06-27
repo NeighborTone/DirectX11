@@ -5,7 +5,7 @@
 #include "Easing.hpp"
 #include "XInput.h"
 #include "SoundSource.h"
-
+#include "Counter.hpp"
 //TODO:
 //:物理エンジン管理クラスの使い勝手が悪いので何とかする
 //:柔軟な衝突検知
@@ -44,11 +44,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	Texture tex("Resource/brick.jpg");
 	
 	//Model m("Resource/ball.fbx");
+	Counter cnt(0, 1, 0, 60);
+	Particle effect;
+	effect.Load("Resource/testParticle.efk");
+	Text text("2DHogeText",20.0f,"メイリオ");
 
-	Text text("Hoge");
-
-	text.scale = 2;
-	text.pos.y = 10;
+	//text.scale = 1.0f/16.0f;
 	while (ge.Run())
 	{
 	
@@ -87,19 +88,27 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		{
 			camera3D.pos.z -= 0.6f;
 		}
+		effect.Draw(camera3D);
+		++cnt;
+		if (cnt.GetCurrentCount() >= 60)
+		{
+
+			effect.Play();
+		}
 		//tex.Attach(0);
 		//m.Draw();
-		text.pos.y = 10;
-		text.Draw();
 		
-		text.color.r = 1;
-		text.pos.y = -10;
-		text.Draw();
 		//===================================//
 		//==========2DRendering=================//
 		//===================================//
 		camera2D.Run(false);
-		
+		text.color = Float4(1,0,0,1);
+		text.pos.y = 10;
+		text.Draw();
+
+		text.color = Float4(0, 1, 0, 1);
+		text.pos.y = -10;
+		text.Draw();
 		//std::cout << Engine::GetFps().GetFrameRate() << std::endl;
 	}
 
