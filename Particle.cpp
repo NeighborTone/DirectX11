@@ -1,11 +1,7 @@
 #include "Particle.h"
 #include "Engine.h"
 
-Particle::Particle(const char* path) :
-	renderer(nullptr),
-	manager(nullptr),
-	effect(nullptr),
-	handle(0)
+Particle::Particle(const char* path)
 {
 	Init();
 	Create();
@@ -60,7 +56,6 @@ void Particle::Stop()
 
 void Particle::Draw(Camera& camera)
 {
-
 	Update();
 	EffectDraw(camera);
 }

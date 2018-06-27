@@ -44,6 +44,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	Texture tex("Resource/brick.jpg");
 	
 	//Model m("Resource/ball.fbx");
+	Easing ease;
 	Counter cnt(0, 1, 0, 60);
 	Particle effect;
 	effect.Load("Resource/testParticle.efk");
@@ -103,7 +104,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		//===================================//
 		camera2D.Run(false);
 		text.color = Float4(1,0,0,1);
-		text.pos.y = 10;
+		text.pos.y = ease.quad.Out(ease.Time(10),200, 10 - 200);
 		text.Draw();
 
 		text.color = Float4(0, 1, 0, 1);

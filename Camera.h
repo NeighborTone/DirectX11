@@ -25,11 +25,11 @@ public:
 	void SetPerspective(float fieldOfView, float nearClip, float farClip);
 	
 	/*!
-	*   @brief 正射影変換を行います
+	*   @brief 正射影変換を行います。画面の奥行きの概念をなくした射影変換です
 	*   @param (size) クライアント領域のサイズ基本的には1を指定します
 	*   @param (nearClip) 絵が見え始める距離
 	*   @param (farClip)  絵が見えなくなる距離
-	*   @detail 画面の奥行きの概念をなくした射影変換です
+	*   @detail 
 	*/
 	void SetOrthographic(float size, float nearClip, float farClip);
 	/*!

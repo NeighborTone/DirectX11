@@ -3,8 +3,8 @@
 template <typename T>
 /*! @class Counter
 *   @brief カウンターです.上限値に達したら下限値、下限値を超えたら上限値になります
-*   @detail コンストラクタで初期値、加算値、下限値、上限値を設定してください
-*   @detail int(Counter), float(CounterF), double(CounterD)型がそれぞれあります
+*   @note コンストラクタで初期値、加算値、下限値、上限値を設定してください
+*   @note int(Counter), float(CounterF), double(CounterD)型がそれぞれあります
 */
 class TemplateCounter
 {
