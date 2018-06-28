@@ -175,6 +175,9 @@
     <ClInclude Include="SoundEffect.h">
       <Filter>Engine\Sounds</Filter>
     </ClInclude>
+    <ClInclude Include="Randam.hpp">
+      <Filter>Engine\Utilitys</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Engine">

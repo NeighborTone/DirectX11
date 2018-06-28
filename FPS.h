@@ -23,7 +23,7 @@ public:
 	*/
 	void UpDate();
 	/*!
-	* @brief  アプリケーション起動時からの時間を返します]
+	* @brief  アプリケーション起動時からの時間を返します
 	* @retrun [float] time
 	*/
 	float GetTime() const;

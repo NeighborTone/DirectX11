@@ -6,6 +6,7 @@
 #include "XInput.h"
 #include "SoundSource.h"
 #include "Counter.hpp"
+#include "Randam.hpp"
 //TODO:
 //:物理エンジン管理クラスの使い勝手が悪いので何とかする
 //:柔軟な衝突検知
@@ -33,7 +34,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	Camera camera3D;
 	camera3D.pos.z = -20;
 	camera3D.pos.y = 5;
-	camera3D.angle.x = 20;
+	camera3D.angle.x = 0;
+	camera3D.color = Float4(0, 0, 0, 1);
 	camera3D.SetPerspective(45.0f, 1, 10000.0f);
 	camera3D.SetDepthTest(true);
 
@@ -47,21 +49,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	Easing ease;
 	Counter cnt(0, 1, 0, 60);
 	Particle effect;
-	effect.Load("Resource/testParticle.efk");
+	effect.Load("Resource/TestParticle2.efk");
 	Text text("2DHogeText",20.0f,"メイリオ");
-
-	//text.scale = 1.0f/16.0f;
+	Random rand;
 	while (ge.Run())
 	{
-	
+		std::cout <<rand.GetRand(0,1)<< std::endl;
 		//===================================//
 		//==========3DRendering=================//
 		//===================================//
 		camera3D.Run(true);
-		XInput::UpDate();
-		if (KeyBoard::Down(KeyBoard::Key::KEY_ESCAPE) ||
-			XInput::Down(XInput::ButtonID::START,XInput::ID::P1)||
-			XInput::Down(XInput::ButtonID::START, XInput::ID::P2))
+		if (KeyBoard::Down(KeyBoard::Key::KEY_ESCAPE))
 		{
 			break;
 		}
@@ -104,7 +102,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		//===================================//
 		camera2D.Run(false);
 		text.color = Float4(1,0,0,1);
-		text.pos.y = ease.quad.Out(ease.Time(10),200, 10 - 200);
+		text.pos.y = ease.bounce.Out(ease.Time(10),200, 10 - 200);
 		text.Draw();
 
 		text.color = Float4(0, 1, 0, 1);

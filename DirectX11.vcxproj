@@ -68,6 +68,7 @@
     <ClInclude Include="Pad.h" />
     <ClInclude Include="PCM.h" />
     <ClInclude Include="Physics.h" />
+    <ClInclude Include="Randam.hpp" />
     <ClInclude Include="RigidBody.h" />
     <ClInclude Include="SoundEffect.h" />
     <ClInclude Include="SoundSource.h" />
