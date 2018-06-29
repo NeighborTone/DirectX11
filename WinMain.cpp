@@ -28,14 +28,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 {
 	ShowConsole();
 	//ゲームエンジン生成
-	Engine ge("DirectX11", 640, 480, true);
+	Engine ge("DirectX11", 1280, 900, true);
 	
 	//カメラ生成
 	Camera camera3D;
 	camera3D.pos.z = -20;
 	camera3D.pos.y = 5;
 	camera3D.angle.x = 0;
-	camera3D.color = Float4(0, 0, 0, 1);
+
 	camera3D.SetPerspective(45.0f, 1, 10000.0f);
 	camera3D.SetDepthTest(true);
 
@@ -43,9 +43,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	camera2D.SetDepthTest(false);
 	camera2D.SetOrthographic(1, 0.1f, 1000.0f);
 	
-	Texture tex("Resource/brick.jpg");
+	Texture tex("Resource/F01_512.jpg");
 	
-	//Model m("Resource/ball.fbx");
+	Model m("Resource/untitled.fbx");
+	m.scale = 0.01f;
+	m.angle.x = -90;
+	m.angle.y = -90;
+
 	Easing ease;
 	Counter cnt(0, 1, 0, 60);
 	Particle effect;
@@ -54,6 +58,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	Random rand;
 	while (ge.Run())
 	{
+		
 		std::cout <<rand.GetRand(0,1)<< std::endl;
 		//===================================//
 		//==========3DRendering=================//
@@ -87,6 +92,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		{
 			camera3D.pos.z -= 0.6f;
 		}
+		if (KeyBoard::On(KeyBoard::Key::KEY_D))
+		{
+			m.pos.x += 0.6f;
+		}
+		if (KeyBoard::On(KeyBoard::Key::KEY_A))
+		{
+			m.pos.x -= 0.6f;
+		}
+		tex.Attach(0);
+		m.Draw();
+
 		effect.Draw(camera3D);
 		++cnt;
 		if (cnt.GetCurrentCount() >= 60)
@@ -94,8 +110,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 
 			effect.Play();
 		}
-		//tex.Attach(0);
-		//m.Draw();
 		
 		//===================================//
 		//==========2DRendering=================//
