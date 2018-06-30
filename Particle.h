@@ -37,7 +37,5 @@ public:
 	void Play();
 	void Stop();
 	void Draw(Camera &camera);
-
-	
 };
 

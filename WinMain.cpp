@@ -44,7 +44,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	camera2D.SetOrthographic(1, 0.1f, 1000.0f);
 	
 	Texture tex("Resource/F01_512.jpg");
-	
+	Texture tex2("Resource/box.jpg");
 	Model m("Resource/untitled.fbx");
 	m.scale = 0.01f;
 	m.angle.x = -90;
@@ -53,9 +53,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	Easing ease;
 	Counter cnt(0, 1, 0, 60);
 	Particle effect;
-	effect.Load("Resource/TestParticle2.efk");
+	effect.Load("Resource/TestParticle.efk");
 	Text text("2DHogeText",20.0f,"メイリオ");
 	Random rand;
+	Sprite sp("Resource/カーソル.png");
+	Mesh mm;
+	mm.CreateCube();
+	mm.GetMaterial().SetTexture(0,&tex2);
+
 	while (ge.Run())
 	{
 		
@@ -102,7 +107,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		}
 		tex.Attach(0);
 		m.Draw();
-
+		mm.Draw();
 		effect.Draw(camera3D);
 		++cnt;
 		if (cnt.GetCurrentCount() >= 60)
@@ -122,6 +127,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		text.color = Float4(0, 1, 0, 1);
 		text.pos.y = -10;
 		text.Draw();
+
+		sp.pos.x = -100;
+		sp.Draw();
 		//std::cout << Engine::GetFps().GetFrameRate() << std::endl;
 	}
 

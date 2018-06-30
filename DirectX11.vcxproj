@@ -78,6 +78,8 @@
     <ClInclude Include="Text.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Utility.hpp" />
+    <ClInclude Include="Vec.hpp" />
+    <ClInclude Include="Vertex.hpp" />
     <ClInclude Include="WavDecoder.h" />
     <ClInclude Include="XInput.h" />
   </ItemGroup>

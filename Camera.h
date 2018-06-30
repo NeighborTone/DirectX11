@@ -1,6 +1,6 @@
 #pragma once
 #include "Engine.h"
-#include "Utility.hpp"
+#include "Vec.hpp"
 
 /*! @class Camera
 *   @brief アプリケーションの3D空間を映します

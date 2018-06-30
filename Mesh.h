@@ -1,5 +1,6 @@
 #pragma once
-#include "Utility.hpp"
+#include "Vec.hpp"
+#include "Vertex.hpp"
 #include "Material.h"
 #include <DirectXMath.h>
 #include <vector>
