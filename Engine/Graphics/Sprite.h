@@ -1,5 +1,5 @@
 #pragma once
-#include "Utility.hpp"
+#include "../Utilitys/Vec.hpp"
 #include "Mesh.h"
 #include <DirectXMath.h>
 

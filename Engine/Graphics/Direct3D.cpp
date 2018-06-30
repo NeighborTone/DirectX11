@@ -1,6 +1,6 @@
 #include "Direct3D.h"
-#include "Engine.h"
-#include "Utility.hpp"
+#include "../Engine.h"
+#include "../Utilitys/Utility.hpp"
 #include <array>
 bool Direct3D::isFullScreen = false;
 Direct3D::Direct3D(bool isFullScreen) :

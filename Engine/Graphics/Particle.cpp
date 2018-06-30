@@ -1,5 +1,5 @@
 #include "Particle.h"
-#include "Engine.h"
+#include "../Engine.h"
 
 Particle::Particle(const char* path)
 {

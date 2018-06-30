@@ -1,6 +1,6 @@
 #include "System.h"
-#include "Engine.h"
-#include "Utility.hpp"
+#include "../Engine.h"
+#include "../Utilitys/Utility.hpp"
 
 System::System(std::string title, int width, int height)
 {

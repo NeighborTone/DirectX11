@@ -19,69 +19,69 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Audio.cpp" />
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Direct3D.cpp" />
-    <ClCompile Include="Direct_Input.cpp" />
-    <ClCompile Include="OggDecoder.cpp" />
-    <ClCompile Include="Particle.cpp" />
-    <ClCompile Include="Engine.cpp" />
-    <ClCompile Include="FPS.cpp" />
-    <ClCompile Include="Geometry.cpp" />
-    <ClCompile Include="Keyboard.cpp" />
-    <ClCompile Include="Material.cpp" />
-    <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="Model.cpp" />
-    <ClCompile Include="Mouse.cpp" />
-    <ClCompile Include="Pad.cpp" />
-    <ClCompile Include="PCM.cpp" />
-    <ClCompile Include="Physics.cpp" />
-    <ClCompile Include="RigidBody.cpp" />
-    <ClCompile Include="SoundEffect.cpp" />
-    <ClCompile Include="SoundSource.cpp" />
-    <ClCompile Include="Sprite.cpp" />
-    <ClCompile Include="System.cpp" />
-    <ClCompile Include="Text.cpp" />
-    <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="WavDecoder.cpp" />
+    <ClCompile Include="Engine\Engine.cpp" />
+    <ClCompile Include="Engine\Graphics\Camera.cpp" />
+    <ClCompile Include="Engine\Graphics\Direct3D.cpp" />
+    <ClCompile Include="Engine\Graphics\Material.cpp" />
+    <ClCompile Include="Engine\Graphics\Mesh.cpp" />
+    <ClCompile Include="Engine\Graphics\Model.cpp" />
+    <ClCompile Include="Engine\Graphics\Particle.cpp" />
+    <ClCompile Include="Engine\Graphics\Sprite.cpp" />
+    <ClCompile Include="Engine\Graphics\System.cpp" />
+    <ClCompile Include="Engine\Graphics\Text.cpp" />
+    <ClCompile Include="Engine\Graphics\Texture.cpp" />
+    <ClCompile Include="Engine\Inputs\Direct_Input.cpp" />
+    <ClCompile Include="Engine\Inputs\Keyboard.cpp" />
+    <ClCompile Include="Engine\Inputs\Mouse.cpp" />
+    <ClCompile Include="Engine\Inputs\Pad.cpp" />
+    <ClCompile Include="Engine\Inputs\XInput.cpp" />
+    <ClCompile Include="Engine\Physics\Geometry.cpp" />
+    <ClCompile Include="Engine\Physics\Physics.cpp" />
+    <ClCompile Include="Engine\Physics\RigidBody.cpp" />
+    <ClCompile Include="Engine\Sounds\Audio.cpp" />
+    <ClCompile Include="Engine\Sounds\OggDecoder.cpp" />
+    <ClCompile Include="Engine\Sounds\PCM.cpp" />
+    <ClCompile Include="Engine\Sounds\SoundEffect.cpp" />
+    <ClCompile Include="Engine\Sounds\SoundSource.cpp" />
+    <ClCompile Include="Engine\Sounds\WavDecoder.cpp" />
+    <ClCompile Include="Engine\Utilitys\FPS.cpp" />
     <ClCompile Include="WinMain.cpp" />
-    <ClCompile Include="XInput.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Audio.h" />
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="Console.hpp" />
-    <ClInclude Include="Counter.hpp" />
-    <ClInclude Include="Direct3D.h" />
-    <ClInclude Include="Direct_Input.h" />
-    <ClInclude Include="Easing.hpp" />
-    <ClInclude Include="OggDecoder.h" />
-    <ClInclude Include="Particle.h" />
-    <ClInclude Include="Engine.h" />
-    <ClInclude Include="FPS.h" />
-    <ClInclude Include="Geometry.h" />
-    <ClInclude Include="Keyboard.h" />
-    <ClInclude Include="Material.h" />
-    <ClInclude Include="Mesh.h" />
-    <ClInclude Include="Model.h" />
-    <ClInclude Include="Mouse.h" />
-    <ClInclude Include="Pad.h" />
-    <ClInclude Include="PCM.h" />
-    <ClInclude Include="Physics.h" />
-    <ClInclude Include="Randam.hpp" />
-    <ClInclude Include="RigidBody.h" />
-    <ClInclude Include="SoundEffect.h" />
-    <ClInclude Include="SoundSource.h" />
-    <ClInclude Include="Sprite.h" />
-    <ClInclude Include="StringConverter.hpp" />
-    <ClInclude Include="System.h" />
-    <ClInclude Include="Text.h" />
-    <ClInclude Include="Texture.h" />
-    <ClInclude Include="Utility.hpp" />
-    <ClInclude Include="Vec.hpp" />
-    <ClInclude Include="Vertex.hpp" />
-    <ClInclude Include="WavDecoder.h" />
-    <ClInclude Include="XInput.h" />
+    <ClInclude Include="Engine\Engine.h" />
+    <ClInclude Include="Engine\Graphics\Camera.h" />
+    <ClInclude Include="Engine\Graphics\Direct3D.h" />
+    <ClInclude Include="Engine\Graphics\Material.h" />
+    <ClInclude Include="Engine\Graphics\Mesh.h" />
+    <ClInclude Include="Engine\Graphics\Model.h" />
+    <ClInclude Include="Engine\Graphics\Particle.h" />
+    <ClInclude Include="Engine\Graphics\Sprite.h" />
+    <ClInclude Include="Engine\Graphics\System.h" />
+    <ClInclude Include="Engine\Graphics\Text.h" />
+    <ClInclude Include="Engine\Graphics\Texture.h" />
+    <ClInclude Include="Engine\Inputs\Direct_Input.h" />
+    <ClInclude Include="Engine\Inputs\Keyboard.h" />
+    <ClInclude Include="Engine\Inputs\Mouse.h" />
+    <ClInclude Include="Engine\Inputs\Pad.h" />
+    <ClInclude Include="Engine\Inputs\XInput.h" />
+    <ClInclude Include="Engine\Physics\Geometry.h" />
+    <ClInclude Include="Engine\Physics\Physics.h" />
+    <ClInclude Include="Engine\Physics\RigidBody.h" />
+    <ClInclude Include="Engine\Sounds\Audio.h" />
+    <ClInclude Include="Engine\Sounds\OggDecoder.h" />
+    <ClInclude Include="Engine\Sounds\PCM.h" />
+    <ClInclude Include="Engine\Sounds\SoundEffect.h" />
+    <ClInclude Include="Engine\Sounds\SoundSource.h" />
+    <ClInclude Include="Engine\Sounds\WavDecoder.h" />
+    <ClInclude Include="Engine\Utilitys\Console.hpp" />
+    <ClInclude Include="Engine\Utilitys\Counter.hpp" />
+    <ClInclude Include="Engine\Utilitys\Easing.hpp" />
+    <ClInclude Include="Engine\Utilitys\FPS.h" />
+    <ClInclude Include="Engine\Utilitys\Randam.hpp" />
+    <ClInclude Include="Engine\Utilitys\StringConverter.hpp" />
+    <ClInclude Include="Engine\Utilitys\Utility.hpp" />
+    <ClInclude Include="Engine\Utilitys\Vec.hpp" />
+    <ClInclude Include="Engine\Utilitys\Vertex.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -161,14 +161,14 @@
       <BrowseInformation>true</BrowseInformation>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
-      <AdditionalIncludeDirectories>C:\Users\game\Desktop\DirectX11\Ogg\temp;C:\Users\game\Desktop\DirectX11\DirectXTK\Inc;C:\Users\game\Desktop\DirectX11\ODE\include;C:\Users\tonari\Desktop\DirectX11\DirectXTK\Inc;C:\Users\tonari\Desktop\DirectX11\ODE\include;C:\Users\tonari\Desktop\D3D11\DirectXTK\Inc;C:\Users\game\Desktop\aa\ODE\include;C:\Users\tonari\Desktop\D3D11\ODE\include;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include\fbxsdk;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;./ODE/include;./DirectXTK/Inc;./Effekseer/include;./Ogg/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\game\Desktop\DirectX11\Ogg\temp;C:\Users\game\Desktop\DirectX11\DirectXTK\Inc;C:\Users\game\Desktop\DirectX11\ODE\include;C:\Users\tonari\Desktop\DirectX11\DirectXTK\Inc;C:\Users\tonari\Desktop\DirectX11\ODE\include;C:\Users\tonari\Desktop\D3D11\DirectXTK\Inc;C:\Users\game\Desktop\aa\ODE\include;C:\Users\tonari\Desktop\D3D11\ODE\include;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include\fbxsdk;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;./Engine/ODE/include;./Engine/DirectXTK/Inc;./Engine/Effekseer/include;./Engine/Ogg/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <EnableModules>true</EnableModules>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>C:\Users\game\Desktop\DirectX11\Ogg\lib;C:\Users\game\Desktop\DirectX11\Effekseer\lib;C:\Users\tonari\Desktop\DirectX11\Effekseer\lib;C:\Users\tonari\Desktop\DirectX11\Effekseer\lib\VS2015\Debug;C:\Users\game\Desktop\DirectX11\DirectXTK\lib\Debug;C:\Users\game\Desktop\DirectX11\ODE\lib\Debug;C:\Users\tonari\Desktop\DirectX11\DirectXTK\lib\Debug;C:\Users\tonari\Desktop\DirectX11\ODE\lib\Debug;C:\Users\tonari\Desktop\D3D11\DirectXTK\lib\Debug;C:\Users\game\Desktop\aa\ODE\lib\Debug;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\debug;C:\Users\tonari\Desktop\D3D11\ODE\lib\Debug;./ODE/lib/debug;./DirectXTK/lib/Debug;./Ogg/libOgg/Debug;./Ogg/libVorbis/Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\game\Desktop\DirectX11\Ogg\lib;C:\Users\game\Desktop\DirectX11\Effekseer\lib;C:\Users\tonari\Desktop\DirectX11\Effekseer\lib;C:\Users\tonari\Desktop\DirectX11\Effekseer\lib\VS2015\Debug;C:\Users\game\Desktop\DirectX11\DirectXTK\lib\Debug;C:\Users\game\Desktop\DirectX11\ODE\lib\Debug;C:\Users\tonari\Desktop\DirectX11\DirectXTK\lib\Debug;C:\Users\tonari\Desktop\DirectX11\ODE\lib\Debug;C:\Users\tonari\Desktop\D3D11\DirectXTK\lib\Debug;C:\Users\game\Desktop\aa\ODE\lib\Debug;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\debug;C:\Users\tonari\Desktop\D3D11\ODE\lib\Debug;./Engine/ODE/lib/debug;./EngineDirectXTK/lib/Debug;./Engine/Ogg/libOgg/Debug;./Engine/Ogg/libVorbis/Debug;./Engine/Effekseer/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
       <GenerateMapFile>false</GenerateMapFile>
       <MapFileName>map</MapFileName>
@@ -199,7 +199,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_CRTDBG_MAP_ALLOC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>C:\Users\game\Desktop\DirectX11\DirectXTK\Inc;C:\Users\game\Desktop\DirectX11\ODE\include;C:\Users\tonari\Desktop\DirectX11\DirectXTK\Inc;C:\Users\tonari\Desktop\DirectX11\ODE\include;C:\Users\tonari\Desktop\D3D11\DirectXTK\Inc;C:\Users\game\Desktop\aa\ODE\include;C:\Users\tonari\Desktop\D3D11\ODE\include;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include\fbxsdk;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;./ODE/include;./DirectXTK/Inc;./Effekseer/include;./Ogg/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\game\Desktop\DirectX11\DirectXTK\Inc;C:\Users\game\Desktop\DirectX11\ODE\include;C:\Users\tonari\Desktop\DirectX11\DirectXTK\Inc;C:\Users\tonari\Desktop\DirectX11\ODE\include;C:\Users\tonari\Desktop\D3D11\DirectXTK\Inc;C:\Users\game\Desktop\aa\ODE\include;C:\Users\tonari\Desktop\D3D11\ODE\include;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include\fbxsdk;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\include;./Engine/ODE/include;./Engine/DirectXTK/Inc;./Engine/Effekseer/include;./Engine/Ogg/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -207,7 +207,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>C:\Users\game\Desktop\DirectX11\DirectXTK\lib\Release;C:\Users\game\Desktop\DirectX11\ODE\lib\Release;C:\Users\tonari\Desktop\DirectX11\DirectXTK\lib\Release;C:\Users\tonari\Desktop\DirectX11\ODE\lib\Release;C:\Users\tonari\Desktop\D3D11\DirectXTK\lib\Release;C:\Users\game\Desktop\aa\ODE\lib\Release;C:\Users\tonari\Desktop\D3D11\ODE\lib\Release;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\release;C:\Users\game\Desktop\DirectX11\ODE\lib\Debug;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\debug;./ODE/lib/Release;./DirectXTK/lib/Release;./Effekseer/lib;./Ogg/libOgg/Release;./Ogg/libVorbis/Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\game\Desktop\DirectX11\DirectXTK\lib\Release;C:\Users\game\Desktop\DirectX11\ODE\lib\Release;C:\Users\tonari\Desktop\DirectX11\DirectXTK\lib\Release;C:\Users\tonari\Desktop\DirectX11\ODE\lib\Release;C:\Users\tonari\Desktop\D3D11\DirectXTK\lib\Release;C:\Users\game\Desktop\aa\ODE\lib\Release;C:\Users\tonari\Desktop\D3D11\ODE\lib\Release;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\release;C:\Users\game\Desktop\DirectX11\ODE\lib\Debug;C:\Program Files\Autodesk\FBX\FBX SDK\2019.0\lib\vs2015\x86\debug;./Engine/ODE/lib/Release;./Engine/DirectXTK/lib/Release;./Engine/Effekseer/lib;./Engine/Ogg/libOgg/Release;./Engine/Ogg/libVorbis/Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

@@ -1,5 +1,5 @@
 #include "Sprite.h"
-#include "Engine.h"
+#include "../Engine.h"
 
 void Sprite::Initialize()
 {
@@ -10,7 +10,7 @@ void Sprite::Initialize()
 	scale = Vec3(1.0f, 1.0f, 1.0f);
 	color = Float4(1.0f, 1.0f, 1.0f, 1.0f);
 
-	mesh.GetMaterial().Load("Shader/sprite.hlsl");
+	mesh.GetMaterial().Load("Engine//Shader/sprite.hlsl");
 	mesh.GetMaterial().SetBuffer(2, &color, sizeof(Float4));
 	mesh.SetDrawMode(D3D11_CULL_NONE,D3D11_FILL_SOLID);
 }

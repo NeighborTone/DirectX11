@@ -1,5 +1,5 @@
 #include "Camera.h"
-#include "Utility.hpp"
+#include "../Utilitys/Utility.hpp"
 using namespace DirectX;
 Camera::Camera():
 	renderTargetView(nullptr),

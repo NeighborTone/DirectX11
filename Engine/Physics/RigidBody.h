@@ -1,7 +1,7 @@
 #pragma once
 #include "Physics.h"
-#include "Utility.hpp"
-#include "Mesh.h"
+#include "../Utilitys/Vec.hpp"
+#include "../Graphics/Mesh.h"
 //とりあえずテンプレートメソッドパターンで実装
 
 

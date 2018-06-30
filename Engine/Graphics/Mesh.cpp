@@ -1,5 +1,5 @@
 #include "Mesh.h"
-#include "Engine.h"
+#include "../Engine.h"
 using namespace DirectX;
 
 Mesh::Mesh():
@@ -11,7 +11,7 @@ Mesh::Mesh():
 	scale(1,1,1)
 {
 	Engine::COMInitialize();
-	material.Load("Shader/mesh.hlsl");
+	material.Load("Engine/Shader/mesh.hlsl");
 	SetDrawMode(D3D11_CULL_NONE,D3D11_FILL_SOLID);
 
 }

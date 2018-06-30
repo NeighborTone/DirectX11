@@ -1,4 +1,5 @@
 #pragma once
+#pragma warning (disable : 4458)	//thisを使うため消す
 template <typename T>
 /*! @class Vec2
 *   @brief 2次元ベクトルを扱います

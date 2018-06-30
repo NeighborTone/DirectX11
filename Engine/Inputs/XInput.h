@@ -3,7 +3,6 @@
 #pragma comment(lib,"xinput.lib ")
 #include <DirectXMath.h>
 #include <Windows.h>
-#include "Utility.hpp"
 #include <vector>
 #include <XInput.h>
 

@@ -1,6 +1,6 @@
 #pragma once
 #pragma warning (disable : 4100)	
-#include "DirectXMath.h"
+#include <DirectXMath.h>
 #include "Effekseer.h"
 #include "EffekseerRendererDX11.h"
 #include "EffekseerSoundXAudio2.h"

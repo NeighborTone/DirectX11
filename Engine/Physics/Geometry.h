@@ -1,8 +1,7 @@
 #pragma once
 #include "Physics.h"
-#include "Utility.hpp"
-#include "Mesh.h"
-
+#include "../Utilitys/Vec.hpp"
+#include "../Graphics/Mesh.h"
 /*!
 *	@class Geometry
 *   @brief  OpenDynamicsEngineで衝突判定を行いたい形状を生成するクラスのインターフェースです

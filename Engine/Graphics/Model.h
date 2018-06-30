@@ -2,11 +2,12 @@
 //FBXSDK‚ª•K—v‚Å‚·//
 //---------------------//
 #pragma once
+#pragma warning (disable : 4458)	//this‚ğg‚¤‚½‚ßÁ‚·
 #include <vector>
 #include <memory>
 #include <fbxsdk.h>
 #include <DirectXMath.h>
-#include "Engine.h"
+#include "../Engine.h"
 
 #if defined(_DLL)
 #pragma comment(lib, "libfbxsdk-md.lib")

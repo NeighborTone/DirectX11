@@ -1,7 +1,7 @@
 #pragma once
-#include "StringConverter.hpp"
+#include "../Utilitys/StringConverter.hpp"
 #include "Sprite.h"
-#include "Engine.h"
+#include "../Engine.h"
 
 /*! @class Text
 *   @brief テキストをスプライトとして描画するためのクラスです

@@ -1,12 +1,12 @@
-#include "Engine.h"
-#include "Model.h"
-#include "Particle.h"
-#include "Console.hpp"
-#include "Easing.hpp"
-#include "XInput.h"
-#include "SoundSource.h"
-#include "Counter.hpp"
-#include "Randam.hpp"
+#include "Engine/Engine.h"
+#include "Engine/Graphics/Model.h"
+#include "Engine/Graphics/Particle.h"
+#include "Engine/Utilitys/Console.hpp"
+#include "Engine/Utilitys/Easing.hpp"
+#include "Engine/Inputs/XInput.h"
+#include "Engine/Sounds/SoundSource.h"
+#include "Engine/Utilitys/Counter.hpp"
+#include "Engine/Utilitys/Randam.hpp"
 //TODO:
 //:物理エンジン管理クラスの使い勝手が悪いので何とかする
 //:柔軟な衝突検知

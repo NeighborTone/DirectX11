@@ -1,7 +1,7 @@
 #include "Texture.h"
-#include "Engine.h"
-#include "Utility.hpp"
-#include "StringConverter.hpp"
+#include "../Engine.h"
+#include "../Utilitys/Utility.hpp"
+#include "../Utilitys/StringConverter.hpp"
 #include <memory>
 
 

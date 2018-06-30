@@ -1,12 +1,13 @@
 #include "Model.h"
-#include "StringConverter.hpp"
+#include "../Utilitys/StringConverter.hpp"
 /*~~~~~~~~~~~~~~~~~Memo~~~~~~~~~~~~~~~~~*/
 //FBXはマネージャーがすべてのノード(各機能)を管理する
 //コントロールポイントとはインデックスバッファの指し示すデータ(モデルの頂点)
 //頂点の情報はFbxMesh に格納
 //FbxMeshはFbxScene::GetRootNode関数で取得したFbxNodeにある
 //アニメーションはシーンに登録される
-
+//GetPolygonVertexCount() はインデックスデータの数を取得
+//GetPolygonVertices()でインデックスデータそのものを取得
 
 //----------//
 //-publics-//
@@ -221,7 +222,7 @@ void Model::LoadMesh(FbxScene* scene, FbxMesh* mesh)
 
 	//シェーダーをアタッチ
 	item->Apply();
-	item->GetMaterial().Load("Shader/test.hlsl");
+	item->GetMaterial().Load("Engine//Shader/test.hlsl");
 	item->GetMaterial().SetBuffer(2, &constant, sizeof(Constant));
 
 	meshes.push_back(std::move(item));

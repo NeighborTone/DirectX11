@@ -1,14 +1,14 @@
 #pragma once
-#include "Keyboard.h"
-#include "Mouse.h"
-#include "Pad.h"
-#include "Direct_Input.h"
-#include "System.h"
-#include "Direct3D.h"
-#include "Camera.h"
-#include "Text.h"
-#include "FPS.h"
-#include "Physics.h"
+#include "Inputs/Keyboard.h"
+#include "Inputs/Mouse.h"
+#include "Inputs/Pad.h"
+#include "Inputs/Direct_Input.h"
+#include "Graphics/System.h"
+#include "Graphics/Direct3D.h"
+#include "Graphics/Camera.h"
+#include "Graphics/Text.h"
+#include "Utilitys/FPS.h"
+#include "Physics/Physics.h"
 
 /*! @class Engine
 *   @brief 描画等の更新処理や各ハンドルをまとめます
