@@ -3,7 +3,6 @@
 #include "Engine/Graphics/Particle.h"
 #include "Engine/Utilitys/Console.hpp"
 #include "Engine/Utilitys/Easing.hpp"
-#include "Engine/Inputs/XInput.h"
 #include "Engine/Sounds/SoundSource.h"
 #include "Engine/Utilitys/Counter.hpp"
 #include "Engine/Utilitys/Randam.hpp"
@@ -46,7 +45,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	Texture tex("Resource/F01_512.jpg");
 	Texture tex2("Resource/box.jpg");
 	Model m("Resource/untitled.fbx");
-	m.scale = 0.01f;
+	m.scale = 0.1f;
 	m.angle.x = -90;
 	m.angle.y = -90;
 
@@ -64,12 +63,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	while (ge.Run())
 	{
 		
-		std::cout <<rand.GetRand(0,1)<< std::endl;
+		
 		//===================================//
 		//==========3DRendering=================//
 		//===================================//
 		camera3D.Run(true);
-		if (KeyBoard::Down(KeyBoard::Key::KEY_ESCAPE))
+		if (KeyBoard::Down(KeyBoard::Key::KEY_ESCAPE) ||
+			DInput::Down(DInput::Button::PAD_START))
 		{
 			break;
 		}
@@ -97,16 +97,47 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		{
 			camera3D.pos.z -= 0.6f;
 		}
-		if (KeyBoard::On(KeyBoard::Key::KEY_D))
+	
+		if (KeyBoard::On(KeyBoard::Key::KEY_D)||
+			DInput::StickOn(DInput::Stick::RIGHT))
 		{
-			m.pos.x += 0.6f;
+			m.pos.x += 1.6f;
 		}
-		if (KeyBoard::On(KeyBoard::Key::KEY_A))
+		if (KeyBoard::On(KeyBoard::Key::KEY_A) ||
+			DInput::StickOn(DInput::Stick::LEFT))
 		{
-			m.pos.x -= 0.6f;
+			m.pos.x -= 1.6f;
 		}
-		tex.Attach(0);
-		m.Draw();
+		if (DInput::StickOn(DInput::Stick::UP_RIGHT))
+		{
+			m.pos.x += static_cast<float>(cosf((float)M_PI / 180.0f * 45)) * 1.6f;
+			m.pos.y += static_cast<float>(sinf((float)M_PI / 180.0f * 45)) * 1.6f;
+		}
+		if (DInput::StickOn(DInput::Stick::DOWN_RIGHT))
+		{
+			m.pos.x += static_cast<float>(cosf((float)M_PI / 180.0f * 45)) * 1.6f;
+			m.pos.y -= static_cast<float>(sinf((float)M_PI / 180.0f * 45)) * 1.6f;
+		}
+		if (KeyBoard::On(KeyBoard::Key::KEY_W) ||
+			DInput::StickOn(DInput::Stick::UP))
+		{
+			m.pos.y += 1.6f;
+		}
+		if (KeyBoard::On(KeyBoard::Key::KEY_S) ||
+			DInput::StickOn(DInput::Stick::DOWN))
+		{
+			m.pos.y -= 1.6f;
+		}
+		if (DInput::StickOn(DInput::Stick::UP_LEFT))
+		{
+			m.pos.x -= static_cast<float>(cosf((float)M_PI / 180.0f * 45)) * 1.6f;
+			m.pos.y += static_cast<float>(sinf((float)M_PI / 180.0f * 45)) * 1.6f;
+		}
+		if (DInput::StickOn(DInput::Stick::DOWN_LEFT))
+		{
+			m.pos.x -= static_cast<float>(cosf((float)M_PI / 180.0f * 45)) * 1.6f;
+			m.pos.y -= static_cast<float>(sinf((float)M_PI / 180.0f * 45)) * 1.6f;
+		}
 		mm.Draw();
 		effect.Draw(camera3D);
 		++cnt;
@@ -130,7 +161,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 
 		sp.pos.x = -100;
 		sp.Draw();
-		//std::cout << Engine::GetFps().GetFrameRate() << std::endl;
+		tex.Attach(0);
+		m.Draw();
+		std::cout << Engine::GetFps().GetFrameRate() << std::endl;
 	}
 
 	//I—¹

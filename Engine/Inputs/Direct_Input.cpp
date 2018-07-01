@@ -240,7 +240,7 @@ BOOL CALLBACK PadInput::EnumAxisCallback(
 	//軸範囲指定
 	DIPROPRANGE prg;
 	prg.diph.dwSize = sizeof(prg);
-	prg.diph.dwHeaderSize = sizeof(prg);
+	prg.diph.dwHeaderSize = sizeof(prg.diph);
 	prg.diph.dwHow = DIPH_BYID;
 	prg.diph.dwObj = objInst->dwType;
 	prg.lMin = -1000;	//傾き最小値
@@ -423,6 +423,26 @@ int PadInput::GetPovPosition(const int no)
 
 	return 0xffffffff;	//未押下時
 
+}
+
+long PadInput::GetLStickXAngle(const int no)
+{
+	if (!pPad[0])
+	{
+		return 0xffffffff;	//パッドが接続されていなければ未押下状態を返す
+	}
+	
+	return buf[no].lX;
+}
+
+long PadInput::GetLStickYAngle(const int no)
+{
+	if (!pPad[0])
+	{
+		return 0xffffffff;	//パッドが接続されていなければ未押下状態を返す
+	}
+
+	return buf[no].lY;
 }
 
 

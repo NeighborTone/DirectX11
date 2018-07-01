@@ -6,14 +6,12 @@ DX::XMFLOAT2 XInput::Controller::GetThumb(const short x, const short y) const
 	{
 		return DX::XMFLOAT2(0,0);
 	}
-	float ret_x =
-		x;
-	float ret_y =
-		y;
+	float ret_x = x >= 0 ? 32767.0f : 32768.0f;
+	float ret_y =	y >= 0 ? 32767.0f : 32768.0f;
 	return DX::XMFLOAT2
 	(
-		static_cast<float>(ret_x),
-		static_cast<float>(ret_y)
+		static_cast<float>(ret_x) / x,
+		static_cast<float>(ret_y) / y
 	);
 }
 

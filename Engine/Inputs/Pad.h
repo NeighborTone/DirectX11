@@ -52,4 +52,7 @@ public:
 
 	static bool StickOn(const Stick& key, const NO& no = DInput::NO::P1);
 
+	static long GetLStickXAngle(const NO& no = DInput::NO::P1);
+
+	static long GetLStickYAngle(const NO& no = DInput::NO::P1);
 };

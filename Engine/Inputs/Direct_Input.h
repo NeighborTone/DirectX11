@@ -59,9 +59,9 @@ private:
 	//デバイス情報保存用
 	DIDEVCAPS didevCaps[padNum];
 	//現在の入力保存用
-	DIJOYSTATE buf[padNum];
+	DIJOYSTATE2 buf[padNum];
 	//直前の入力保存
-	DIJOYSTATE prebuf[padNum];
+	DIJOYSTATE2 prebuf[padNum];
 
 public:
 	PadInput();
@@ -77,8 +77,12 @@ public:
 	bool Free(const int key, const int no);
 	//はなされた
 	bool Pull(const int key, const int no);
+	// 十字キーの位置を取得 
+	int GetPovPosition(const int no);          
 
-	int GetPovPosition(const int no);          // 十字キーの位置を取得 
+	long GetLStickXAngle(const int no);
+
+	long GetLStickYAngle(const int no);
 };
 
 class DxMouse

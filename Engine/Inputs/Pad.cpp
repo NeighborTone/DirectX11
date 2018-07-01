@@ -34,3 +34,13 @@ bool DInput::StickOn(const Stick& key, const NO& no)
 
 	return false;
 }
+
+long DInput::GetLStickXAngle(const NO& no)
+{
+	return pad.GetLStickXAngle((int)no);
+}
+
+long DInput::GetLStickYAngle(const NO & no)
+{
+	return pad.GetLStickYAngle((int)no);
+}

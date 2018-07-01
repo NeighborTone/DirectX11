@@ -3,6 +3,7 @@
 #include "Inputs/Mouse.h"
 #include "Inputs/Pad.h"
 #include "Inputs/Direct_Input.h"
+#include "Inputs/XInput.h"
 #include "Graphics/System.h"
 #include "Graphics/Direct3D.h"
 #include "Graphics/Camera.h"
