@@ -1,5 +1,5 @@
 #include "Direct_Input.h"
-
+#include "../Engine.h"
 
 //global------------------------------------
 Input in;
@@ -547,10 +547,36 @@ bool DxMouse::RPush()
 	return false;
 }
 
-POINT DxMouse::GetMousePos()
+POINT DxMouse::GetMousePosClient()
 {
 	GetCursorPos(&mouse.pos);
 	ScreenToClient(pwnd, &mouse.pos);
 	return mouse.pos;
 }
 
+POINT DxMouse::GetMousePosClientCenter()
+{
+	POINT point = {};
+	point.y = (Mouse::GetMousePos().y - (Engine::GetWindowSize().y / 2));
+	point.x = (Mouse::GetMousePos().x - (Engine::GetWindowSize().x / 2));
+	return point;
+}
+
+void DxMouse::SetMousePos(int x, int y)
+{
+	if (GetActiveWindow() != Engine::GetWindowHandle())
+		return;
+
+	POINT point = {};
+	point.x = (int)x + Engine::GetWindowSize().x / 2;
+	point.y = (int)-y + Engine::GetWindowSize().y / 2;
+	ClientToScreen(Engine::GetWindowHandle(), &point);
+	SetCursorPos(point.x, point.y);
+	mouse.pos.x = x;
+	mouse.pos.y = y;
+}
+
+void DxMouse::DrawCursor(bool enable)
+{
+	ShowCursor(enable);
+}

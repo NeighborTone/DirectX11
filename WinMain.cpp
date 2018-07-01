@@ -27,7 +27,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 {
 	ShowConsole();
 	//ゲームエンジン生成
-	Engine ge("DirectX11", 1280, 900, true);
+	Engine ge("DirectX11", 640, 450, true);
 	
 	//カメラ生成
 	Camera camera3D;
@@ -60,10 +60,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	mm.CreateCube();
 	mm.GetMaterial().SetTexture(0,&tex2);
 
+	Mouse::SetMousePos(0, 0);
 	while (ge.Run())
 	{
-		
-		
 		//===================================//
 		//==========3DRendering=================//
 		//===================================//
@@ -146,7 +145,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 
 			effect.Play();
 		}
-		
+		camera3D.angle.x += Mouse::GetMousePosCenter().y * 0.3f;
+		camera3D.angle.y += Mouse::GetMousePosCenter().x * 0.3f;
 		//===================================//
 		//==========2DRendering=================//
 		//===================================//
@@ -161,9 +161,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 
 		sp.pos.x = -100;
 		sp.Draw();
+
+		
 		tex.Attach(0);
 		m.Draw();
-		std::cout << Engine::GetFps().GetFrameRate() << std::endl;
+		
+		Mouse::SetMousePos(0, 0); 
+		Mouse::DrawCursor(false);
 	}
 
 	//終了

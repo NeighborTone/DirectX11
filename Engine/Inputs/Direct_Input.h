@@ -94,15 +94,21 @@ private:
 public:
 	DxMouse();
 	~DxMouse();
-	POINT pos;
+	POINT pos = {0,0};
 	bool CreateMousenput(const HWND& hwnd);
 
 	void Run();
 	//押されている
 	bool LPush();
-
 	bool RPush();
-	POINT GetMousePos();
+	//マウスのクライアント領域の座標を取得
+	POINT GetMousePosClient();
+	//マウスのクライアント領域の座標(0,0)を中心とした座標を取得
+	POINT GetMousePosClientCenter();
+	//マウスのクライアント領域の座標(0,0)を中心とした座標を設定
+	void SetMousePos(int x, int y);
+	//マウスカーソルを描画するかしないか
+	void DrawCursor(bool enable);
 };
 extern Input in;	//DirectX初期化時に生成する
 extern PadInput pad;

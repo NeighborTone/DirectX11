@@ -124,7 +124,3 @@ Physics& Engine::GetPhysics()
 	static std::unique_ptr<Physics> physics(new Physics());
 	return *physics.get();
 }
-
-
-
-
