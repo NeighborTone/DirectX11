@@ -67,6 +67,13 @@ public:
 	*/
 	void CreateCube(bool shouldClear = true);
 	/*!
+	* @brief 球を作成します
+	* @param (diameter) 直径
+	* @param (tessellation) 頂点数
+	* @param (shouldClear) 頂点、インデックスの初期化
+	*/
+	void CreateSphere(float diameter = 1.0f, int tessellation = 10, bool shouldClear = true);
+	/*!
 	* @brief Materialを取得します
 	* @return Material&
 	*/

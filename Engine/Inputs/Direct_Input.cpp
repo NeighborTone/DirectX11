@@ -431,7 +431,7 @@ long PadInput::GetLStickXAngle(const int no)
 	{
 		return 0xffffffff;	//ƒpƒbƒh‚ªÚ‘±‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î–¢‰Ÿ‰ºó‘Ô‚ğ•Ô‚·
 	}
-	
+
 	return buf[no].lX;
 }
 
@@ -529,22 +529,31 @@ void DxMouse::Run()
 
 }
 
-bool DxMouse::LPush()
+int DxMouse::LPush()
 {
 	if (pMouseState.rgbButtons[0] & 0x80)
 	{
-		return true;
+		++buttonCnt[0];
+		return buttonCnt[0];
+	}
+	else
+	{
+		return buttonCnt[0] = 0;
 	}
 
-	return false;
 }
-bool DxMouse::RPush()
+int DxMouse::RPush()
 {
 	if (pMouseState.rgbButtons[1] & 0x80)
 	{
-		return true;
+		++buttonCnt[1];
+		return buttonCnt[1];
 	}
-	return false;
+	else
+	{
+		return buttonCnt[1] = 0;
+	}
+
 }
 
 POINT DxMouse::GetMousePosClient()

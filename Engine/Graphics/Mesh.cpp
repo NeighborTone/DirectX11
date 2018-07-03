@@ -104,6 +104,81 @@ void Mesh::CreateCube(bool shouldClear)
 }
 
 
+void Mesh::CreateSphere(float diameter, int tessellation, bool shouldClear)
+{
+	if (shouldClear)
+	{
+		vertices.clear();
+		indices.clear();
+	}
+
+	int verticalSegments = tessellation;
+	int horizontalSegments = tessellation * 2;
+
+	float radius = diameter / 2;
+
+	for (int i = 0; i <= verticalSegments; i++)
+	{
+		float v = float(i) / verticalSegments;
+
+		float latitude = (i * XM_PI / verticalSegments) - XM_PIDIV2;
+		float dy, dxz;
+
+		XMScalarSinCos(&dy, &dxz, latitude);
+
+		for (int j = 0; j <= horizontalSegments; j++)
+		{
+			float u = float(j) / horizontalSegments;
+
+			float longitude = j * XM_2PI / horizontalSegments + XM_PI;
+			float dx, dz;
+
+			XMScalarSinCos(&dx, &dz, longitude);
+
+			dx *= dxz;
+			dz *= dxz;
+
+			Vec2 uv(u, v);
+			XMFLOAT3 ntmp = { dx, dy, dz };
+			XMVECTOR Nvec = XMLoadFloat3(&ntmp);
+			XMVECTOR Xvec = XMVectorScale(-Nvec, radius);
+			
+			Vec3 nval;
+			nval.x = ntmp.x;
+			nval.y = ntmp.y;
+			nval.z = ntmp.z;
+			Vec3 val;
+			val.x = XMVectorGetX(Xvec);
+			val.y = XMVectorGetY(Xvec);
+			val.z = XMVectorGetZ(Xvec);
+
+			vertices.push_back(Vertex(Vec3(val), Vec3(-nval), Vec2(uv)));
+		}
+	}
+
+	int stride = horizontalSegments + 1;
+
+	for (int i = 0; i < verticalSegments; i++)
+	{
+		for (int j = 0; j <= horizontalSegments; j++)
+		{
+			int nextI = i + 1;
+			int nextJ = (j + 1) % stride;
+
+			indices.push_back(i * stride + j);
+			indices.push_back(nextI * stride + j);
+			indices.push_back(i * stride + nextJ);
+
+			indices.push_back(i * stride + nextJ);
+			indices.push_back(nextI * stride + j);
+			indices.push_back(nextI * stride + nextJ);
+		}
+	}
+
+	if (shouldClear)
+		Apply();
+}
+
 Material& Mesh::GetMaterial()
 {
 	return material;

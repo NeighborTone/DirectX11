@@ -6,8 +6,8 @@ public:
 	Mouse();
 	~Mouse();
 	static void UpDate();
-	static bool L_On();
-	static bool R_On();
+	static int L_On();
+	static int R_On();
 	static POINT GetMousePos();
 	static POINT GetMousePosCenter();
 	static void SetMousePos(int x, int y);

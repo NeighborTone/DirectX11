@@ -57,7 +57,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	Random rand;
 	Sprite sp("Resource/ÉJÅ[É\Éã.png");
 	Mesh mm;
-	mm.CreateCube();
+	mm.CreateSphere();
 	mm.GetMaterial().SetTexture(0,&tex2);
 
 	Mouse::SetMousePos(0, 0);

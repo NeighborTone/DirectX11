@@ -1,5 +1,6 @@
 #pragma once
 #pragma warning (disable : 4458)	//thisを使うため消す
+#include <DirectXMath.h>
 template <typename T>
 /*! @class Vec2
 *   @brief 2次元ベクトルを扱います
@@ -24,7 +25,17 @@ public:
 		y = v.y;
 	}
 	~TemplateVec2() {};
-
+	/*!
+	* @brief XMVECTORを返します
+	* @return XMVECTOR
+	*/
+	DirectX::XMVECTOR ToXMVECTOR()
+	{
+		DirectX::XMVECTOR ret;
+		DirectX::XMVectorSetX(ret, this->x);
+		DirectX::XMVectorSetY(ret, this->y);
+		return ret;
+	}
 	/*!
 	* @brief 内積を返します
 	* @return 内積
@@ -249,6 +260,18 @@ public:
 		x = v.x;
 		y = v.y;
 		z = v.z;
+	}
+	/*!
+	* @brief XMVECTORを返します
+	* @return XMVECTOR
+	*/
+	DirectX::XMVECTOR ToXMVECTOR()
+	{
+		DirectX::XMVECTOR ret = {};
+		DirectX::XMVectorSetX(ret, this->x);
+		DirectX::XMVectorSetY(ret, this->y);
+		DirectX::XMVectorSetZ(ret, this->z);
+		return ret;
 	}
 	~TemplateVec3() {};
 	/*!

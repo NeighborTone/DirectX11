@@ -18,10 +18,17 @@ struct Vertex
 		uv(0, 0),
 		tangent(0, 0, 0)
 	{}
+	Vertex(Vec3& pos, Vec3& normal, Vec2& uv)
+	{
+		this->pos = pos;
+		this->normal = normal;
+		this->uv = uv;
+	}
 	Vertex(Vec3&& pos, Vec3&& normal, Vec2&& uv)
 	{
 		this->pos = pos;
 		this->normal = normal;
 		this->uv = uv;
 	}
+
 };

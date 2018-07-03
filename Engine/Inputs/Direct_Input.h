@@ -78,7 +78,7 @@ public:
 	//はなされた
 	bool Pull(const int key, const int no);
 	// 十字キーの位置を取得 
-	int GetPovPosition(const int no);          
+	int GetPovPosition(const int no);
 
 	long GetLStickXAngle(const int no);
 
@@ -91,16 +91,18 @@ private:
 	LPDIRECTINPUTDEVICE8 pDIMouse;	//マウスデバイス
 	DIMOUSESTATE pMouseState;				//マウス状態
 	HWND pwnd;
+
+	int buttonCnt[2] = { 0,0 };
 public:
 	DxMouse();
 	~DxMouse();
-	POINT pos = {0,0};
+	POINT pos = { 0,0 };
 	bool CreateMousenput(const HWND& hwnd);
 
 	void Run();
-	//押されている
-	bool LPush();
-	bool RPush();
+	//押されているフレーム数が返ってくる
+	int LPush();
+	int RPush();
 	//マウスのクライアント領域の座標を取得
 	POINT GetMousePosClient();
 	//マウスのクライアント領域の座標(0,0)を中心とした座標を取得

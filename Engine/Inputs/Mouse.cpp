@@ -16,12 +16,12 @@ void Mouse::UpDate()
 	mouse.Run();
 }
 
-bool Mouse::L_On()
+int Mouse::L_On()
 {
 	return mouse.LPush();
 }
 
-bool Mouse::R_On()
+int Mouse::R_On()
 {
 	return mouse.RPush();
 }
@@ -38,7 +38,7 @@ POINT Mouse::GetMousePosCenter()
 
 void Mouse::SetMousePos(int x, int y)
 {
-	mouse.SetMousePos(x,y);
+	mouse.SetMousePos(x, y);
 }
 
 void Mouse::DrawCursor(bool enable)
