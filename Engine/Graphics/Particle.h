@@ -25,11 +25,12 @@ private:
 	Effekseer::Effect* effect;
 	std::unordered_map<std::string, Effekseer::Effect*> effects;
 	void Create();
-	void Update();
+	void SetMatrix(Camera &camera);
 	Camera* pCamera;
 	void EffectDraw();
 public:
-	void SetMatrix(Camera &camera);
+	void UpDate(Camera &camera);
+	
 	void AddEffect(const std::string name, const char* filePass);
 	void DeleteEffect(const char* name);
 	//エフェクトを走査するハンドル番号が返る

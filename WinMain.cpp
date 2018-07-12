@@ -41,7 +41,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	Camera camera2D;
 	camera2D.SetDepthTest(false);
 	camera2D.SetOrthographic(1, 0.1f, 1000.0f);
-	
+	Texture t;
+	t.Load("Resource/brick.jpg");
+	Mesh m;
+
+	m.GetMaterial().SetTexture(0,&t);
+	m.CreateSphere();
+	Particle efs;
+	efs.AddEffect("test","Resource/TestParticle.efk");
+	efs.AddEffect("test2", "Resource/TestParticle2.efk");
 
 	Counter cnt(0, 1, 0, 60);
 
@@ -57,11 +65,21 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		{
 			break;
 		}
-	
+		if (KeyBoard::Down(KeyBoard::Key::KEY_Z))
+			efs.Play("test", Vec3(0, 0, 10));
+		if (KeyBoard::Down(KeyBoard::Key::KEY_X))
+			efs.Play("test2", Vec3(0, 0, 10));
 
-	
+		m.pos.z = 10;
+		m.Draw();
+		efs.UpDate(camera3D);
+
 		camera3D.angle.x += Mouse::GetMousePosCenter().y * 0.3f;
 		camera3D.angle.y += Mouse::GetMousePosCenter().x * 0.3f;
+
+
+
+		
 		//===================================//
 		//==========2DRendering=================//
 		//===================================//

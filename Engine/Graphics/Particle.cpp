@@ -41,12 +41,13 @@ void Particle::AddEffect(const std::string name, const char * filePass)
 		//名前の重複防止
 		if (effects.find(name) != effects.end())
 		{
-			throw name + "のは既に登録されています";
+			throw name + "は既に登録されています";
 		}
 	}
 	catch(const std::string str)
 	{
 		std::cerr << str;
+		return;
 	}
 
 	EFK_CHAR pass[64];
@@ -62,26 +63,42 @@ void Particle::AddEffect(const std::string name, const char * filePass)
 
 void Particle::DeleteEffect(const char* name)
 {
+	if (effects.find(name) == effects.end() || !effects[name]) 
+	{
+		return;
+	}
+	effects[name]->Release();
+	effects.erase(name);
 }
 
 Effekseer::Handle Particle::Play(const std::string & name, Vec3 pos)
 {
-	return Effekseer::Handle();
+	//リストにその名前があってインスタンスもあるものが対象
+	if (effects.find(name) == effects.end() || !effects[name]) 
+	{
+		return -1;
+	}
+
+	return manager->Play(this->effects[name], pos.x, pos.y, pos.z);
 }
 
 void Particle::Stop(Effekseer::Handle handle)
 {
+	manager->StopEffect(handle);
 }
 
 void Particle::StopRoot(Effekseer::Handle handle)
 {
+	manager->StopRoot(handle);
 }
 
 
-void Particle::Update()
+void Particle::UpDate(Camera &camera)
 {
 	// 全てのエフェクトの更新
 	manager->Update();
+	SetMatrix(camera);
+	EffectDraw();
 }
 
 void Particle::EffectDraw()
@@ -109,13 +126,16 @@ void Particle::EffectDraw()
 	renderer->BeginRendering();
 	manager->Draw();
 	renderer->EndRendering();
+
 }
 
 Particle::~Particle()
 {
 	manager->StopAllEffects();
-	for (auto it : effects) {
-		if (it.second == nullptr) {
+	for (auto& it : effects)
+	{
+		if (it.second == nullptr) 
+		{
 			continue;
 		}
 		it.second->Release();
@@ -123,9 +143,6 @@ Particle::~Particle()
 	}
 	effects.clear();
 
-
-	// エフェクトを解放します。再生中の場合は、再生が終了した後、自動的に解放されます。
-	ES_SAFE_RELEASE(effect);
 	// エフェクト管理用インスタンスを破棄
 	manager->Destroy();
 	// サウンド用インスタンスを破棄
