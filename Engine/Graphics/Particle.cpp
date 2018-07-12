@@ -1,17 +1,8 @@
 #include "Particle.h"
 #include "../Engine.h"
-
-Particle::Particle(const char* path)
-{
-	Init();
-	Create();
-	Load(path);
-
-}
-
+#include <iostream>
 Particle::Particle()
 {
-	Init();
 	Create();
 }
 
@@ -37,27 +28,53 @@ void Particle::Create()
 	manager->SetTextureLoader(renderer->CreateTextureLoader());
 }
 
-void Particle::Play()
+
+void Particle::SetMatrix(Camera& camera)
 {
-	handle = manager->Play(effect, pos.x, pos.y, pos.z);
-	manager->SetScale(handle, scale.x, scale.y, scale.z);
-	manager->SetRotation(
-		handle, 
-		DirectX::XMConvertToRadians(angle.x), 
-		DirectX::XMConvertToRadians(angle.y), 
-		DirectX::XMConvertToRadians(angle.z)
-	);
+	pCamera = &camera;
 }
 
-void Particle::Stop()
+void Particle::AddEffect(const std::string name, const char * filePass)
 {
-	manager->StopEffect(handle);
+	try
+	{
+		//名前の重複防止
+		if (effects.find(name) != effects.end())
+		{
+			throw name + "のは既に登録されています";
+		}
+	}
+	catch(const std::string str)
+	{
+		std::cerr << str;
+	}
+
+	EFK_CHAR pass[64];
+	Effekseer::ConvertUtf8ToUtf16((int16_t*)pass, 64, (const int8_t*)filePass);
+	Effekseer::Effect* efk = Effekseer::Effect::Create(manager, pass);
+	if (efk == nullptr) 
+	{
+		return;
+	}
+	//リストへ登録
+	effects[name] = efk;
 }
 
-void Particle::Draw(Camera& camera)
+void Particle::DeleteEffect(const char* name)
 {
-	Update();
-	EffectDraw(camera);
+}
+
+Effekseer::Handle Particle::Play(const std::string & name, Vec3 pos)
+{
+	return Effekseer::Handle();
+}
+
+void Particle::Stop(Effekseer::Handle handle)
+{
+}
+
+void Particle::StopRoot(Effekseer::Handle handle)
+{
 }
 
 
@@ -67,7 +84,7 @@ void Particle::Update()
 	manager->Update();
 }
 
-void Particle::EffectDraw(Camera& camera)
+void Particle::EffectDraw()
 {
 	Effekseer::Matrix44 view;
 	Effekseer::Matrix44 projection;
@@ -75,8 +92,8 @@ void Particle::EffectDraw(Camera& camera)
 	{
 		for (int x = 0; x < 4; ++x)
 		{
-			view.Values[y][x] = camera.constant.view.r[y].m128_f32[x];
-			projection.Values[y][x] = camera.constant.projection.r[y].m128_f32[x];
+			view.Values[y][x] = pCamera->constant.view.r[y].m128_f32[x];
+			projection.Values[y][x] = pCamera->constant.projection.r[y].m128_f32[x];
 		}
 	}
 	//=====重要===============
@@ -94,19 +111,18 @@ void Particle::EffectDraw(Camera& camera)
 	renderer->EndRendering();
 }
 
-void Particle::Init()
-{
-	pos = 0;
-	scale = 1;
-	angle = 0;
-	renderer = nullptr;
-	manager = nullptr;
-	effect = nullptr;
-	handle = 0;
-}
-
 Particle::~Particle()
 {
+	manager->StopAllEffects();
+	for (auto it : effects) {
+		if (it.second == nullptr) {
+			continue;
+		}
+		it.second->Release();
+		it.second = nullptr;
+	}
+	effects.clear();
+
 
 	// エフェクトを解放します。再生中の場合は、再生が終了した後、自動的に解放されます。
 	ES_SAFE_RELEASE(effect);
@@ -117,12 +133,3 @@ Particle::~Particle()
 	// 描画用インスタンスを破棄
 	renderer->Destroy();
 }
-
-void Particle::Load(const char* path)
-{
-	// エフェクトの読込
-	EFK_CHAR pass[64];
-	Effekseer::ConvertUtf8ToUtf16((int16_t*)pass, 64, (const int8_t*)path);
-	effect = Effekseer::Effect::Create(manager, pass);
-}
-
