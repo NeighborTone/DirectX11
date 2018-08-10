@@ -44,7 +44,7 @@ private:
 	//接続されているpadを検知する
 	static BOOL CALLBACK EnumPadCallback(
 		const DIDEVICEINSTANCE* inst,
-		void* pContext
+		[[maybe_unused]]void* pContext
 	);
 	//パッドの設定
 	static BOOL CALLBACK EnumAxisCallback(
@@ -78,7 +78,7 @@ public:
 	//はなされた
 	bool Pull(const int key, const int no);
 	// 十字キーの位置を取得 
-	int GetPovPosition(const int no);
+	int GetPovPosition(const int no);          
 
 	long GetLStickXAngle(const int no);
 
@@ -92,11 +92,11 @@ private:
 	DIMOUSESTATE pMouseState;				//マウス状態
 	HWND pwnd;
 
-	int buttonCnt[2] = { 0,0 };
+	int buttonCnt[2] = {0,0};
 public:
 	DxMouse();
 	~DxMouse();
-	POINT pos = { 0,0 };
+	POINT pos = {0,0};
 	bool CreateMousenput(const HWND& hwnd);
 
 	void Run();

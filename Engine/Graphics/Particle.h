@@ -25,20 +25,27 @@ private:
 	Effekseer::Effect* effect;
 	std::unordered_map<std::string, Effekseer::Effect*> effects;
 	void Create();
-	void SetMatrix(Camera &camera);
+	void SetMatrix(Camera& camera);
 	Camera* pCamera;
 	void EffectDraw();
 public:
-	void UpDate(Camera &camera);
+	void UpDate(Camera&& camera);
 	
 	void AddEffect(const std::string name, const char* filePass);
+
 	void DeleteEffect(const char* name);
 	//エフェクトを走査するハンドル番号が返る
-	Effekseer::Handle Play(const std::string& name, Vec3 pos);
+	Effekseer::Handle Play(const std::string& name, Vec3&& pos);
 	//明示的に停止、呼んだ瞬間にすぐ消える
 	void Stop(Effekseer::Handle handle);
 	//明示的に停止、ただしエフェクトの生成をやめるだけなのでしばらく残る
 	void StopRoot(Effekseer::Handle handle);
+	//ハンドルを指定し座標を設定する
+	void SetPos(Effekseer::Handle handle, Vec3&& pos);
+
+	void SetScale(Effekseer::Handle handle, Vec3&& scale);
+
+	void SetAngles(Effekseer::Handle handle, Vec3&& angles);
 	Particle();
 	~Particle();
 

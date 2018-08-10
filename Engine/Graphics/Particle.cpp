@@ -1,6 +1,9 @@
 #include "Particle.h"
 #include "../Engine.h"
 #include <iostream>
+
+
+
 Particle::Particle()
 {
 	Create();
@@ -71,7 +74,7 @@ void Particle::DeleteEffect(const char* name)
 	effects.erase(name);
 }
 
-Effekseer::Handle Particle::Play(const std::string & name, Vec3 pos)
+Effekseer::Handle Particle::Play(const std::string & name, Vec3&& pos)
 {
 	//リストにその名前があってインスタンスもあるものが対象
 	if (effects.find(name) == effects.end() || !effects[name]) 
@@ -79,7 +82,7 @@ Effekseer::Handle Particle::Play(const std::string & name, Vec3 pos)
 		return -1;
 	}
 
-	return manager->Play(this->effects[name], pos.x, pos.y, pos.z);
+	return manager->Play(effects[name], pos.x, pos.y, pos.z);
 }
 
 void Particle::Stop(Effekseer::Handle handle)
@@ -92,8 +95,26 @@ void Particle::StopRoot(Effekseer::Handle handle)
 	manager->StopRoot(handle);
 }
 
+void Particle::SetPos(Effekseer::Handle handle, Vec3 && pos)
+{
+	manager->SetLocation(handle, pos.x, pos.y, pos.z);
+}
 
-void Particle::UpDate(Camera &camera)
+void Particle::SetScale(Effekseer::Handle handle, Vec3 && scale)
+{
+	manager->SetScale(handle, scale.x, scale.y, scale.z);
+}
+
+void Particle::SetAngles(Effekseer::Handle handle, Vec3 && angles)
+{
+	manager->SetRotation(handle,
+		DirectX::XMConvertToRadians(angles.x),
+		DirectX::XMConvertToRadians(angles.y), 
+		DirectX::XMConvertToRadians(angles.z));
+}
+
+
+void Particle::UpDate(Camera&& camera)
 {
 	// 全てのエフェクトの更新
 	manager->Update();

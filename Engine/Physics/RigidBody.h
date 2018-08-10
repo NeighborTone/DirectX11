@@ -103,11 +103,7 @@ public:
 	* @brief 剛体の物理演算を無効にします
 	*/
 	virtual void BodyDisable() final;
-	/*!
-	* @brief 剛体の形状を描画します(現在Boxのみ)
-	* @param (tex) 描画に使いたいテクスチャー
-	*/
-	virtual void Draw(Texture& tex) = 0;
+
 };
 
 
@@ -118,7 +114,6 @@ public:
 class DynamicBox final : public RigidBody
 {
 private:
-	Mesh mesh;
 	void Create(const Vec3& pos, const Vec3& scale, dReal totalMass);
 public:
 	/*!
@@ -131,18 +126,7 @@ public:
 	DynamicBox(const DynamicBox& box);
 	DynamicBox();
 	~DynamicBox();
-	void Draw(Texture& tex) override;
 
-	//アライメント対策
-	void* operator new(size_t i)
-	{
-		return _mm_malloc(i, 16);
-	}
-
-	void operator delete(void* p)
-	{
-		_mm_free(p);
-	}
 };
 
 /*! 
@@ -164,8 +148,7 @@ public:
 	DynamicSphere(const DynamicSphere& sphere);
 	DynamicSphere();
 	~DynamicSphere();
-	
-	void Draw(Texture& tex) override;
+
 };
 
 /*! 
@@ -190,7 +173,6 @@ public:
 	DynamicCylinder();
 	~DynamicCylinder();
 
-	void Draw(Texture& tex) override;
 };
  
 /*!
@@ -215,5 +197,4 @@ public:
 	DynamicCapsule();
 	~DynamicCapsule();
 
-	void Draw(Texture& tex) override;
 };

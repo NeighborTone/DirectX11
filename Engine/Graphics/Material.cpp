@@ -70,7 +70,7 @@ void Material::Create(const std::string & source)
 		vertexShaderBlob->GetBufferSize(), 
 		nullptr, 
 		&vertexShader);
-	ErrorMessage(hr, "バーテックスシェーダーの作成に失敗", "Error");
+	Message(hr, "バーテックスシェーダーの作成に失敗", "Error");
 
 	pixelShader.Release();
 	ATL::CComPtr<ID3DBlob> pixelShaderBlob = nullptr;
@@ -85,7 +85,7 @@ void Material::Create(const std::string & source)
 		pixelShaderBlob->GetBufferSize(),
 		nullptr, 
 		&pixelShader);
-	ErrorMessage(hr, "ピクセルシェーダーの作成に失敗", "Error");
+	Message(hr, "ピクセルシェーダーの作成に失敗", "Error");
 
 	inputLayout.Release();
 	//シェーダに入るデータのレイアウトを設定する,入力アセンブラーステージの単一の要素についての記述
@@ -114,7 +114,7 @@ void Material::Create(const std::string & source)
 		vertexShaderBlob->GetBufferPointer(),
 		vertexShaderBlob->GetBufferSize(),
 		&inputLayout);
-	ErrorMessage(hr, "インプットレイアウトの作成に失敗", "Error");
+	Message(hr, "インプットレイアウトの作成に失敗", "Error");
 }
 
 void Material::SetBuffer(int slot, void* cbuffer, size_t size)
@@ -133,7 +133,7 @@ void Material::SetBuffer(int slot, void* cbuffer, size_t size)
 		&constDesc, 
 		nullptr, 
 		&constbuff[slot].buffer);
-	ErrorMessage(hr,"シェーダー定数バッファーの作成に失敗","Error");
+	Message(hr,"シェーダー定数バッファーの作成に失敗","Error");
 }
 
 void Material::SetTexture(int slot, Texture* texture)

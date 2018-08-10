@@ -222,7 +222,7 @@ void Model::LoadMesh(FbxScene* scene, FbxMesh* mesh)
 
 	//シェーダーをアタッチ
 	item->Apply();
-	item->GetMaterial().Load("Engine//Shader/test.hlsl");
+	item->GetMaterial().Load("Resource//Shader/test.hlsl");
 	item->GetMaterial().SetBuffer(2, &constant, sizeof(Constant));
 
 	meshes.push_back(std::move(item));

@@ -1,6 +1,8 @@
 #pragma once
 #pragma warning (disable : 4458)	//thisを使うため消す
+#pragma warning (disable : 4715)	//不正な値の場合落とすため
 #include <DirectXMath.h>
+
 template <typename T>
 /*! @class Vec2
 *   @brief 2次元ベクトルを扱います
@@ -10,9 +12,9 @@ class TemplateVec2
 {
 public:
 	T x, y;
-	TemplateVec2():
-	x(0),
-	y(0)
+	TemplateVec2() :
+		x(0),
+		y(0)
 	{};
 	TemplateVec2(const T x, const T y)
 	{
@@ -55,6 +57,18 @@ public:
 	}
 
 	/*!
+	* @brief 2点間の距離を返します
+	* @return 距離
+	*/
+	T GetDistance(TemplateVec2& v)
+	{
+		const T dx = x - v.x;
+		const T dy = y - v.y;
+
+		return hypot(dx, dy);				
+	}
+
+	/*!
 	* @brief 長さを返します
 	* @return 長さ
 	*/
@@ -94,24 +108,24 @@ public:
 		return TemplateVec2(-x, -y);
 	}
 
-	TemplateVec2 operator+(const TemplateVec2& v)
+	TemplateVec2 operator+(const TemplateVec2& v) const
 	{
 		TemplateVec2 ret(*this);
 		ret += v;
 		return ret;
 	}
 
-	 TemplateVec2 operator+(const T& t)
-	{
-		 TemplateVec2 ret(*this);
-		 ret += t;
-		 return ret;
-	}
-
-	TemplateVec2 operator-(const TemplateVec2& v)
+	TemplateVec2 operator+(const T& t)
 	{
 		TemplateVec2 ret(*this);
-		ret -= v	;
+		ret += t;
+		return ret;
+	}
+
+	TemplateVec2 operator-(const TemplateVec2& v) const
+	{
+		TemplateVec2 ret(*this);
+		ret -= v;
 		return ret;
 	}
 
@@ -220,6 +234,14 @@ public:
 		return *this;
 	}
 
+	const T operator()(const int idx) const
+	{
+		if (idx == 0) return x;
+		if (idx == 1) return y;
+
+		assert(0);
+	}
+
 	bool operator==(const TemplateVec2 &v) const
 	{
 		return x == v.x && y == v.y;
@@ -290,7 +312,7 @@ public:
 	* @brief 内積を返します
 	* @return float
 	*/
-	float Dot(TemplateVec3& v)
+	float Dot(TemplateVec3&& v)
 	{
 		return x * v.x + y * v.y + z * v.z;
 	}
@@ -299,7 +321,7 @@ public:
 	* @brief 外積を返します
 	* @return Vec3
 	*/
-	TemplateVec3 Cross(TemplateVec3& v)
+	TemplateVec3 Cross(TemplateVec3&& v)
 	{
 		TemplateVec3 result;
 		result.x = y * v.z - z * v.y;
@@ -307,6 +329,21 @@ public:
 		result.z = x * v.y - y * v.x;
 		return result;
 	}
+
+	/*!
+	* @brief 2点間の距離を返します
+	* @note C++17でないとエラー
+	* @return 距離
+	*/
+	T GetDistance(TemplateVec3&& v)
+	{
+		const T dx = x - v.x;
+		const T dy = y - v.y;
+		const T dz = z - v.z;
+
+		return std::hypot(dx, dy, dz);
+	}
+
 	/*!
 	* @brief 長さを返します
 	* @return float
@@ -365,24 +402,24 @@ public:
 		return TemplateVec3(-this->x, -this->y, -this->z);
 	}
 
-	TemplateVec3 operator+(const TemplateVec3& v)
+	TemplateVec3 operator+(const TemplateVec3& v) const
 	{
 		TemplateVec3 ret(*this);
 		ret += v;
 		return ret;
 	}
 
-	 TemplateVec3 operator+(const T& t)
+	TemplateVec3 operator+(const T& t) 
 	{
-		 TemplateVec3 ret(*this);
-		 ret += t;
-		 return ret;
+		TemplateVec3 ret(*this);
+		ret += t;
+		return ret;
 	}
 
-	 TemplateVec3 operator-(const TemplateVec3& v)
+	TemplateVec3 operator-(const TemplateVec3& v) const
 	{
-		 TemplateVec3 ret(*this);
-		 ret -= v;
+		TemplateVec3 ret(*this);
+		ret -= v;
 		return ret;
 	}
 
@@ -400,7 +437,7 @@ public:
 		return ret;
 	}
 
-	TemplateVec3 operator*(const T& t)
+	const TemplateVec3 operator*(const T& t) const
 	{
 		TemplateVec3 ret(*this);
 		ret *= t;
@@ -414,11 +451,11 @@ public:
 		return ret;
 	}
 
-	 TemplateVec3 operator/(const T& t)
+	TemplateVec3 operator/(const T& t)
 	{
-		 TemplateVec3 ret(*this);
-		 ret /= t;
-		 return ret;
+		TemplateVec3 ret(*this);
+		ret /= t;
+		return ret;
 	}
 
 	TemplateVec3& operator+=(const TemplateVec3& v)
@@ -428,7 +465,7 @@ public:
 		z += v.z;
 		return *this;
 	}
-	
+
 	TemplateVec3& operator+=(const T& v)
 	{
 		x += v;
@@ -485,6 +522,14 @@ public:
 		return *this;
 	}
 
+	const T operator()(const int idx) const
+	{
+		if (idx == 0) return x;
+		if (idx == 1) return y;
+		if (idx == 2) return z;
+		assert(0);
+	}
+
 	bool	operator==(const TemplateVec3 &v) const
 	{
 		return (x == v.x && y == v.y && v.z == z);
@@ -493,7 +538,7 @@ public:
 	{
 		return !(*this == v);
 	}
-	
+
 };
 typedef TemplateVec3<int>Vec3_i;
 typedef TemplateVec3<float>Vec3;
@@ -507,7 +552,7 @@ class Float4
 {
 public:
 	float r, g, b, a;
-	Float4():
+	Float4() :
 		r(0),
 		g(0),
 		b(0),
@@ -520,7 +565,7 @@ public:
 		this->b = z;
 		this->a = w;
 	}
-	Float4(const Float4& f4)
+	explicit Float4(const Float4& f4)
 	{
 		r = f4.r;
 		g = f4.g;
@@ -578,3 +623,8 @@ public:
 	}
 
 };
+
+using Pos = Vec3;
+using Velocity = Vec3;
+using Angles = Vec3;
+using Scale = Vec3;

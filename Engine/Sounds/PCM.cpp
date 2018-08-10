@@ -35,6 +35,11 @@ namespace SoundEngine
 		return wav.GetWaveByteSize();
 	}
 
+	const UINT64 Wav::GetSample() const
+	{
+		return wav.GetWaveFmtEx().nSamplesPerSec;
+	}
+
 	Ogg::Ogg(const std::string& path)
 	{
 		try
@@ -62,5 +67,9 @@ namespace SoundEngine
 	const size_t Ogg::GetWaveByteSize() const
 	{
 		return ogg.GetWaveByteSize();
+	}
+	const UINT64 Ogg::GetSample() const
+	{
+		return ogg.GetWaveFmtEx().nSamplesPerSec;
 	}
 }

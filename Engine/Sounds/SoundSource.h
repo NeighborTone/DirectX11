@@ -39,10 +39,18 @@ namespace SoundEngine
 		void PlaySE(int loopNum = 0, float gain = 1.0f, float pitch = 1.0f);	//全部読み込む
 		void Stop() const;
 		void Pause();
+		//ボリューム0~1と聞いたがそれ以上でも問題ないようだった
+		void SetGain(float gain);
+		//3Dサウンドを使うときのみ
 		void UpDate3DSound(Vec3&& pos, Vec3&& listenerPos);
+		//曲の終端に来たらループをやめる
 		void ExitLoop() const;
+		//ループ区間を設定
+		void SetLoopPoint(UINT32 begine, UINT32 end);
+		//
+		void SetLoopNum(int num);
 		void Destroy();
-		long long GetCurrentSampleTime();
+		UINT64 GetCurrentSampleTime();
 		IXAudio2SourceVoice* GetSource();
 		WORD GetChannels();
 	};

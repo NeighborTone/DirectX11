@@ -97,4 +97,8 @@ namespace SoundEngine
 		static std::unique_ptr<Audio> inst(new Audio());
 		return inst.get();
 	}
+	void Audio::SetMasterGain(float gain)
+	{
+		GetMaster()->SetVolume(gain);
+	}
 }

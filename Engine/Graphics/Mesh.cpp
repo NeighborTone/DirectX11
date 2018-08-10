@@ -11,7 +11,7 @@ Mesh::Mesh():
 	scale(1,1,1)
 {
 	Engine::COMInitialize();
-	material.Load("Engine/Shader/mesh.hlsl");
+	material.Load("Resource/Shader/mesh.hlsl");
 	SetDrawMode(D3D11_CULL_NONE,D3D11_FILL_SOLID);
 
 }

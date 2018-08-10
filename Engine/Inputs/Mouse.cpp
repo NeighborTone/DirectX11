@@ -38,7 +38,7 @@ POINT Mouse::GetMousePosCenter()
 
 void Mouse::SetMousePos(int x, int y)
 {
-	mouse.SetMousePos(x, y);
+	mouse.SetMousePos(x,y);
 }
 
 void Mouse::DrawCursor(bool enable)

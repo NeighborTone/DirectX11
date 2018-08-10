@@ -44,7 +44,7 @@ void Texture::Load(const std::string filePath)
 		GENERIC_READ,
 		WICDecodeMetadataCacheOnDemand,
 		&decoder);
-	ErrorMessage(hr,"テクスチャーの読み込みに失敗","Error");
+	Message(hr,"テクスチャーの読み込みに失敗","Error");
 
 	ATL::CComPtr<IWICBitmapFrameDecode> frame = nullptr;
 	decoder->GetFrame(0, &frame);
@@ -53,7 +53,7 @@ void Texture::Load(const std::string filePath)
 
 	WICPixelFormatGUID pixelFormat;
 	hr = frame->GetPixelFormat(&pixelFormat);
-	ErrorMessage(hr, "テクスチャーの形式取得に失敗", "Error");
+	Message(hr, "テクスチャーの形式取得に失敗", "Error");
 
 	std::unique_ptr<BYTE[]> buffer(new BYTE[width * height * 4]);
 
@@ -62,7 +62,7 @@ void Texture::Load(const std::string filePath)
 		//Direct2Dはビットマップしか描画できないので変換を行う
 		ATL::CComPtr<IWICFormatConverter> formatConverter = nullptr;
 		hr = Engine::GetTextureFactory().CreateFormatConverter(&formatConverter);
-		ErrorMessage(hr,"コンバーターの作成に失敗","Error");
+		Message(hr,"コンバーターの作成に失敗","Error");
 	    
 		hr =	formatConverter->Initialize(
 			frame, 
@@ -71,15 +71,15 @@ void Texture::Load(const std::string filePath)
 			0, 
 			0, 
 			WICBitmapPaletteTypeCustom);
-		ErrorMessage(hr, "テクスチャーのコンバートに失敗", "Error");
+		Message(hr, "テクスチャーのコンバートに失敗", "Error");
 
 		hr = formatConverter->CopyPixels(0, width * 4, width * height * 4, buffer.get());
-		ErrorMessage(hr, "テクスチャー情報の取得に失敗", "Error");
+		Message(hr, "テクスチャー情報の取得に失敗", "Error");
 	}
 	else
 	{
 		hr = frame->CopyPixels(0, width * 4, width * height * 4, buffer.get());
-		ErrorMessage(hr, "テクスチャー情報の取得に失敗", "Error");
+		Message(hr, "テクスチャー情報の取得に失敗", "Error");
 	}
 
 	Create(buffer.get(), width, height);

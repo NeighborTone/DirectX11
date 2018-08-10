@@ -80,6 +80,9 @@
     <ClCompile Include="Engine\Inputs\XInput.cpp">
       <Filter>Engine\Inputs</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Graphics\Light.cpp">
+      <Filter>Engine\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Engine">
@@ -203,6 +206,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Inputs\XInput.h">
       <Filter>Engine\Inputs</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Graphics\Light.h">
+      <Filter>Engine\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

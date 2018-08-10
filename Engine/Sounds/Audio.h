@@ -73,6 +73,6 @@ namespace SoundEngine
 		X3DAUDIO_HANDLE& Get3DInstance();
 		XAUDIO2_VOICE_DETAILS& GetVoiceDetails();
 		static Audio* GetInstance();
-
+		void SetMasterGain(float gain);
 	};
 }

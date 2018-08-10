@@ -13,6 +13,7 @@ namespace SoundEngine
 		virtual const WAVEFORMATEX& GetWaveFmtEx() const = 0;	//WAVE フォーマットを取得
 		virtual const BYTE* GetWaveData() const = 0;			//Wave データを取得
 		virtual const size_t	GetWaveByteSize() const = 0;	//Wave データのサイズを取得
+		virtual const UINT64 GetSample() const = 0;
 	};
 
 	class Wav : public PCM
@@ -25,6 +26,7 @@ namespace SoundEngine
 		const WAVEFORMATEX& GetWaveFmtEx() const override;
 		const BYTE* GetWaveData() const override;
 		const size_t GetWaveByteSize() const override;
+		const UINT64 GetSample() const override;
 	};
 
 	class Ogg : public PCM
@@ -37,5 +39,6 @@ namespace SoundEngine
 		const WAVEFORMATEX& GetWaveFmtEx() const override;
 		const BYTE* GetWaveData() const override;
 		const size_t GetWaveByteSize() const override;
+		const UINT64 GetSample() const override;
 	};
 }

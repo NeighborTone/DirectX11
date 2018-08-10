@@ -70,7 +70,7 @@ bool System::Create(std::string str, int width, int height)
 	wcex.hIconSm = NULL;												//小さいアイコン
 	ins = instance;
 
-	ErrorMessage(RegisterClassEx(&wcex), "ウィンドウの登録に失敗しました", "Error");
+	Message(RegisterClassEx(&wcex), "ウィンドウの登録に失敗しました", "Error");
 
 	this->width = width;
 	this->height = height;
@@ -88,7 +88,7 @@ bool System::Create(std::string str, int width, int height)
 				instance,					//アプリケーションインスタンスへのハンドル
 				NULL);						//ウィンドウパラメータなし
 	//生成チェック
-	ErrorMessage(handle, "ウィンドウの生成に失敗しました", "Error");
+	Message(handle, "ウィンドウの生成に失敗しました", "Error");
 
 	//ウィンドウサイズと初期座標位置
 	SetSize(width,height);

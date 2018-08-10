@@ -31,8 +31,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	
 	//ÉJÉÅÉâê∂ê¨
 	Camera camera3D;
-	camera3D.pos.z = -20;
-	camera3D.pos.y = 5;
+	camera3D.pos = Vec3(0,1,-5);
 	camera3D.angle.x = 0;
 
 	camera3D.SetPerspective(45.0f, 1, 10000.0f);
@@ -52,6 +51,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	efs.AddEffect("test2", "Resource/TestParticle2.efk");
 
 	Counter cnt(0, 1, 0, 60);
+	Mesh b;
+	b.CreateCube();
+	b.GetMaterial().SetTexture(0, &t);
+	b.scale = 10;
+	b.scale.y = 0.5f;
 
 	Mouse::SetMousePos(0, 0);
 	while (ge.Run())
@@ -69,15 +73,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 			efs.Play("test", Vec3(0, 0, 10));
 		if (KeyBoard::Down(KeyBoard::Key::KEY_X))
 			efs.Play("test2", Vec3(0, 0, 10));
-
+	
 		m.pos.z = 10;
 		m.Draw();
-		efs.UpDate(camera3D);
-
-		camera3D.angle.x += Mouse::GetMousePosCenter().y * 0.3f;
-		camera3D.angle.y += Mouse::GetMousePosCenter().x * 0.3f;
-
-
+		b.Draw();
+		efs.UpDate(Camera(camera3D));
 
 		
 		//===================================//
@@ -85,8 +85,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 		//===================================//
 		camera2D.Run(false);
 
-		Mouse::SetMousePos(0, 0); 
-		Mouse::DrawCursor(false);
+
+
 	}
 
 	//èIóπ

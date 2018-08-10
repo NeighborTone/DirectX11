@@ -69,9 +69,9 @@ void Direct3D::UpDate()
 
 bool Direct3D::Create()
 {
-	ErrorMessage(IsCreateDevice(), "デバイスの作成に失敗", "Error");
-	ErrorMessage(IsCreateBlendState(), "アルファブレンドの設定に失敗", "Error");
-	ErrorMessage(IsCreateD2D(), "Direct2Dの作成に失敗", "Error");
+	Message(IsCreateDevice(), "デバイスの作成に失敗", "Error");
+	Message(IsCreateBlendState(), "アルファブレンドの設定に失敗", "Error");
+	Message(IsCreateD2D(), "Direct2Dの作成に失敗", "Error");
 	
 	//ビューとスワップチェイン
 	CreateSwapChain();

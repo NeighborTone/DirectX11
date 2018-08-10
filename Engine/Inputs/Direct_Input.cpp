@@ -209,7 +209,7 @@ LPDIRECTINPUTDEVICE8 PadInput::pPad[PadInput::padNum] =
 	nullptr
 };
 
-BOOL CALLBACK PadInput::EnumPadCallback(const DIDEVICEINSTANCE* inst, void* pContext)
+BOOL CALLBACK PadInput::EnumPadCallback(const DIDEVICEINSTANCE* inst, [[maybe_unused]]void* pContext)
 {
 
 	//保存
@@ -235,7 +235,7 @@ BOOL CALLBACK PadInput::EnumPadCallback(const DIDEVICEINSTANCE* inst, void* pCon
 
 BOOL CALLBACK PadInput::EnumAxisCallback(
 	const DIDEVICEOBJECTINSTANCE* objInst,
-	void* pContext)
+	[[maybe_unused]]void* pContext)
 {
 	//軸範囲指定
 	DIPROPRANGE prg;
@@ -431,7 +431,7 @@ long PadInput::GetLStickXAngle(const int no)
 	{
 		return 0xffffffff;	//パッドが接続されていなければ未押下状態を返す
 	}
-
+	
 	return buf[no].lX;
 }
 

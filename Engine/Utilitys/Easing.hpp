@@ -1,343 +1,241 @@
 #pragma once
-#define _USE_MATH_DEFINES
-#include <math.h>
+#include "Counter.hpp"
+typedef float(*Ease)(float, float);
+
 class Easing
 {
 private:
-	float	cnt;
-	float	duration;
-	bool	easeEnd;
+	Counter_f	time;
+	float	vol;
+
 public:
 	//コンストラクタ
-	Easing() : cnt(0), easeEnd(false),
-		linear(&duration),
-		back(&duration),
-		bounce(&duration),
-		circ(&duration),
-		cubic(&duration),
-		elastic(&duration),
-		expo(&duration),
-		quad(&duration),
-		quart(&duration),
-		quint(&duration),
-		sine(&duration) 
+	Easing() :
+		time(1,1),
+		vol(0)
 	{}
 
-	//イージング用カウンタ
-	float Time(float dur)
+	//イージングの実行
+	//引数：イージング動作の関数ポインタ, 継続時間(float)
+	void Run(const Ease em, const float durationTime)
 	{
-		duration = dur;
-		if (cnt <= duration)
-		{
-			cnt += 0.1f;
-			easeEnd = false;
-		}
-		else
-		{
-			easeEnd = true;
-		}
-		return cnt;
+		time.SetEndTime(durationTime);
+		time.Add();
+		vol = em(time.GetCurrentCount(), durationTime);
+	}
+
+	//値を取得
+	//引数：始点(float), 終点(float)-始点(float)
+	const float GetVolume(const float startPoint, const float endPoint)
+	{
+		return startPoint + (vol * endPoint);
 	}
 
 	//イージングが終了したらtrueが返る
-	bool IsEnd()
+	const bool IsEaseEnd()
 	{
-		return easeEnd;
+		return time.IsMax();
 	}
 
-	//t = 時間 d = 始点 c = 終点-始点 d = 経過時間
-	class Linear
+	//イージングをリセットする
+	void Reset()
 	{
-		float* duration;
-	public:
-		//コンストラクタ
-		Linear(float* dur) : duration(dur) {}
+		time.Reset();
+	}
 
-		float None(float t, float b, float c)
-		{
-			return c * t / *duration + b;
-		}
-		float In(float t, float b, float c)
-		{
-			return c * t / *duration + b;
-		}
-		float Out(float t, float b, float c)
-		{
-			return c * t / *duration + b;
-		}
-		float InOut(float t, float b, float c)
-		{
-			return c * t / *duration + b;
-		}
-	}linear;
-
-	class Back
+	static float LinearIn(float time, float duration)
 	{
-		float* duration;
-	public:
-		//コンストラクタ
-		Back(float* dur) : duration(dur) {}
-
-		float In(float t, float b, float c)
-		{
-			float s = 1.70158f;
-			float postFix = t /= *duration;
-			return c * (postFix)*t*((s + 1)*t - s) + b;
-		}
-		float Out(float t, float b, float c)
-		{
-
-			float s = 1.70158f;
-
-			return c * ((t = t / *duration - 1)*t*((s + 1)*t + s) + 1) + b;
-		}
-		float InOut(float t, float b, float c)
-		{
-			float s = 1.70158f;
-			if ((t /= *duration / 2) < 1) return c / 2 * (t*t*(((s *= (1.525f)) + 1)*t - s)) + b;
-			float postFix = t -= 2;
-			return c / 2 * ((postFix)*t*(((s *= (1.525f)) + 1)*t + s) + 2) + b;
-		}
-	}back;
-
-
-	class Bounce
+		return time / duration;
+	}
+	static float LinearOut(float time, float duration)
 	{
-		float* duration;
-	public:
-		//コンストラクタ
-		Bounce(float* dur) : duration(dur) {}
-
-		float Out(float t, float b, float c)
-		{
-
-			if ((t /= *duration) < (1 / 2.75f))
-			{
-				return c * (7.5625f*t*t) + b;
-			}
-			else if (t < (2 / 2.75f))
-			{
-				float postFix = t -= (1.5f / 2.75f);
-				return c * (7.5625f*(postFix)*t + .75f) + b;
-			}
-			else if (t < (2.5 / 2.75))
-			{
-				float postFix = t -= (2.25f / 2.75f);
-				return c * (7.5625f*(postFix)*t + .9375f) + b;
-			}
-			else
-			{
-				float postFix = t -= (2.625f / 2.75f);
-				return c * (7.5625f*(postFix)*t + .984375f) + b;
-			}
-		}
-		float In(float t, float b, float c)
-		{
-			return c - Out(*duration - t, 0, c) + b;
-		}
-		float InOut(float t, float b, float c)
-		{
-			if (t < *duration / 2) return In(t * 2, 0, c) * .5f + b;
-			else return Out(t * 2 - *duration, 0, c) * .5f + c * .5f + b;
-		}
-	}bounce;
-
-	class Circ
+		return time / duration;
+	}
+	static float LinearInOut(float time, float duration)
 	{
-		float* duration;
-	public:
-		//コンストラクタ
-		Circ(float* dur) : duration(dur) {}
+		return time / duration;
+	}
 
-		float In(float t, float b, float c)	//バグあり
-		{
-			return -c * static_cast<float>((sqrt(1 - (t /= *duration)*t) - 1)) + b;
-		}
-		float Out(float t, float b, float c)
-		{
-			return c * static_cast<float>(sqrt(1 - (t = t / *duration - 1)*t)) + b;
-		}
-		float InOut(float t, float b, float c)
-		{
-			if ((t /= *duration / 2) < 1) return -c / 2 * static_cast<float>((sqrt(1 - t * t) - 1)) + b;
-			return c / 2 * static_cast<float>((sqrt(1 - t * (t -= 2)) + 1)) + b;
-		}
-	}circ;
-
-	class Cubic
+	static float BackIn(float time, float duration)
 	{
-		float* duration;
-	public:
-		//コンストラクタ
-		Cubic(float* dur) : duration(dur) {}
-
-		float In(float t, float b, float c)
-		{
-			return c * (t /= *duration)*t*t + b;
-		}
-		float Out(float t, float b, float c)
-		{
-			return c * ((t = t / *duration - 1)*t*t + 1) + b;
-		}
-		float InOut(float t, float b, float c)
-		{
-			if ((t /= *duration / 2) < 1) return c / 2 * t*t*t + b;
-			return c / 2 * ((t -= 2)*t*t + 2) + b;
-		}
-	}cubic;
-
-	class Elastic
+		float s = 1.70158f;
+		float postFix = time /= duration;
+		return (postFix)*time*((s + 1)*time - s);
+	}
+	static float BackOut(float time, float duration)
 	{
-		float* duration;
-	public:
-		//コンストラクタ
-		Elastic(float* dur) : duration(dur) {}
-
-		float In(float t, float b, float c)
-		{
-			if (t == 0) return b;  if ((t /= *duration) == 1) return b + c;
-			float p = *duration*.3f;
-			float a = c;
-			float s = p / 4;
-			float postFix = static_cast<float>(a*pow(2, 10 * (t -= 1)));
-			return -static_cast<float>(postFix * sin((t*(*duration) - s)*(2 * (M_PI)) / p)) + b;
-		}
-
-		float Out(float t, float b, float c)
-		{
-			if (t == 0) return b;  if ((t /= *duration) == 1) return b + c;
-			float p = *duration*.3f;
-			float a = c;
-			float s = p / 4;
-			return (static_cast<float>(a*pow(2, -10 * t) * sin((t*(*duration) - s)*(2 * static_cast<float>(M_PI)) / p) + c + b));
-		}
-
-		float InOut(float t, float b, float c)
-		{
-			if (t == 0) return b;  if ((t /= *duration / 2) == 2) return b + c;
-			float p = *duration*(.3f*1.5f);
-			float a = c;
-			float s = p / 4;
-
-			if (t < 1) {
-				float postFix = static_cast<float>(a*pow(2, 10 * (t -= 1)));
-				return -.5f*static_cast<float>((postFix* sin((t*(*duration) - s)*(2 * (M_PI)) / p))) + b;
-			}
-			float postFix = static_cast<float>(a*pow(2, -10 * (t -= 1)));
-			return static_cast<float>(postFix * sin((t*(*duration) - s)*(2 * static_cast<float>(M_PI)) / p)*.5f + c + b);
-		}
-	}elastic;
-
-	class Expo
+		float s = 1.70158f;
+		return ((time = time / duration - 1)*time*((s + 1)*time + s) + 1);
+	}
+	static float BackInOut(float time, float duration)
 	{
-		float* duration;
-	public:
-		//コンストラクタ
-		Expo(float* dur) : duration(dur) {}
+		float s = 1.70158f;
+		if ((time /= duration / 2) < 1) return 1.f / 2.f * (time*time*(((s *= (1.525f)) + 1)*time - s));
+		float postFix = time -= 2;
+		return 1.f / 2.f * ((postFix)*time*(((s *= (1.525f)) + 1)*time + s) + 2);
+	}
 
-		float In(float t, float b, float c)
-		{
-			return (t == 0) ? b : c * static_cast<float>(pow(2, 10 * (t / *duration - 1)) + b);
-		}
-		float Out(float t, float b, float c)
-		{
-			return (t == *duration) ? b + c : c * (static_cast<float>(-pow(2, -10 * t / *duration) + 1)) + b;
-		}
-		float InOut(float t, float b, float c)
-		{
-			if (t == 0) return b;
-			if (t == *duration) return b + c;
-			if ((t /= *duration / 2) < 1) return c / 2 * static_cast<float>(pow(2, 10 * (t - 1))) + b;
-			return c / 2 * (static_cast<float>(-pow(2, -10 * --t) + 2)) + b;
-		}
-	}expo;
-
-	class Quad
+	static float BounceIn(float time, float duration)
 	{
-		float* duration;
-	public:
-		//コンストラクタ
-		Quad(float* dur) : duration(dur) {}
-
-		float In(float t, float b, float c)
-		{
-			return c * (t /= *duration)*t + b;
-		}
-		float Out(float t, float b, float c)
-		{
-			return -c * (t /= *duration)*(t - 2) + b;
-		}
-		float InOut(float t, float b, float c)
-		{
-			if ((t /= *duration / 2) < 1) return ((c / 2)*(t*t)) + b;
-			return -c / 2 * (((t - 2)*(--t)) - 1) + b;
-		}
-	}quad;
-
-	class Quart
+		return 1.f - BounceOut(duration - time, duration);
+	}
+	static float BounceOut(float time, float duration)
 	{
-		float* duration;
-	public:
-		//コンストラクタ
-		Quart(float* dur) : duration(dur) {}
-
-		float In(float t, float b, float c)
+		if ((time /= duration) < (1.f / 2.75f))
 		{
-			return c * (t /= *duration)*t*t*t + b;
+			return 7.5625f*time*time;
 		}
-		float Out(float t, float b, float c)
+		else if (time < (2.f / 2.75f))
 		{
-			return -c * ((t = t / *duration - 1)*t*t*t - 1) + b;
+			float postFix = time -= (1.5f / 2.75f);
+			return 7.5625f*(postFix)*time + .75f;
 		}
-		float InOut(float t, float b, float c)
+		else if (time < (2.5 / 2.75))
 		{
-			if ((t /= *duration / 2) < 1) return c / 2 * t*t*t*t + b;
-			return -c / 2 * ((t -= 2)*t*t*t - 2) + b;
+			float postFix = time -= (2.25f / 2.75f);
+			return 7.5625f*(postFix)*time + .9375f;
 		}
-	}quart;
-
-	class Quint
+		else
+		{
+			float postFix = time -= (2.625f / 2.75f);
+			return 7.5625f*(postFix)*time + .984375f;
+		}
+	}
+	static float BounceInOut(float time, float duration)
 	{
-		float* duration;
-	public:
-		//コンストラクタ
-		Quint(float* dur) : duration(dur) {}
+		if (time < duration / 2) return BounceIn(time * 2, duration) * 0.5f;
+		else return BounceOut(time * 2 - duration, duration) * 0.5f + 0.5f;
+	}
 
-		float In(float t, float b, float c)
-		{
-			return c * (t /= *duration)*t*t*t*t + b;
-		}
-		float Out(float t, float b, float c)
-		{
-			return c * ((t = t / *duration - 1)*t*t*t*t + 1) + b;
-		}
-		float InOut(float t, float b, float c)
-		{
-			if ((t /= *duration / 2) < 1) return c / 2 * t*t*t*t*t + b;
-			return c / 2 * ((t -= 2)*t*t*t*t + 2) + b;
-		}
-	}quint;
-
-	class Sine
+	static float CircIn(float time, float duration)
 	{
-		float* duration;
-	public:
-		//コンストラクタ
-		Sine(float* dur) : duration(dur) {}
+		return -1.f * static_cast<float>((sqrt(1 - (time /= duration)*time) - 1));
+	}
+	static float CircOut(float time, float duration)
+	{
+		return static_cast<float>(sqrt(1 - (time = time / duration - 1)*time));
+	}
+	static float CircInOut(float time, float duration)
+	{
+		if ((time /= duration / 2) < 1) return -1.f / 2.f * static_cast<float>((sqrt(1 - time * time) - 1));
+		return 1.f / 2.f * static_cast<float>((sqrt(1 - time * (time -= 2)) + 1));
+	}
 
-		float In(float t, float b, float c)
-		{
-			return -c * static_cast<float>(cos(t / *duration * (M_PI / 2))) + c + b;
-		}
-		float Out(float t, float b, float c)
-		{
-			return c * static_cast<float>(sin(t / *duration * (M_PI / 2))) + b;
-		}
+	static float CubicIn(float time, float duration)
+	{
+		return (time /= duration)*time*time;
+	}
+	static float CubicOut(float time, float duration)
+	{
+		return (time = time / duration - 1)*time*time + 1;
+	}
+	static float CubicInOut(float time, float duration)
+	{
+		if ((time /= duration / 2) < 1) return 1.f / 2.f * time*time*time;
+		return 1.f / 2.f * ((time -= 2)*time*time + 2);
+	}
 
-		float InOut(float t, float b, float c)
-		{
-			return -c / 2 * static_cast<float>((cos(M_PI*t / *duration) - 1)) + b;
-		}
-	}sine;
+	static float ElasticIn(float time, float duration)
+	{
+		if (time == 0) return 0.f;  if ((time /= duration) == 1) return 1.f;
+		float p = duration * 0.3f;
+		float a = 1.f;
+		float s = p / 4;
+		float postFix = static_cast<float>(a*pow(2, 10 * (time -= 1)));
+		return -static_cast<float>(postFix * sin((time*(duration)-s)*(2 * (M_PI)) / p));
+	}
+	static float ElasticOut(float time, float duration)
+	{
+		if (time == 0) return 0.f;  if ((time /= duration) == 1) return 1.f;
+		float p = duration * 0.3f;
+		float a = 1.f;
+		float s = p / 4;
+		return (static_cast<float>(a*pow(2, -10 * time) * sin((time*(duration)-s)*(2 * static_cast<float>(M_PI)) / p) + 1.f));
+	}
+	static float ElasticInOut(float time, float duration)
+	{
+		if (time == 0) return 0.f;  if ((time /= duration / 2) == 2) return 1.f;
+		float p = duration * (0.3f*1.5f);
+		float a = 1.f;
+		float s = p / 4;
 
+		if (time < 1) {
+			float postFix = static_cast<float>(a*pow(2, 10 * (time -= 1)));
+			return -0.5f*static_cast<float>((postFix* sin((time*(duration)-s)*(2 * (M_PI)) / p)));
+		}
+		float postFix = static_cast<float>(a*pow(2, -10 * (time -= 1)));
+		return static_cast<float>(postFix * sin((time*(duration)-s)*(2 * static_cast<float>(M_PI)) / p)*.5f + 1.f);
+	}
+
+	static float ExpoIn(float time, float duration)
+	{
+		return (time == 0) ? 0.f : static_cast<float>(pow(2, 10 * (time / duration - 1)));
+	}
+	static float ExpoOut(float time, float duration)
+	{
+		return (time == duration) ? 1.f : static_cast<float>(-pow(2, -10 * time / duration) + 1);
+	}
+	static float ExpoInOut(float time, float duration)
+	{
+		if (time == 0) return 0.f;
+		if (time == duration) return 1.f;
+		if ((time /= duration / 2) < 1) return 1.f / 2.f * static_cast<float>(pow(2, 10 * (time - 1)));
+		return 1.f / 2.f * (static_cast<float>(-pow(2, -10 * --time) + 2));
+	}
+
+	static float QuadIn(float time, float duration)
+	{
+		return (time /= duration)*time;
+	}
+	static float QuadOut(float time, float duration)
+	{
+		return -1.f * (time /= duration)*(time - 2);
+	}
+	static float QuadInOut(float time, float duration)
+	{
+		if ((time /= duration / 2) < 1) return ((1.f / 2.f)*(time*time));
+		return -1.f / 2.f * (((time - 2)*(--time)) - 1);
+	}
+
+	static float QuartIn(float time, float duration)
+	{
+		return (time /= duration)*time*time*time;
+	}
+	static float QuartOut(float time, float duration)
+	{
+		return -1.f * ((time = time / duration - 1)*time*time*time - 1);
+	}
+	static float QuartInOut(float time, float duration)
+	{
+		if ((time /= duration / 2) < 1) return 1.f / 2.f * time*time*time*time;
+		return -1.f / 2.f * ((time -= 2)*time*time*time - 2);
+	}
+
+	static float QuintIn(float time, float duration)
+	{
+		return (time /= duration)*time*time*time*time;
+	}
+	static float QuintOut(float time, float duration)
+	{
+		return (time = time / duration - 1)*time*time*time*time + 1;
+	}
+	static float QuintInOut(float time, float duration)
+	{
+		if ((time /= duration / 2) < 1) return 1.f / 2.f * time*time*time*time*time;
+		return 1.f / 2.f * ((time -= 2)*time*time*time*time + 2);
+	}
+
+	static float SineIn(float time, float duration)
+	{
+		return -1.f * static_cast<float>(cos(time / duration * (M_PI / 2))) + 1.f;
+	}
+	static float SineOut(float time, float duration)
+	{
+		return static_cast<float>(sin(time / duration * (M_PI / 2)));
+	}
+	static float SineInOut(float time, float duration)
+	{
+		return -1.f / 2.f * static_cast<float>((cos(M_PI*time / duration) - 1));
+	}
 };
+

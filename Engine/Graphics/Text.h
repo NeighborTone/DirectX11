@@ -10,7 +10,7 @@ class Text : public Sprite
 {
 public:
 	Text();
-	Text(const std::string& text = "", float fontSize = 16.0f, const std::string& fontFace = "ＭＳ ゴシック");
+	Text(const std::string& text, float fontSize = 16.0f, const std::string& fontFace = "ＭＳ ゴシック");
 	~Text();
 	/*!
 	* @brief テキストを作成します
