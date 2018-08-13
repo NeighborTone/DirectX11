@@ -62,6 +62,11 @@ IDWriteFactory& Direct3D::GetTextFactory() const
 	return *textFactory.Get();
 }
 
+D3D11_VIEWPORT Direct3D::GetViewPort() const
+{
+	return viewPort;
+}
+
 void Direct3D::UpDate()
 {
 	swapChain->Present(1, 0);
@@ -283,7 +288,6 @@ void Direct3D::CreateSwapChain()
 void Direct3D::SetViewport()
 {
 	//ビューポートの作成
-	D3D11_VIEWPORT viewPort;
 	SecureZeroMemory(&viewPort,sizeof(viewPort));
 	viewPort.Width = static_cast<float>(Engine::GetWindowSize().x);
 	viewPort.Height = static_cast<float>(Engine::GetWindowSize().y);

@@ -74,6 +74,8 @@ public:
 	* @return IDXGISwapChain&
 	*/
 	static IDXGISwapChain& GetDXSwapChain();
+
+	static D3D11_VIEWPORT GetViewPort();
 	/*!
 	* @brief テクスチャーファクトリーを取得します
 	* @return IWICImagingFactory&

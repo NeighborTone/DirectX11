@@ -31,7 +31,7 @@ public:
 	* @brief XMVECTORを返します
 	* @return XMVECTOR
 	*/
-	DirectX::XMVECTOR ToXMVECTOR()
+	const DirectX::XMVECTOR ToXMVECTOR() const
 	{
 		DirectX::XMVECTOR ret;
 		DirectX::XMVectorSetX(ret, this->x);
@@ -39,10 +39,28 @@ public:
 		return ret;
 	}
 	/*!
+	* @brief オフセット値を返します
+	* @return Vec2
+	*/
+	const TemplateVec2 OffSetCopy(const T x, const T y) const
+	{
+		TemplateVec2 ret(*this);
+		ret.x += x;
+		ret.y += y;
+		return ret;
+	}
+	//!0ベクトル化します
+	void Zero()
+	{
+		x = 0;
+		y = 0;
+	}
+
+	/*!
 	* @brief 内積を返します
 	* @return 内積
 	*/
-	T Dot(TemplateVec2& v)
+	const T Dot(const TemplateVec2& v) const
 	{
 		return x * v.x + y * v.y;
 	}
@@ -51,16 +69,33 @@ public:
 	* @brief 外積を返します
 	* @return 外積
 	*/
-	T Cross(TemplateVec2& v)
+	const T Cross(const TemplateVec2& v) const
 	{
 		return x * v.y - v.x * y;
+	} 
+
+	/*!
+	* @brief 内積を返します
+	* @return 内積
+	*/
+	static T Dot(const TemplateVec2& v1, const TemplateVec2& v2)
+	{
+		return v1.x * v2.x + v1.y * v2.y;
 	}
 
+	/*!
+	* @brief 外積を返します
+	* @return 外積
+	*/
+	static T Cross(const TemplateVec2& v1, const TemplateVec2& v2)
+	{
+		return v1.x * v2.y - v2.x * v1.y;
+	}
 	/*!
 	* @brief 2点間の距離を返します
 	* @return 距離
 	*/
-	T GetDistance(TemplateVec2& v)
+	const T GetDistance(const TemplateVec2& v) const
 	{
 		const T dx = x - v.x;
 		const T dy = y - v.y;
@@ -72,7 +107,7 @@ public:
 	* @brief 長さを返します
 	* @return 長さ
 	*/
-	T Length()
+	const T Length() const
 	{
 		return sqrtf(x * x + y * y);
 	}
@@ -80,7 +115,7 @@ public:
 	* @brief 自分自身を正規化した値を返します
 	* @return Vec2
 	*/
-	TemplateVec2&  Normalize()
+	const TemplateVec2&  Normalize()
 	{
 		T tmp = Length();
 		x /= tmp;
@@ -91,7 +126,7 @@ public:
 	* @brief 自分自身を正規化した値のコピーを返します。自身の値は変わりません
 	* @return Vec2
 	*/
-	TemplateVec2  GetNormalize() const
+	const TemplateVec2  GetNormalize() const
 	{
 		TemplateVec2 result = *this;
 		result.Normalize();
@@ -287,7 +322,7 @@ public:
 	* @brief XMVECTORを返します
 	* @return XMVECTOR
 	*/
-	DirectX::XMVECTOR ToXMVECTOR()
+	const DirectX::XMVECTOR ToXMVECTOR() const
 	{
 		DirectX::XMVECTOR ret = {};
 		DirectX::XMVectorSetX(ret, this->x);
@@ -300,7 +335,7 @@ public:
 	* @brief オフセット値を返します
 	* @return Vec3
 	*/
-	TemplateVec3 OffSetCopy(const T x, const T y, const T z)
+	const TemplateVec3 OffSetCopy(const T x, const T y, const T z) const
 	{
 		TemplateVec3 ret(*this);
 		ret.x += x;
@@ -312,7 +347,7 @@ public:
 	* @brief 内積を返します
 	* @return float
 	*/
-	float Dot(TemplateVec3&& v)
+	const T Dot(const TemplateVec3&& v) const
 	{
 		return x * v.x + y * v.y + z * v.z;
 	}
@@ -321,7 +356,7 @@ public:
 	* @brief 外積を返します
 	* @return Vec3
 	*/
-	TemplateVec3 Cross(TemplateVec3&& v)
+	const TemplateVec3 Cross(const TemplateVec3&& v) const
 	{
 		TemplateVec3 result;
 		result.x = y * v.z - z * v.y;
@@ -335,7 +370,7 @@ public:
 	* @note C++17でないとエラー
 	* @return 距離
 	*/
-	T GetDistance(TemplateVec3&& v)
+	const T GetDistance(const TemplateVec3&& v) const
 	{
 		const T dx = x - v.x;
 		const T dy = y - v.y;
@@ -343,12 +378,18 @@ public:
 
 		return std::hypot(dx, dy, dz);
 	}
-
+	//!0ベクトル化します
+	void Zero()
+	{
+		x = 0;
+		y = 0;
+		z = 0;
+	}
 	/*!
 	* @brief 長さを返します
 	* @return float
 	*/
-	T Length()
+	const T Length() const
 	{
 		return sqrtf(x * x + y * y + z * z);
 	}
@@ -357,7 +398,7 @@ public:
 	* @brief 自分自身を正規化した値を返します
 	* @return Vec3
 	*/
-	TemplateVec3&  Normalize()
+	const TemplateVec3&  Normalize()
 	{
 		T tmp = Length();
 		x /= tmp;
@@ -369,7 +410,7 @@ public:
 	* @brief 自分自身を正規化した値のコピーを返します。自身の値は変わりません
 	* @return Vec3
 	*/
-	TemplateVec3  GetNormalize() const
+	const TemplateVec3  GetNormalize() const
 	{
 		TemplateVec3 result = *this;
 		result.Normalize();
@@ -623,8 +664,3 @@ public:
 	}
 
 };
-
-using Pos = Vec3;
-using Velocity = Vec3;
-using Angles = Vec3;
-using Scale = Vec3;

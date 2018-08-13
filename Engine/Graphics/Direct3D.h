@@ -36,7 +36,7 @@ public:
 	IDXGISwapChain& GetSwapChain() const;
 	IWICImagingFactory& GetTextureFactory() const;
 	IDWriteFactory& GetTextFactory() const;
-
+	D3D11_VIEWPORT GetViewPort() const;
 	/*!
 	*   @brief 画面の更新処理を行います
 	*/
@@ -69,4 +69,6 @@ private:
 	ATL::CComPtr<IWICImagingFactory>  textureFactory;
 	//! フォントデーターなどの状態情報を保持する
 	Microsoft::WRL::ComPtr<IDWriteFactory> textFactory;		
+
+	D3D11_VIEWPORT viewPort;
 };

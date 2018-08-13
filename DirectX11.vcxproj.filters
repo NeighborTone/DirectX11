@@ -83,6 +83,9 @@
     <ClCompile Include="Engine\Graphics\Light.cpp">
       <Filter>Engine\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Graphics\SpriteRender.cpp">
+      <Filter>Engine\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Engine">
@@ -208,6 +211,9 @@
       <Filter>Engine\Inputs</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Graphics\Light.h">
+      <Filter>Engine\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Graphics\SpriteRender.h">
       <Filter>Engine\Graphics</Filter>
     </ClInclude>
   </ItemGroup>

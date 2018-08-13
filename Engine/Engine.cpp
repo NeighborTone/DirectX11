@@ -91,6 +91,11 @@ IDXGISwapChain& Engine::GetDXSwapChain()
 	return GetDirect3D().GetSwapChain();
 }
 
+D3D11_VIEWPORT Engine::GetViewPort()
+{
+	return GetDirect3D().GetViewPort();
+}
+
 IWICImagingFactory& Engine::GetTextureFactory()
 {
 	return GetDirect3D().GetTextureFactory();

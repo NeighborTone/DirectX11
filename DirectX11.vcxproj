@@ -28,6 +28,7 @@
     <ClCompile Include="Engine\Graphics\Model.cpp" />
     <ClCompile Include="Engine\Graphics\Particle.cpp" />
     <ClCompile Include="Engine\Graphics\Sprite.cpp" />
+    <ClCompile Include="Engine\Graphics\SpriteRender.cpp" />
     <ClCompile Include="Engine\Graphics\System.cpp" />
     <ClCompile Include="Engine\Graphics\Text.cpp" />
     <ClCompile Include="Engine\Graphics\Texture.cpp" />
@@ -58,6 +59,7 @@
     <ClInclude Include="Engine\Graphics\Model.h" />
     <ClInclude Include="Engine\Graphics\Particle.h" />
     <ClInclude Include="Engine\Graphics\Sprite.h" />
+    <ClInclude Include="Engine\Graphics\SpriteRender.h" />
     <ClInclude Include="Engine\Graphics\System.h" />
     <ClInclude Include="Engine\Graphics\Text.h" />
     <ClInclude Include="Engine\Graphics\Texture.h" />

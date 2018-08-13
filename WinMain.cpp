@@ -6,6 +6,7 @@
 #include "Engine/Sounds/SoundSource.h"
 #include "Engine/Utilitys/Counter.hpp"
 #include "Engine/Utilitys/Randam.hpp"
+#include "Engine/Graphics/SpriteRender.h"
 //TODO:
 //:物理エンジン管理クラスの使い勝手が悪いので何とかする
 //:柔軟な衝突検知
@@ -56,6 +57,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	b.GetMaterial().SetTexture(0, &t);
 	b.scale = 10;
 	b.scale.y = 0.5f;
+	Sprite2D ssss("Resource/box.jpg");
+	Sprite z("Resource/box.jpg");
 
 	Mouse::SetMousePos(0, 0);
 	while (ge.Run())
@@ -73,20 +76,23 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 			efs.Play("test", Vec3(0, 0, 10));
 		if (KeyBoard::Down(KeyBoard::Key::KEY_X))
 			efs.Play("test2", Vec3(0, 0, 10));
-	
-		m.pos.z = 10;
-		m.Draw();
-		b.Draw();
+		if (KeyBoard::On(KeyBoard::Key::KEY_UP))
+			camera3D.pos.z += 0.5f;
+		if (KeyBoard::On(KeyBoard::Key::KEY_DOWN))
+			camera3D.pos.z -= 0.5f;
+
 		efs.UpDate(Camera(camera3D));
 
 		
+		z.scale = 0.01f;
+		z.Draw();
 		//===================================//
 		//==========2DRendering=================//
 		//===================================//
 		camera2D.Run(false);
-
-
-
+		
+		ssss.Draw(Math::Box2D(128, 128, 256, 256), Math::Box2D(0, 0, 256, 256));
+		
 	}
 
 	//終了
