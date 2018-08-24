@@ -9,7 +9,7 @@ Camera::Camera():
 	constantBuffer(nullptr),
 	pos(0,0,0),
 	angle(0, 0, 0),
-	color(0.4f, 0.5f, 0.8f, 1),
+	color(0.f, 0.f, 0.f, 1),
 	isDepthTest(false)
 {
 	Engine::COMInitialize();
@@ -66,6 +66,8 @@ void Camera::Run(bool clearBack)
 	);
 
 	//シェーダーで必要なビューとプロジェクションの情報をGPUに送る
+	//このエンジンが描画するもののビューとプロジェクションはこのカメラを基準とする
+	//World座標は描画されるものが基準になる
 	Engine::GetDXContext3D().UpdateSubresource(constantBuffer, 0, nullptr, &constant, 0, 0);	
 	Engine::GetDXContext3D().VSSetConstantBuffers(0, 1, &constantBuffer.p);
 	Engine::GetDXContext3D().HSSetConstantBuffers(0, 1, &constantBuffer.p);

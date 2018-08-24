@@ -11,7 +11,7 @@ void Sprite::Initialize()
 	color = Float4(1.0f, 1.0f, 1.0f, 1.0f);
 
 	mesh.GetMaterial().Load("Resource/Shader/sprite.hlsl");
-	mesh.GetMaterial().SetBuffer(2, &color, sizeof(Float4));
+	mesh.GetMaterial().SetBuffer(6, &color, sizeof(Float4));
 	mesh.SetDrawMode(D3D11_CULL_NONE,D3D11_FILL_SOLID);
 }
 

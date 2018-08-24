@@ -3,11 +3,11 @@ cbuffer Camera : register(b0)
     matrix view;
     matrix projection;
 };
-cbuffer Object : register(b1)
+cbuffer Object : register(b5)
 {
     matrix world;
 };
-cbuffer Sprite : register(b2)
+cbuffer Sprite : register(b6)
 {
     float4 color;
 };
@@ -34,6 +34,7 @@ Pixel VS(Vertex vertex)
 }
 float4 PS(Pixel pixel) : SV_TARGET
 {
+	//pixel.uv.x += 0.3;
     float4 textureColor = texture0.Sample(sampler0, pixel.uv);
     if (textureColor.a <= 0)
         discard;					//アルファ値を有効にする

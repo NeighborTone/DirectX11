@@ -1,4 +1,5 @@
 #include "Engine.h"
+#include "Graphics/Light.h"
 #include <memory>
 #define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ ) 
 
@@ -53,6 +54,7 @@ bool Engine::Run()
 	XInput::UpDate();
 	GetDirect3D().UpDate();
 	GetFps().UpDate();
+	LightManager::Update();
 	return GetWindow().UpDate();
 }
 

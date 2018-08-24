@@ -220,7 +220,7 @@ void Mesh::Apply()
 		Engine::GetDXDevice3D().CreateBuffer(&indexBufferDesc, &indexSubresourceData, &indexBuffer);
 	}
 
-	material.SetBuffer(1, &constant, sizeof(Constant));
+	material.SetBuffer(5, &constant, sizeof(Constant));
 }
 
 void Mesh::Draw()
@@ -238,6 +238,7 @@ void Mesh::Draw()
 		XMMatrixTranslation(pos.x, pos.y, pos.z)
 	);
 
+	//Shader‚Éî•ñ‚ğ‘—‚é
 	material.Attach();
 
 	Engine::GetDXContext3D().RSSetState(rasterizerState);

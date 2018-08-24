@@ -99,14 +99,12 @@ void Material::Create(const std::string & source)
 		0,								//(省略可能)各要素間のオフセット (バイト単位)
 		D3D11_INPUT_PER_VERTEX_DATA,	//単一の入力スロットの入力データ クラスを識別
 		0 });							//バッファーの中で要素の 1 つ分進む前に、インスタンス単位の同じデータを使用して描画するインスタンスの数
-	inputElementDesc.push_back({ "NORMAL", 	0, 	DXGI_FORMAT_R32G32B32_FLOAT, 	0, 	12, 	D3D11_INPUT_PER_VERTEX_DATA, 0 });
+	inputElementDesc.push_back({ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 });
 	inputElementDesc.push_back({ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 });
-	inputElementDesc.push_back({ "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0 });
-	inputElementDesc.push_back({ "BLENDINDICES", 0, DXGI_FORMAT_R32G32B32A32_UINT, 0, 44, D3D11_INPUT_PER_VERTEX_DATA, 0 });
-	inputElementDesc.push_back({ "BLENDINDICES", 1, DXGI_FORMAT_R32G32B32A32_UINT, 0, 60, D3D11_INPUT_PER_VERTEX_DATA, 0 });
-	inputElementDesc.push_back({ "BLENDWEIGHT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 76, D3D11_INPUT_PER_VERTEX_DATA, 0 });
-	inputElementDesc.push_back({ "BLENDWEIGHT", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 92, D3D11_INPUT_PER_VERTEX_DATA, 0 });
-	//頂点レイアウト(入力レイアウト)オブジェクトを作成しデバイスに登録
+	inputElementDesc.push_back({ "BLENDINDICES", 0, DXGI_FORMAT_R32G32B32A32_UINT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0 });
+	inputElementDesc.push_back({ "BLENDINDICES", 1, DXGI_FORMAT_R32G32B32A32_UINT, 0, 48, D3D11_INPUT_PER_VERTEX_DATA, 0 });
+	inputElementDesc.push_back({ "BLENDWEIGHT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 64, D3D11_INPUT_PER_VERTEX_DATA, 0 });
+	inputElementDesc.push_back({ "BLENDWEIGHT", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 80, D3D11_INPUT_PER_VERTEX_DATA, 0 });
 	//インプットレイアウトは、頂点情報とシェーダーの情報を集約します
 	hr = Engine::GetDXDevice3D().CreateInputLayout(
 		inputElementDesc.data(),
@@ -197,6 +195,7 @@ void Material::Attach()
 	{
 		if (constbuff[i].ptr != nullptr)
 		{
+			//Shaderに変数を送る
 			Engine::GetDXContext3D().UpdateSubresource(constbuff[i].buffer, 0, nullptr, constbuff[i].ptr, 0, 0);
 			Engine::GetDXContext3D().VSSetConstantBuffers(i, 1, &constbuff[i].buffer.p);
 			Engine::GetDXContext3D().HSSetConstantBuffers(i, 1, &constbuff[i].buffer.p);
